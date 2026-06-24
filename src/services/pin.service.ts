@@ -1,0 +1,112 @@
+import { apiClient } from './api-client';
+
+interface PINServiceInterface {
+  setPin(
+    newPin: string,
+    newPinConfirmation: string,
+    password: string,
+    currentPin?: string
+  ): Promise<any>;
+  verifyPin(pin: string): Promise<any>;
+  resetPinAttempts(userId: number): Promise<any>;
+  getPINStatus(): Promise<any>;
+}
+
+export const pinService: PINServiceInterface = {
+  /**
+   * Set or update user's transaction PIN
+   * @param newPin - 4-digit PIN
+   * @param newPinConfirmation - Confirmation of new PIN
+   * @param password - User's account password
+   * @param currentPin - Current PIN (required only for updates)
+   */
+  async setPin(
+    newPin: string,
+    newPinConfirmation: string,
+    password: string,
+    currentPin?: string
+  ): Promise<any> {
+    try {
+
+      const payload: any = {
+        new_pin: newPin,
+        new_pin_confirmation: newPinConfirmation,
+        password,
+      };
+
+      // Add current_pin only if provided (update scenario)
+      if (currentPin) {
+        payload.current_pin = currentPin;
+      }
+
+      const response = await apiClient.post('/wallet/pin/set', payload);
+
+      return response;
+    } catch (error) {
+      console.error('[PINService] Error setting PIN:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Verify user's transaction PIN before proceeding with transaction
+   * This is step 1 of the PIN verification flow
+   * @param pin - 4-digit PIN to verify
+   */
+  async verifyPin(pin: string): Promise<any> {
+    try {
+
+      const response = await apiClient.post('/wallet/pin/verify', {
+        pin,
+      });
+
+      return response;
+    } catch (error: any) {
+      console.error('[PINService] Error verifying PIN:', error);
+      
+      // Enhance error with helpful data from response
+      if (error.response?.data) {
+        const data = error.response.data;
+        error.code = data.code;
+        error.data = data.data || {};
+        error.message = data.message;
+      }
+      
+      throw error;
+    }
+  },
+
+  /**
+   * Reset PIN attempts (admin only)
+   * @param userId - User ID whose PIN attempts to reset
+   */
+  async resetPinAttempts(userId: number): Promise<any> {
+    try {
+      console.log('[PINService] Resetting PIN attempts for user:', userId);
+
+      const response = await apiClient.post('/wallet/pin/reset-attempts', {
+        user_id: userId,
+      });
+
+      console.log('[PINService] PIN attempts reset:', response);
+      return response;
+    } catch (error) {
+      console.error('[PINService] Error resetting PIN attempts:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Get current PIN status
+   * Returns information about whether PIN is set, locked, etc.
+   */
+  async getPINStatus(): Promise<any> {
+    try {
+      const response = await apiClient.get('/wallet/pin/status');
+      return response;
+    } catch (error) {
+      console.error('[PINService] Error fetching PIN status:', error);
+      throw error;
+    }
+  },
+};

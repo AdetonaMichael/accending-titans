@@ -1,65 +1,792 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useEffect, useState, useRef } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import {
+  ArrowRight,
+  BadgeCheck,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Gift,
+  Globe,
+  Headphones,
+  Linkedin,
+  Mail,
+  MessageSquare,
+  ShieldCheck,
+  Sparkles,
+  Star,
+  Store,
+  TrendingUp,
+  Users,
+  Zap,
+  Briefcase,
+  Search,
+  Share2,
+} from 'lucide-react';
+import { LandingTopbar } from '@/components/LandingTopbar';
+
+const features = [
+  {
+    title: 'Business Catalogue',
+    desc: 'Showcase your products and services to thousands of members.',
+    icon: Store,
+  },
+  {
+    title: 'Community Networking',
+    desc: 'Connect, collaborate, and grow your network with fellow entrepreneurs.',
+    icon: Users,
+  },
+  {
+    title: 'Birthday Rewards',
+    desc: 'Celebrate members with personalized rewards from the community.',
+    icon: Gift,
+  },
+  {
+    title: 'Direct Messaging',
+    desc: 'Communicate directly via WhatsApp and in-app messaging.',
+    icon: MessageSquare,
+  },
+  {
+    title: 'Advertising Platform',
+    desc: 'Promote your business with text, images, and short videos.',
+    icon: TrendingUp,
+  },
+  {
+    title: 'Job Opportunities',
+    desc: 'Find and post gigs and job opportunities within the community.',
+    icon: Briefcase,
+  },
+];
+
+const membershipTiers = [
+  {
+    tier: 'Regular',
+    price: '₦2,000',
+    period: '/month',
+    features: [
+      'Access to community',
+      'Basic profile creation',
+      '1 business catalogue entry',
+      'Member messaging',
+      'Birthday recognition',
+    ],
+    color: 'border-gray-200',
+    buttonColor: 'bg-gray-100 text-gray-900 hover:bg-gray-200',
+  },
+  {
+    tier: 'VIP',
+    price: '₦3,500',
+    period: '/month',
+    features: [
+      'Everything in Regular',
+      'Up to 5 catalogue entries',
+      'Priority support',
+      'Featured listings',
+      'Enhanced profile badge',
+      'Job posting access',
+    ],
+    color: 'border-[#C9A84C]',
+    buttonColor: 'bg-[#C9A84C] text-white hover:bg-[#B8962E]',
+    recommended: true,
+  },
+  {
+    tier: 'VVIP',
+    price: '₦5,000',
+    period: '/month',
+    features: [
+      'Everything in VIP',
+      'Unlimited catalogue entries',
+      'Video advertising (5 min)',
+      'Premium support',
+      'Custom profile design',
+      'Monthly analytics report',
+      'Co-branding opportunities',
+    ],
+    color: 'border-[#C9A84C]',
+    buttonColor: 'bg-[#C9A84C] text-white hover:bg-[#B8962E]',
+  },
+];
+
+const howItWorks = [
+  {
+    step: 1,
+    title: 'Sign Up & Choose Tier',
+    desc: 'Create your account and select a membership plan that works for you.',
+    icon: CheckCircle2,
+  },
+  {
+    step: 2,
+    title: 'Build Your Profile',
+    desc: 'Add your business details, upload products, and showcase your services.',
+    icon: Store,
+  },
+  {
+    step: 3,
+    title: 'Connect & Network',
+    desc: 'Meet other entrepreneurs, send messages, and find collaboration opportunities.',
+    icon: Users,
+  },
+  {
+    step: 4,
+    title: 'Grow & Earn',
+    desc: 'Increase visibility through ads, get rewarded, and expand your reach.',
+    icon: TrendingUp,
+  },
+];
+
+const testimonials = [
+  {
+    name: 'Chioma Okafor',
+    role: 'Fashion Designer',
+    text: 'This platform transformed my business. I went from 0 to 50+ clients in 3 months through the community connections.',
+    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80',
+    rating: 5,
+  },
+  {
+    name: 'Adebayo Oluwaseun',
+    role: 'Tech Consultant',
+    text: 'The birthday reward system is genius. It keeps the community engaged and my business top-of-mind for members.',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
+    rating: 5,
+  },
+  {
+    name: 'Grace Emeka',
+    role: 'Event Planner',
+    text: 'A reliable platform with excellent support. My catalogue has become my primary business tool.',
+    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&q=80',
+    rating: 5,
+  },
+];
+
+const stats = [
+  { value: '10K+', label: 'Active Members', icon: Users },
+  { value: '50K+', label: 'Business Listings', icon: Store },
+  { value: '25K+', label: 'Referrals Made', icon: Gift },
+  { value: '98%', label: 'Member Satisfaction', icon: Star },
+];
+
+export default function LandingPage() {
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const testimonialsRef = useRef<HTMLDivElement>(null);
+  const [activeHeroSlide, setActiveHeroSlide] = useState(0);
+
+  const heroSlides = [
+    {
+      image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1920&q=90',
+      headline: 'Showcase Your Business',
+      subtext: 'Display your products and services to thousands of engaged entrepreneurs and grow your sales',
+      service: '📦 Business Catalogue',
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1920&q=90',
+      headline: 'Network & Collaborate',
+      subtext: 'Connect with like-minded business owners, find partners, and unlock unlimited opportunities',
+      service: '🤝 Community Networking',
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1920&q=90',
+      headline: 'Promote Your Services',
+      subtext: 'Reach thousands of members with targeted advertising through text, images, and video content',
+      service: '📢 Advertising Platform',
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1920&q=90',
+      headline: 'Find Jobs & Opportunities',
+      subtext: 'Post gigs, find skilled professionals, and discover new business opportunities in your network',
+      service: '💼 Job Opportunities',
+    },
+  ];
+
+  // Auto-advance hero slides
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveHeroSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 6000); // Change slide every 6 seconds
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="min-h-screen bg-white text-gray-900">
+      <LandingTopbar />
+
+      {/* ═══════════════════ HERO SECTION ═══════════════════ */}
+      <section id="hero" className="relative overflow-hidden pt-16 sm:pt-20 md:pt-24 min-h-screen flex items-center">
+        {/* Static premium background */}
+        <div className="absolute inset-0 z-0">
+          {/* Background image */}
+          <img
+            src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1920&q=90"
+            alt="Community background"
+            className="w-full h-full object-cover brightness-110 contrast-105"
+          />
+          
+          {/* Premium gradient overlays */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/50 to-black/30" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/60" />
+          
+          {/* Gold accent radial gradient - premium feel */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,rgba(201,168,76,0.15),transparent_60%)]" />
+          
+          {/* Animated gold accent on right */}
+          <div className="absolute inset-y-0 right-0 w-96 bg-gradient-to-l from-[#C9A84C]/8 via-[#C9A84C]/3 to-transparent blur-3xl" />
+          
+          {/* Left vignette */}
+          <div className="absolute inset-y-0 left-0 w-48 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
+          
+          {/* Right vignette */}
+          <div className="absolute inset-y-0 right-0 w-48 bg-gradient-to-l from-black/70 via-black/40 to-transparent" />
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-5 py-12 sm:py-16 md:py-28 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
+            {/* Left content with animations */}
+            <div>
+              {/* Service badge with animation */}
+              {/* <div className="mb-6 inline-block min-h-[44px]">
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#C9A84C]/20 to-[#C9A84C]/10 border border-[#C9A84C]/40 text-sm font-semibold text-[#C9A84C] backdrop-blur-sm transition-all duration-500">
+                  <Sparkles size={16} />
+                  {heroSlides[activeHeroSlide].service}
+                </span>
+              </div> */}
+
+              {/* Main headline with smooth transition */}
+              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-7xl font-bold leading-tight text-white mb-6 transition-all duration-700 ease-in-out min-h-[120px]">
+                {heroSlides[activeHeroSlide].headline}
+                <span className="block text-[#C9A84C] mt-3">with Ascending Titans</span>
+              </h1>
+
+              {/* Subheading with description of service */}
+              <p className="text-lg sm:text-xl text-white/85 mb-8 leading-relaxed max-w-xl transition-all duration-700 ease-in-out font-light min-h-[80px]">
+                {heroSlides[activeHeroSlide].subtext}
+              </p>
+
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 mb-12">
+                <Link
+                  href="/auth/register"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-[#C9A84C] to-[#B8962E] text-gray-900 font-semibold rounded-xl hover:shadow-2xl hover:shadow-[#C9A84C]/40 transition-all duration-300 transform hover:scale-105 backdrop-blur-sm border border-[#C9A84C]/50"
+                >
+                  Get Started Free <ArrowRight size={20} />
+                </Link>
+                <a
+                  href="#features"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-[#C9A84C]/60 text-white font-semibold rounded-xl hover:bg-[#C9A84C]/15 transition-all backdrop-blur-md hover:border-[#C9A84C] group"
+                >
+                  Explore Services
+                  <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                </a>
+              </div>
+
+              {/* Social proof */}
+              <div className="flex flex-wrap items-center gap-8">
+                <div>
+                  <div className="flex -space-x-3 mb-3">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <div key={i} className="h-12 w-12 rounded-full bg-gradient-to-br from-[#C9A84C] to-[#B8962E] border-3 border-white/20 flex items-center justify-center text-white text-sm font-bold shadow-lg">
+                        {i}
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-sm font-semibold text-white">10,000+ Active Entrepreneurs</p>
+                  <p className="text-xs text-white/60">Growing every single day</p>
+                </div>
+                <div className="h-14 w-px bg-gradient-to-b from-[#C9A84C]/30 via-[#C9A84C]/20 to-transparent" />
+                <div>
+                  <div className="flex gap-1 mb-2">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <Star key={i} size={20} className="fill-[#C9A84C] text-[#C9A84C]" />
+                    ))}
+                  </div>
+                  <p className="text-sm font-semibold text-white">Rated 4.9/5</p>
+                  <p className="text-xs text-white/60">From real members</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right side - Premium video with glow effect */}
+            <div className="hidden lg:block relative">
+              {/* Animated glow effects */}
+              <div className="absolute -top-10 -right-10 w-96 h-96 bg-[#C9A84C]/15 rounded-full blur-3xl animate-pulse" />
+              <div className="absolute -bottom-10 -left-10 w-80 h-80 bg-[#C9A84C]/10 rounded-full blur-3xl animate-pulse delay-1000" />
+              
+              <div className="relative">
+                {/* Premium card stack effect */}
+                <div className="absolute -bottom-6 -right-6 w-full h-full rounded-3xl border-2 border-[#C9A84C]/20 bg-black/40 backdrop-blur-sm transform rotate-3 shadow-2xl" />
+                <div className="absolute -bottom-3 -right-3 w-full h-full rounded-3xl border-2 border-[#C9A84C]/30 bg-black/50 backdrop-blur-sm transform rotate-1 shadow-xl" />
+                
+                <div className="relative rounded-3xl border-2 border-[#C9A84C]/60 bg-gradient-to-br from-black/80 to-black/60 overflow-hidden shadow-2xl shadow-[#C9A84C]/40 backdrop-blur-sm">
+                  <div className="aspect-video bg-gradient-to-br from-gray-800 via-gray-900 to-black flex items-center justify-center">
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&modestbranding=1&rel=0"
+                      title="Community Platform Overview"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="rounded-2xl"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Premium stats bar with icons */}
+          <div className="mt-20 sm:mt-28 md:mt-32 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+            {[
+              { label: 'Active Members', value: '10K+', icon: Users },
+              { label: 'Business Listings', value: '50K+', icon: Store },
+              { label: 'Daily Referrals', value: '25K+', icon: TrendingUp },
+              { label: 'Success Rate', value: '98%', icon: Zap },
+            ].map((stat) => {
+              const Icon = stat.icon;
+              return (
+                <div 
+                  key={stat.label} 
+                  className="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl border border-[#C9A84C]/30 p-4 sm:p-6 hover:border-[#C9A84C]/60 hover:from-white/15 hover:to-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-[#C9A84C]/30 cursor-pointer"
+                >
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="p-2.5 rounded-lg bg-gradient-to-br from-[#C9A84C]/30 to-[#C9A84C]/10 group-hover:from-[#C9A84C]/40 group-hover:to-[#C9A84C]/20 transition-all">
+                      <Icon size={22} className="text-[#C9A84C]" />
+                    </div>
+                    <h3 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-white to-[#C9A84C] bg-clip-text text-transparent">{stat.value}</h3>
+                  </div>
+                  <p className="text-xs sm:text-sm text-white/70 group-hover:text-white/90 transition-colors">{stat.label}</p>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Slide indicators for content carousel */}
+          <div className="mt-12 flex justify-center gap-2">
+            {heroSlides.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setActiveHeroSlide(idx)}
+                className={`transition-all duration-300 ${
+                  idx === activeHeroSlide
+                    ? 'w-8 h-2 bg-[#C9A84C] rounded-full'
+                    : 'w-2 h-2 bg-white/40 rounded-full hover:bg-white/60'
+                }`}
+                aria-label={`Go to service ${idx + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════ HOW IT WORKS ═══════════════════ */}
+      <section id="how-it-works" className="bg-gradient-to-b from-white to-gray-50 py-16 sm:py-20 md:py-28 px-5 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16 sm:mb-20">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              How It Works
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Get started in just a few minutes and begin your entrepreneurial journey
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {howItWorks.map((item, idx) => {
+              const Icon = item.icon;
+              return (
+                <div key={item.step} className="relative">
+                  {idx < howItWorks.length - 1 && (
+                    <div className="hidden lg:block absolute top-12 left-[60%] w-[40%] h-[2px] bg-gradient-to-r from-[#C9A84C] to-transparent" />
+                  )}
+                  <div className="relative bg-white rounded-2xl border border-gray-200 p-8 hover:shadow-lg hover:border-[#C9A84C]/30 transition-all">
+                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-[#C9A84C]/10 border border-[#C9A84C]/20 mb-5">
+                      <Icon className="text-[#C9A84C]" size={24} />
+                    </div>
+                    <div className="mb-3 text-sm font-bold text-[#C9A84C]">STEP {item.step}</div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
+                    <p className="text-gray-600">{item.desc}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════ FEATURES ═══════════════════ */}
+      <section id="features" className="bg-white py-16 sm:py-20 md:py-28 px-5 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16 sm:mb-20">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Powerful Features for Growth
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Everything you need to build, promote, and grow your business
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature) => {
+              const Icon = feature.icon;
+              return (
+                <div
+                  key={feature.title}
+                  className="bg-white rounded-2xl border border-gray-200 p-8 hover:shadow-xl hover:border-[#C9A84C]/30 transition-all group"
+                >
+                  <div className="w-14 h-14 bg-[#C9A84C]/10 rounded-xl flex items-center justify-center mb-5 group-hover:shadow-md transition-all">
+                    <Icon className="text-[#C9A84C]" size={28} />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
+                  <p className="text-gray-600">{feature.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════ MEMBERSHIP TIERS ═══════════════════ */}
+      <section id="pricing" className="bg-gradient-to-b from-gray-50 to-white py-16 sm:py-20 md:py-28 px-5 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16 sm:mb-20">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Choose Your Membership
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Flexible plans designed for every stage of your business journey
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {membershipTiers.map((plan) => (
+              <div
+                key={plan.tier}
+                className={`relative rounded-2xl border-2 ${plan.color} bg-white overflow-hidden transition-all hover:shadow-2xl ${
+                  plan.recommended ? 'shadow-xl scale-105 md:scale-110' : ''
+                }`}
+              >
+                {plan.recommended && (
+                  <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#C9A84C]/35 via-[#C9A84C] to-[#C9A84C]/35" />
+                )}
+
+                <div className="p-8">
+                  {plan.recommended && (
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C9A84C]/10 border border-[#C9A84C]/20 mb-4">
+                      <BadgeCheck size={14} className="text-[#C9A84C]" />
+                      <span className="text-xs font-semibold text-[#C9A84C]">Most Popular</span>
+                    </div>
+                  )}
+
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.tier}</h3>
+                  <div className="mb-6">
+                    <span className="text-4xl font-bold text-[#C9A84C]">{plan.price}</span>
+                    <span className="text-gray-600 ml-2">{plan.period}</span>
+                  </div>
+
+                  <button className={`w-full py-3 px-4 rounded-xl font-semibold transition-colors mb-8 ${plan.buttonColor}`}>
+                    Get Started
+                  </button>
+
+                  <div className="space-y-4">
+                    {plan.features.map((feature) => (
+                      <div key={feature} className="flex items-start gap-3">
+                        <CheckCircle2 size={20} className="text-[#C9A84C] flex-shrink-0 mt-0.5" />
+                        <span className="text-gray-700">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════ MOBILE APP SECTION ═══════════════════ */}
+      <section
+        id="download-app"
+        className="relative overflow-hidden bg-gradient-to-b from-gray-900 to-gray-950 px-5 py-16 sm:py-20 md:py-28 lg:px-8"
+      >
+        {/* Background blur effects */}
+        <div className="absolute left-0 top-20 h-56 w-56 sm:h-72 sm:w-72 md:h-80 md:w-80 rounded-full bg-[#C9A84C]/15 blur-3xl" />
+        <div className="absolute right-0 bottom-0 h-64 w-64 sm:h-80 sm:w-80 md:h-96 md:w-96 rounded-full bg-[#C9A84C]/10 blur-3xl" />
+
+        <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-8 sm:gap-10 md:gap-12 lg:grid-cols-2">
+          {/* Left Content */}
+          <div>
+            <span className="inline-block px-4 py-2 rounded-full bg-[#C9A84C]/15 border border-[#C9A84C]/30 text-sm font-semibold text-[#C9A84C] mb-6">
+              Download Now
+            </span>
+
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+              Everything you need,
+              <br />
+              <span className="text-[#C9A84C]">right in your pocket.</span>
+            </h2>
+
+            <p className="text-lg sm:text-xl text-gray-300 mb-8 leading-relaxed max-w-md">
+              Access your business catalogue, connect with members, manage your profile, view analytics, and seize opportunities anytime, anywhere with our mobile app.
+            </p>
+
+            {/* Download Buttons */}
+            <div className="flex flex-col gap-4 w-full">
+              {/* App Store Buttons Row */}
+              <div className="flex gap-4 w-full">
+                <a
+                  href="https://play.google.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 flex items-center justify-center gap-3 px-5 py-3 sm:px-6 sm:py-4 rounded-xl border border-white/20 bg-white/10 backdrop-blur text-white font-semibold transition hover:bg-white/20 hover:border-[#C9A84C]/50"
+                >
+                  <svg className="w-6 h-6 sm:w-7 sm:h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M9 7h6M9 11h6M9 15h6" />
+                  </svg>
+                  <div className="text-left">
+                    <p className="text-xs opacity-75">Get it on</p>
+                    <p className="text-sm sm:text-base font-bold">Google Play</p>
+                  </div>
+                </a>
+                <a
+                  href="https://apps.apple.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 flex items-center justify-center gap-3 px-5 py-3 sm:px-6 sm:py-4 rounded-xl border border-white/20 bg-white/10 backdrop-blur text-white font-semibold transition hover:bg-white/20 hover:border-[#C9A84C]/50"
+                >
+                  <svg className="w-6 h-6 sm:w-7 sm:h-7" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.05 13.5c-.91 2.92-3.44 5.23-6.55 5.23-3.83 0-6.94-3.11-6.94-6.94s3.11-6.94 6.94-6.94c1.64 0 3.15.57 4.35 1.52l2.17-2.17C15.44 2.18 13.56 1 11.5 1 5.04 1 1 5.04 1 11.5s4.04 10.5 10.5 10.5c5.05 0 9.35-3.72 10.16-8.5h-7.61z" />
+                  </svg>
+                  <div className="text-left">
+                    <p className="text-xs opacity-75">Download on the</p>
+                    <p className="text-sm sm:text-base font-bold">App Store</p>
+                  </div>
+                </a>
+              </div>
+
+              {/* Direct Download Button - Full Width */}
+              <a
+                href="#"
+                download
+                className="w-full flex items-center justify-center gap-2 sm:gap-3 px-6 py-3 sm:px-7 sm:py-4 rounded-xl bg-[#C9A84C] text-gray-900 font-semibold shadow-lg shadow-[#C9A84C]/25 transition hover:bg-[#B8962E] hover:shadow-xl hover:shadow-[#C9A84C]/35"
+              >
+                Direct Download APK
+                <ArrowRight size={20} />
+              </a>
+            </div>
+          </div>
+
+          {/* Right - Professional Phone Mockup */}
+          <div className="relative flex justify-center lg:justify-end">
+            {/* Glow effect behind phone */}
+            <div className="absolute top-10 h-48 w-48 sm:h-60 sm:w-60 md:h-72 md:w-72 rounded-full bg-[#C9A84C]/20 blur-3xl -z-10" />
+
+            {/* Phone mockup container */}
+            <div className="relative">
+              {/* Outer phone body - realistic frame */}
+              <div className="relative h-[480px] w-[240px] sm:h-[600px] sm:w-[300px] md:h-[680px] md:w-[340px] rounded-[2.5rem] sm:rounded-[3rem] md:rounded-[3.5rem] bg-gradient-to-br from-gray-600 via-gray-800 to-black p-3 sm:p-3.5 md:p-4 shadow-2xl shadow-black/80">
+                {/* Phone bezel/frame inner */}
+                <div className="relative h-full w-full overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] md:rounded-[3rem] bg-black border border-gray-900">
+                  {/* Notch */}
+                  <div className="absolute left-1/2 top-0 z-30 h-6 sm:h-7 md:h-8 w-28 sm:w-36 md:w-44 -translate-x-1/2 rounded-b-3xl bg-black" />
+
+                  {/* Screen Content */}
+                  <div className="relative h-full w-full overflow-hidden bg-gray-950">
+                    {/* App Display Image */}
+                    <img
+                      src="https://images.unsplash.com/photo-1512941691920-25bda36dc643?auto=format&fit=crop&w=600&h=1200&q=90"
+                      alt="Community Hub App"
+                      className="h-full w-full object-cover"
+                    />
+
+                    {/* Overlay gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+
+                    {/* Screen shine effect */}
+                    <div className="absolute inset-0 rounded-[2rem] sm:rounded-[2.5rem] md:rounded-[3rem] bg-gradient-to-br from-white/15 via-transparent to-transparent pointer-events-none" />
+                  </div>
+
+                  {/* Home indicator */}
+                  <div className="absolute bottom-2 sm:bottom-2.5 md:bottom-3 left-1/2 z-30 h-1 w-24 sm:w-32 md:w-40 -translate-x-1/2 rounded-full bg-white/30" />
+                </div>
+
+                {/* Physical phone buttons - side details */}
+                <div className="absolute left-0 top-40 z-20 h-12 w-1.5 rounded-r-lg bg-gray-500/70" />
+                <div className="absolute right-0 top-56 sm:top-72 md:top-80 z-20 h-20 w-1.5 rounded-l-lg bg-gray-500/70" />
+                <div className="absolute right-0 top-80 sm:top-96 md:top-[28rem] z-20 h-20 w-1.5 rounded-l-lg bg-gray-500/70" />
+              </div>
+
+              {/* Floating stat card - Left side */}
+              <div className="absolute -left-12 sm:-left-16 md:-left-20 top-1/4 sm:top-1/3 z-20 rounded-2xl border border-[#C9A84C]/50 bg-gradient-to-br from-gray-700/95 to-gray-800/95 p-4 sm:p-6 shadow-2xl backdrop-blur-md">
+                <p className="text-gray-300 text-xs font-semibold uppercase tracking-wide">Active Members</p>
+                <p className="mt-3 text-[#C9A84C] font-bold text-2xl sm:text-3xl">10K+</p>
+                <p className="text-gray-400 text-xs mt-1">Growing daily</p>
+              </div>
+
+              {/* Floating stat card - Bottom right */}
+              <div className="absolute -right-12 sm:-right-16 md:-right-20 bottom-1/4 sm:bottom-1/3 z-20 rounded-2xl border border-[#C9A84C]/50 bg-gradient-to-br from-gray-700/95 to-gray-800/95 p-4 sm:p-6 shadow-2xl backdrop-blur-md">
+                <p className="text-gray-300 text-xs font-semibold uppercase tracking-wide">Listings</p>
+                <p className="mt-3 text-[#C9A84C] font-bold text-2xl sm:text-3xl">50K+</p>
+                <p className="text-gray-400 text-xs mt-1">Active now</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════ TESTIMONIALS ═══════════════════ */}
+      <section id="testimonials" className="bg-white py-16 sm:py-20 md:py-28 px-5 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16 sm:mb-20">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Loved by Our Members
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              See how entrepreneurs and business owners are thriving
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, idx) => (
+              <div
+                key={testimonial.name}
+                className="bg-white rounded-2xl border border-gray-200 p-8 hover:shadow-lg hover:border-[#C9A84C]/30 transition-all"
+              >
+                <div className="flex gap-1 mb-4">
+                  {Array.from({ length: testimonial.rating }).map((_, i) => (
+                    <Star key={i} size={18} className="fill-[#C9A84C] text-[#C9A84C]" />
+                  ))}
+                </div>
+
+                <p className="text-gray-700 mb-6 italic">"{testimonial.text}"</p>
+
+                <div className="flex items-center gap-4">
+                  <img
+                    src={testimonial.image}
+                    alt={testimonial.name}
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                  <div>
+                    <h4 className="font-bold text-gray-900">{testimonial.name}</h4>
+                    <p className="text-sm text-gray-600">{testimonial.role}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════ STATS ═══════════════════ */}
+      <section id="stats" className="bg-gradient-to-r from-[#C9A84C]/5 to-transparent py-16 sm:py-20 md:py-28 px-5 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {stats.map((stat) => {
+              const Icon = stat.icon;
+              return (
+                <div key={stat.label} className="text-center">
+                  <div className="flex justify-center mb-4">
+                    <div className="flex items-center justify-center w-16 h-16 rounded-full bg-[#C9A84C]/10 border border-[#C9A84C]/20">
+                      <Icon className="text-[#C9A84C]" size={32} />
+                    </div>
+                  </div>
+                  <h3 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">{stat.value}</h3>
+                  <p className="text-gray-600">{stat.label}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════ CTA SECTION ═══════════════════ */}
+      <section className="bg-white py-16 sm:py-20 md:py-28 px-5 lg:px-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            Ready to Join the Community?
+          </h2>
+          <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+            Start building your network and growing your business today. Join thousands of successful entrepreneurs on our platform.
           </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/auth/register"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#C9A84C] text-white font-semibold rounded-xl hover:bg-[#B8962E] transition-colors shadow-md shadow-[#C9A84C]/25"
+            >
+              Create Free Account <ArrowRight size={20} />
+            </Link>
+            <a
+              href="#features"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-gray-200 text-gray-900 font-semibold rounded-xl hover:bg-gray-50 transition-colors"
+            >
+              Explore Features
+            </a>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* ═══════════════════ FOOTER ═══════════════════ */}
+      <footer className="bg-gray-900 text-gray-300 py-12 sm:py-14 md:py-16 px-5 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+            <div>
+              <div className="flex items-center gap-2.5 mb-4">
+                <Image src="/icon.png" alt="Logo" width={40} height={40} className="h-9 w-9 sm:h-10 sm:w-10" />
+                <span className="font-bold text-white text-lg">Community</span>
+              </div>
+              <p className="text-sm text-gray-400 leading-relaxed">
+                Empowering entrepreneurs and business owners through community, connection, and opportunity.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-bold text-white mb-4">Company</h3>
+              <ul className="space-y-2.5">
+                {[['About Us', '/about'], ['Blog', '/'], ['Careers', '/about'], ['Contact', '/support']].map(([label, href]) => (
+                  <li key={label}>
+                    <Link href={href} className="text-sm text-gray-400 hover:text-[#C9A84C] transition-colors">
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-bold text-white mb-4">Resources</h3>
+              <ul className="space-y-2.5">
+                {[['Help Center', '/support'], ['Documentation', '/'], ['Terms of Service', '/terms'], ['Privacy Policy', '/privacy']].map(([label, href]) => (
+                  <li key={label}>
+                    <Link href={href} className="text-sm text-gray-400 hover:text-[#C9A84C] transition-colors">
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-bold text-white mb-4">Connect</h3>
+              <div className="flex gap-3">
+                <a href="#" className="flex items-center justify-center w-10 h-10 rounded-lg bg-gray-800 hover:bg-[#C9A84C]/20 transition-colors">
+                  <Linkedin size={20} />
+                </a>
+                <a href="mailto:support@community.com" className="flex items-center justify-center w-10 h-10 rounded-lg bg-gray-800 hover:bg-[#C9A84C]/20 transition-colors">
+                  <Mail size={20} />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-800 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p className="text-sm text-gray-500">© 2026 Community Platform. All rights reserved.</p>
+            <p className="text-sm text-gray-500">
+              Made with <span className="text-[#C9A84C]">♥</span> for entrepreneurs
+            </p>
+          </div>
         </div>
-      </main>
-    </div>
+      </footer>
+    </main>
   );
 }

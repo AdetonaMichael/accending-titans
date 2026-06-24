@@ -1,0 +1,79 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Accending Titans",
+  "url": " https://accending-titans.vercel.app",
+  "logo": " https://accending-titans.vercel.app/icon.png",
+  "description": "Accending Titans is a modern digital finance platform that empowers individuals and businesses with secure USD accounts, virtual dollar cards, seamless money transfers, and everyday payment solutions.",
+  "sameAs": [
+    "https://twitter.com/Accending Titans",
+    "https://facebook.com/Accending Titans",
+    "https://linkedin.com/company/Accending Titans"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+234-xxx-xxxx",
+    "contactType": "Customer Support",
+    "email": "support@Accending https://accending-titans.vercel.app"
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "NG"
+  },
+  "potentialAction": {
+    "@type": "TradeAction",
+    "target": " https://accending-titans.vercel.app/auth/register"
+  },
+  "serviceArea": {
+    "@type": "Country",
+    "name": "Nigeria"
+  },
+  "offers": [
+    {
+      "@type": "Service",
+      "name": "USD Accounts",
+      "description": "Receive, hold, and manage US Dollar payments conveniently from clients, businesses, and international platforms.",
+      "url": " https://accending-titans.vercel.app/services/usd-accounts"
+    },
+    {
+      "@type": "Service",
+      "name": "Virtual Dollar Cards",
+      "description": "Secure virtual USD cards for international online payments, subscriptions, advertising, e-commerce, and global transactions.",
+      "url": " https://accending-titans.vercel.app/services/virtual-dollar-cards"
+    },
+    {
+      "@type": "Service",
+      "name": "Virtual Top-Up Services",
+      "description": "Buy airtime, mobile data, electricity tokens, TV subscriptions, examination pins, and more at competitive rates.",
+      "url": " https://accending-titans.vercel.app/services/virtual-topup"
+    },
+    {
+      "@type": "Service",
+      "name": "Airtime to Cash Conversion",
+      "description": "Instantly convert excess airtime into cash directly within the platform.",
+      "url": " https://accending-titans.vercel.app/services/airtime-to-cash"
+    },
+    {
+      "@type": "Service",
+      "name": "Wallet Transfers",
+      "description": "Fast and secure transfers between Accending Titans users.",
+      "url": " https://accending-titans.vercel.app/services/money-transfer"
+    },
+    {
+      "@type": "Service",
+      "name": "Bank Transfers",
+      "description": "Send funds seamlessly to local and external bank accounts.",
+      "url": " https://accending-titans.vercel.app/services/money-transfer"
+    }
+  ],
+  "knowsAbout": [
+    "Digital Finance",
+    "Online Payments",
+    "International Transfers",
+    "Virtual Cards",
+    "USD Banking",
+    "Bill Payments",
+    "VTU Services",
+    "Airtime Conversion"
+  ]
+}
