@@ -1,6 +1,6 @@
 /**
  * useTransfer Hook
- * Handles Accending Titans-to-Accending Titans transfer logic, validation, and state management
+ * Handles Ascending Titans-to-Ascending Titans transfer logic, validation, and state management
  */
 
 import { useCallback, useState } from 'react';
@@ -8,8 +8,8 @@ import { useAuthStore } from '@/store/auth.store';
 import { useUIStore } from '@/store/ui.store';
 import { transferService } from '@/services/transfer.service';
 import {
-  AccendingTitansTransferFormData,
-  AccendingTitansTransferResponse,
+  AscendingTitansTransferFormData,
+  AscendingTitansTransferResponse,
   RecipientUser,
   Recipient,
   IdentifierType,
@@ -17,15 +17,15 @@ import {
 } from '@/types/transfer.types';
 import {
   normalizePhoneNumber,
-  validateAccendingTitansTransferForm,
+  validateAscendingTitansTransferForm,
   validateIdentifier,
-  validateAccendingTitansAmount,
+  validateAscendingTitansAmount,
   extractErrorMessage,
   extractFieldErrors,
 } from '@/utils/transfer.utils';
 
 interface UseTransferOptions {
-  onSuccess?: (response: AccendingTitansTransferResponse) => void;
+  onSuccess?: (response: AscendingTitansTransferResponse) => void;
   onError?: (error: any) => void;
 }
 
@@ -34,7 +34,7 @@ export const useTransfer = (options?: UseTransferOptions) => {
   const { addToast, setIsLoading } = useUIStore();
 
   // State management
-  const [formData, setFormData] = useState<AccendingTitansTransferFormData>({
+  const [formData, setFormData] = useState<AscendingTitansTransferFormData>({
     recipientIdentifier: '',
     identifierType: IdentifierType.PHONE,
     amount: 0,
@@ -52,7 +52,7 @@ export const useTransfer = (options?: UseTransferOptions) => {
    * Update form field
    */
   const updateField = useCallback(
-    (field: keyof AccendingTitansTransferFormData, value: any) => {
+    (field: keyof AscendingTitansTransferFormData, value: any) => {
       setFormData((prev) => ({
         ...prev,
         [field]: value,
@@ -131,7 +131,7 @@ export const useTransfer = (options?: UseTransferOptions) => {
   const loadRecentRecipients = useCallback(async (limit: number = 5) => {
     setIsLoadingRecipients(true);
     try {
-      const recipients = await transferService.getRecentAccendingTitansRecipients(limit);
+      const recipients = await transferService.getRecentAscendingTitansRecipients(limit);
       if (recipients) {
         setRecentRecipients(recipients);
       }
@@ -185,7 +185,7 @@ export const useTransfer = (options?: UseTransferOptions) => {
       }
 
       // Validate amount and balance only
-      const amountValidation = validateAccendingTitansAmount(formData.amount);
+      const amountValidation = validateAscendingTitansAmount(formData.amount);
       if (!amountValidation.valid) {
         setValidationErrors({ amount: amountValidation.error || 'Invalid amount' });
         return false;
@@ -209,7 +209,7 @@ export const useTransfer = (options?: UseTransferOptions) => {
    * Submit transfer request
    */
   const submitTransfer = useCallback(
-    async (pin: string): Promise<AccendingTitansTransferResponse | null> => {
+    async (pin: string): Promise<AscendingTitansTransferResponse | null> => {
       if (!user) {
         addToast({ type: 'error', message: 'User not authenticated' });
         return null;
@@ -240,7 +240,7 @@ export const useTransfer = (options?: UseTransferOptions) => {
           payload.description = formData.description;
         }
 
-        const response = await transferService.initiateAccendingTitansTransfer(payload);
+        const response = await transferService.initiateAscendingTitansTransfer(payload);
 
         if (response?.success) {
           addToast({
@@ -304,7 +304,7 @@ export const useTransfer = (options?: UseTransferOptions) => {
   /**
    * Restore form data from sessionStorage (used on review pages)
    */
-  const restoreFormData = useCallback((data: AccendingTitansTransferFormData, recipient?: RecipientUser) => {
+  const restoreFormData = useCallback((data: AscendingTitansTransferFormData, recipient?: RecipientUser) => {
     setFormData(data);
     if (recipient) {
       setRecipientDetails(recipient);

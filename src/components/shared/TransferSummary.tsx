@@ -40,7 +40,7 @@ export const TransferSummary = ({
       <div className="rounded-2xl bg-gray-50 px-4 py-3">
         <div className="space-y-4">
           <div className="flex items-center gap-4">
-            {type === TransferType.AccendingTitans ? (
+            {type === TransferType.AscendingTitans ? (
               <>
                 {recipient && 'avatar' in recipient && recipient.avatar ? (
                   <img
@@ -83,7 +83,7 @@ export const TransferSummary = ({
             <div className="flex items-center justify-between">
               <p className="text-xs font-bold uppercase tracking-[0.16em] text-gray-500">Account Name</p>
               <p className="font-medium text-gray-900">
-                {type === TransferType.AccendingTitans
+                {type === TransferType.AscendingTitans
                   ? recipient?.name
                   : (accountNumber ? 'Verified Account' : 'Not Verified')}
               </p>

@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = ' https://accending-titans.vercel.app';
+  const baseUrl = ' https://Ascending-titans.vercel.app';
   const lastModified = new Date();
 
   // Main pages with highest priority

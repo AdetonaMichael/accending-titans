@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import CampaignAnalytics from '@/components/admin/promotional-emails/CampaignAnalytics';
 
 export const metadata: Metadata = {
-  title: 'Campaign Analytics - Accending Titans Admin',
+  title: 'Campaign Analytics - Ascending Titans Admin',
   description: 'View campaign analytics and delivery statistics',
 };
 

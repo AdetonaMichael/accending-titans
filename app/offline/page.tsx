@@ -161,7 +161,7 @@ function OfflineContent() {
         {/* Footer */}
         <p className="text-center text-sm text-slate-500 mt-6">
           Still having trouble?{' '}
-          <a href="mailto:support@Accending Titans.com" className="text-red-600 font-semibold hover:underline">
+          <a href="mailto:support@Ascending Titans.com" className="text-red-600 font-semibold hover:underline">
             Contact support
           </a>
         </p>

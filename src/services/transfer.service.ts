@@ -1,6 +1,6 @@
 /**
  * Transfer Service
- * Handles all transfer-related API calls: Accending Titans transfers, bank transfers, and recipient management
+ * Handles all transfer-related API calls: Ascending Titans transfers, bank transfers, and recipient management
  */
 
 import { apiClient } from './api-client';
@@ -9,8 +9,8 @@ import {
   BankListResponse,
   BankTransferRequest,
   BankTransferResponse,
-  AccendingTitansTransferRequest,
-  AccendingTitansTransferResponse,
+  AscendingTitansTransferRequest,
+  AscendingTitansTransferResponse,
   VerifyRecipientRequest,
   VerifyRecipientResponse,
   RecipientsListResponse,
@@ -38,7 +38,7 @@ class TransferService {
   }
 
   /**
-   * Verify recipient exists (Accending Titans user)
+   * Verify recipient exists (Ascending Titans user)
    */
   async verifyRecipient(payload: VerifyRecipientRequest): Promise<RecipientUser | null> {
     try {
@@ -55,12 +55,12 @@ class TransferService {
   }
 
   /**
-   * Get recent Accending Titans transfer recipients (quick selection)
+   * Get recent Ascending Titans transfer recipients (quick selection)
    * limit: max 5 for quick list, can be higher for full list
    */
-  async getRecentAccendingTitansRecipients(limit: number = 5): Promise<Recipient[] | null> {
+  async getRecentAscendingTitansRecipients(limit: number = 5): Promise<Recipient[] | null> {
     try {
-      const response = (await apiClient.get('/wallet/transfer/recipients/Accending Titans', {
+      const response = (await apiClient.get('/wallet/transfer/recipients/Ascending Titans', {
         params: { limit, sort: 'recent' },
       })) as any;
       return response?.data?.recipients || null;
@@ -72,7 +72,7 @@ class TransferService {
 
   /**
    * Get all transfer recipients with pagination
-   * bank_type: 'Accending Titans', 'external_bank', or 'all'
+   * bank_type: 'Ascending Titans', 'external_bank', or 'all'
    * sort: 'recent', 'alphabetical', or 'frequency'
    */
   async getAllRecipients(
@@ -93,18 +93,18 @@ class TransferService {
   }
 
   /**
-   * Initiate Accending Titans-to-Accending Titans transfer
+   * Initiate Ascending Titans-to-Ascending Titans transfer
    * IMPORTANT: Phone number must be normalized to 10 digits before calling
    */
-  async initiateAccendingTitansTransfer(
-    payload: AccendingTitansTransferRequest
-  ): Promise<AccendingTitansTransferResponse | null> {
+  async initiateAscendingTitansTransfer(
+    payload: AscendingTitansTransferRequest
+  ): Promise<AscendingTitansTransferResponse | null> {
     try {
       const response = (await apiClient.post('/wallet/transfer/identifier', payload)) as any;
       // Response is already the full response body with success, reference, amount, etc.
       return response || null;
     } catch (error) {
-      console.error('Error initiating Accending Titans transfer:', error);
+      console.error('Error initiating Ascending Titans transfer:', error);
       throw error; // Re-throw for component error handling
     }
   }

@@ -68,10 +68,10 @@ export function validatePIN(pin: string): boolean {
 }
 
 /**
- * Validate amount for Accending Titans transfer
+ * Validate amount for Ascending Titans transfer
  * Min: 50 NGN, Max: 100,000 NGN
  */
-export function validateAccendingTitansAmount(amount: number): { valid: boolean; error?: string } {
+export function validateAscendingTitansAmount(amount: number): { valid: boolean; error?: string } {
   if (!amount || amount <= 0) {
     return { valid: false, error: 'Amount must be greater than 0' };
   }
@@ -205,9 +205,9 @@ export function formatPINLockTime(seconds: number): string {
 }
 
 /**
- * Validate complete Accending Titans transfer form data
+ * Validate complete Ascending Titans transfer form data
  */
-export function validateAccendingTitansTransferForm(
+export function validateAscendingTitansTransferForm(
   identifier: string,
   identifierType: IdentifierType,
   amount: number,
@@ -223,7 +223,7 @@ export function validateAccendingTitansTransferForm(
   }
 
   // Validate amount
-  const amountValidation = validateAccendingTitansAmount(amount);
+  const amountValidation = validateAscendingTitansAmount(amount);
   if (!amountValidation.valid) {
     errors.amount = amountValidation.error || 'Invalid amount';
   }

@@ -148,7 +148,7 @@ function OfflineContent() {
         {/* Help Text */}
         <p className="text-center text-xs text-gray-500 mt-6">
           If the problem persists, please{' '}
-          <a href="mailto:support@Accending Titans.com" className="text-[#d71927] font-semibold hover:underline">
+          <a href="mailto:support@Ascending Titans.com" className="text-[#d71927] font-semibold hover:underline">
             contact support
           </a>
         </p>

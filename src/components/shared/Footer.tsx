@@ -14,7 +14,7 @@ export function Footer() {
           {/* Brand */}
           <div className="md:col-span-1">
             <div className="mb-4">
-              <h3 className="text-lg font-bold text-gray-900">Accending Titans</h3>
+              <h3 className="text-lg font-bold text-gray-900">Ascending Titans</h3>
               <p className="text-sm text-gray-600">Connect, Showcase, and Grow</p>
             </div>
             <div className="flex gap-3">
@@ -148,7 +148,7 @@ export function Footer() {
           <div className="grid gap-4 md:grid-cols-2 mb-6">
             <div>
               <p className="text-sm text-gray-600">
-                © {currentYear} Accending Titans Community. All rights reserved.
+                © {currentYear} Ascending Titans Community. All rights reserved.
               </p>
             </div>
             <div className="flex gap-6 justify-end">

@@ -1,13 +1,13 @@
 /**
  * Transfer Types
- * Comprehensive type definitions for Accending Titans-to-Accending Titans and Bank Transfers
+ * Comprehensive type definitions for Ascending Titans-to-Ascending Titans and Bank Transfers
  */
 
 /**
  * Transfer Types Enum
  */
 export enum TransferType {
-  AccendingTitans = 'accending_titans',
+  AscendingTitans = 'Ascending_titans',
   BANK = 'external_bank',
 }
 
@@ -106,7 +106,7 @@ export interface RecipientsListResponse {
   count?: number;
   summary?: {
     total_recipients: number;
-    accending_titans_recipients: number;
+    Ascending_titans_recipients: number;
     external_bank_recipients: number;
     total_transfers_made: number;
     total_amount_transferred: number;
@@ -114,9 +114,9 @@ export interface RecipientsListResponse {
 }
 
 /**
- * Accending Titans Transfer types
+ * Ascending Titans Transfer types
  */
-export interface AccendingTitansTransferRequest {
+export interface AscendingTitansTransferRequest {
   identifier: string; // Normalized phone (10 digits) or email
   identifier_type: IdentifierType;
   amount: number; // In NGN
@@ -124,7 +124,7 @@ export interface AccendingTitansTransferRequest {
   pin: string; // 4-digit PIN
 }
 
-export interface AccendingTitansTransferResponse {
+export interface AscendingTitansTransferResponse {
   success: boolean;
   message?: string;
   reference: string;
@@ -178,7 +178,7 @@ export interface PINVerificationResponse {
 /**
  * Form data types for session storage
  */
-export interface AccendingTitansTransferFormData {
+export interface AscendingTitansTransferFormData {
   recipientIdentifier: string;
   identifierType: IdentifierType;
   amount: number;

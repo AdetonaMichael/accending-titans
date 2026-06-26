@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { LandingTopbar } from '@/components/LandingTopbar';
 
 export const metadata: Metadata = {
-  title: 'VTU Services | Airtime, Data, TV & Bills - Accending Titans',
-  description: 'Fast and reliable VTU services on Accending Titans. Buy airtime, data bundles, TV subscriptions, and pay bills with ease. Instant delivery and best rates.',
+  title: 'VTU Services | Airtime, Data, TV & Bills - Ascending Titans',
+  description: 'Fast and reliable VTU services on Ascending Titans. Buy airtime, data bundles, TV subscriptions, and pay bills with ease. Instant delivery and best rates.',
   keywords: 'VTU, airtime, data bundles, TV subscription, bills payment, MTN, Airtel, Glo, 9mobile, DStv, GOtv',
 };
 
@@ -75,7 +75,7 @@ export default function VtuPage() {
             Digital Payments Made <span className="text-[#C9A84C]">Easy</span>
           </h1>
           <p className="text-lg text-gray-600 leading-relaxed max-w-2xl mb-8">
-            Top up airtime, buy data bundles, subscribe to TV, and pay bills - all in one place. With Accending Titans, your payments are quick, secure, and affordable.
+            Top up airtime, buy data bundles, subscribe to TV, and pay bills - all in one place. With Ascending Titans, your payments are quick, secure, and affordable.
           </p>
 
           <Link
@@ -133,7 +133,7 @@ export default function VtuPage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              Why Choose Accending <span className="text-[#C9A84C]">Titans?</span>
+              Why Choose Ascending <span className="text-[#C9A84C]">Titans?</span>
             </h2>
             <p className="text-lg text-gray-600">
               The best digital payment platform for your transactions

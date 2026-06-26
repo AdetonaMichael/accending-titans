@@ -241,7 +241,7 @@ export default function AboutPage() {
               {
                 name: 'Tunde Akintola',
                 title: 'Head of Compliance',
-                bio: 'Regulatory specialist ensuring Accending Titans meets all compliance standards.',
+                bio: 'Regulatory specialist ensuring Ascending Titans meets all compliance standards.',
               },
             ].map((member, idx) => (
               <div
@@ -269,13 +269,13 @@ export default function AboutPage() {
             {[
               {
                 year: '2023 Q1',
-                title: 'Accending Titans Founded',
+                title: 'Ascending Titans Founded',
                 desc: 'Three passionate founders come together with a vision to revolutionize African fintech.',
               },
               {
                 year: '2023 Q3',
                 title: 'MVP Launch',
-                desc: 'Accending Titans officially launches with airtime purchase and data bundles.',
+                desc: 'Ascending Titans officially launches with airtime purchase and data bundles.',
               },
               {
                 year: '2024 Q1',
@@ -373,7 +373,7 @@ export default function AboutPage() {
                   love to hear from you.
                 </p>
                 <Link
-                  href="mailto:careers@Accending Titans.com"
+                  href="mailto:careers@Ascending Titans.com"
                   className="inline-flex items-center gap-3 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-[#9b111e] transition hover:bg-white/90"
                 >
                   Explore Opportunities

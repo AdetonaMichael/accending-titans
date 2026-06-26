@@ -315,7 +315,7 @@ function RegisterPageContent() {
                       <input
                         {...register('referral_code')}
                         type="text"
-                        placeholder="Accending Titans-XXXXX"
+                        placeholder="Ascending Titans-XXXXX"
                         className="w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-9 pr-3.5 uppercase tracking-wider text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-[#C9A84C] focus:ring-2 focus:ring-[#C9A84C]/12 transition-colors"
                       />
                     </FieldWrapper>

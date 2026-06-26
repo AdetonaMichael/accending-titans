@@ -5,8 +5,8 @@ import { Footer } from '@/components/shared/Footer';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'TV Subscription Online | DStv, GOtv, Startimes - Accending Titans',
-  description: 'Renew or subscribe to DStv, GOtv, and Startimes through Accending Titans. Instant activation and flexible payment options.',
+  title: 'TV Subscription Online | DStv, GOtv, Startimes - Ascending Titans',
+  description: 'Renew or subscribe to DStv, GOtv, and Startimes through Ascending Titans. Instant activation and flexible payment options.',
   keywords: 'TV subscription, DStv, GOtv, Startimes, cable TV, instant activation',
 };
 
@@ -91,7 +91,7 @@ export default function TvPage() {
       <section className="bg-gray-50 py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-gray-900">Why Subscribe with Accending Titans?</h2>
+            <h2 className="mb-4 text-3xl font-bold text-gray-900">Why Subscribe with Ascending Titans?</h2>
           </div>
 
           <div className="grid gap-8 md:grid-cols-3">

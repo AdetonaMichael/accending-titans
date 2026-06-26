@@ -450,7 +450,7 @@ export default function RewardsPage() {
               </p>
               <p className="mt-2 text-sm leading-6 text-[#667085]">
                 Your reward balance and redemption activity are protected by
-                Accending Titans account security.
+                Ascending Titans account security.
               </p>
             </div>
           </Card>

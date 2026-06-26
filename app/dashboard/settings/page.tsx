@@ -190,7 +190,7 @@ export default function SettingsPage() {
                 </p>
                 <p className="mt-2 text-sm leading-6 text-[#667085]">
                   Complete the required information to unlock higher account
-                  limits and additional Accending Titans features.
+                  limits and additional Ascending Titans features.
                 </p>
               </div>
             )}
@@ -259,7 +259,7 @@ export default function SettingsPage() {
                       Account Tier Upgrade
                     </h2>
                     <p className="mt-2 max-w-2xl text-sm leading-7 text-[#667085]">
-                      Upgrade your Accending Titans account by completing verification
+                      Upgrade your Ascending Titans account by completing verification
                       requirements. Higher tiers unlock stronger limits and
                       broader financial access.
                     </p>
@@ -351,7 +351,7 @@ export default function SettingsPage() {
                     </h2>
                     <p className="mt-2 max-w-2xl text-sm leading-7 text-[#667085]">
                       Manage transaction authorization, PIN protection, and other
-                      important security controls for your Accending Titans wallet.
+                      important security controls for your Ascending Titans wallet.
                     </p>
                   </div>
 
@@ -387,7 +387,7 @@ export default function SettingsPage() {
                         Account Protection
                       </h3>
                       <p className="mt-2 text-sm leading-6 text-[#667085]">
-                        Accending Titans uses authorization tokens, PIN verification, and
+                        Ascending Titans uses authorization tokens, PIN verification, and
                         secure transaction flows to protect your account.
                       </p>
 

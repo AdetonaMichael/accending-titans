@@ -110,7 +110,7 @@ function ErrorContent({
         <p className="text-center text-xs text-slate-400 mt-8">
           Experiencing persistent issues?{' '}
           <a 
-            href="mailto:support@Accending Titans.com" 
+            href="mailto:support@Ascending Titans.com" 
             className="text-red-400 font-semibold hover:text-red-300 transition-colors"
           >
             Contact Support
