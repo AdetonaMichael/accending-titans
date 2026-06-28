@@ -204,7 +204,7 @@ export default function LandingPage() {
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveHeroSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 6000); // Change slide every 6 seconds
+    }, 6000);
     return () => clearInterval(interval);
   }, []);
 
@@ -213,131 +213,84 @@ export default function LandingPage() {
       <LandingTopbar />
 
       {/* ═══════════════════ HERO SECTION ═══════════════════ */}
-      <section id="hero" className="relative overflow-hidden pt-16 sm:pt-20 md:pt-24 min-h-screen flex items-center">
-        {/* Static premium background */}
+      <section id="hero" className="relative overflow-hidden pt-14 sm:pt-16 md:pt-20 min-h-screen flex items-center">
+        {/* Background */}
         <div className="absolute inset-0 z-0">
-          {/* Background image */}
           <img
             src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1920&q=90"
             alt="Community background"
             className="w-full h-full object-cover brightness-110 contrast-105"
           />
-          
-          {/* Premium gradient overlays */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/50 to-black/30" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/60" />
-          
-          {/* Gold accent radial gradient - premium feel */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/50 to-black/30" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/65" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,rgba(201,168,76,0.15),transparent_60%)]" />
-          
-          {/* Animated gold accent on right */}
-          <div className="absolute inset-y-0 right-0 w-96 bg-gradient-to-l from-[#C9A84C]/8 via-[#C9A84C]/3 to-transparent blur-3xl" />
-          
-          {/* Left vignette */}
-          <div className="absolute inset-y-0 left-0 w-48 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
-          
-          {/* Right vignette */}
-          <div className="absolute inset-y-0 right-0 w-48 bg-gradient-to-l from-black/70 via-black/40 to-transparent" />
+          <div className="absolute inset-y-0 right-0 w-72 bg-gradient-to-l from-[#C9A84C]/8 via-[#C9A84C]/3 to-transparent blur-3xl" />
+          <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
+          <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-black/70 via-black/40 to-transparent" />
         </div>
 
         {/* Content */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-5 py-12 sm:py-16 md:py-28 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
-            {/* Left content with animations */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14 md:py-20 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10 items-center">
+            {/* Left content */}
             <div>
-              {/* Service badge with animation */}
-              {/* <div className="mb-6 inline-block min-h-[44px]">
-                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#C9A84C]/20 to-[#C9A84C]/10 border border-[#C9A84C]/40 text-sm font-semibold text-[#C9A84C] backdrop-blur-sm transition-all duration-500">
-                  <Sparkles size={16} />
-                  {heroSlides[activeHeroSlide].service}
-                </span>
-              </div> */}
-
-              {/* Main headline with smooth transition */}
-              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-7xl font-bold leading-tight text-white mb-6 transition-all duration-700 ease-in-out min-h-[120px]">
+              {/* Main headline */}
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-white mb-4 sm:mb-5 transition-all duration-700 ease-in-out min-h-[80px] sm:min-h-[100px] md:min-h-[130px]">
                 {heroSlides[activeHeroSlide].headline}
-                <span className="block text-[#C9A84C] mt-3">with Ascending Titans</span>
+                <span className="block text-[#C9A84C] mt-2">with Accending Titans</span>
               </h1>
 
-              {/* Subheading with description of service */}
-              <p className="text-lg sm:text-xl text-white/85 mb-8 leading-relaxed max-w-xl transition-all duration-700 ease-in-out font-light min-h-[80px]">
+              {/* Subheading */}
+              <p className="text-sm sm:text-base md:text-lg text-white/85 mb-6 sm:mb-8 leading-relaxed max-w-lg transition-all duration-700 ease-in-out font-light min-h-[48px] sm:min-h-[60px] md:min-h-[72px]">
                 {heroSlides[activeHeroSlide].subtext}
               </p>
 
               {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 mb-12">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8 sm:mb-10">
                 <Link
                   href="/auth/register"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-[#C9A84C] to-[#B8962E] text-gray-900 font-semibold rounded-xl hover:shadow-2xl hover:shadow-[#C9A84C]/40 transition-all duration-300 transform hover:scale-105 backdrop-blur-sm border border-[#C9A84C]/50"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 sm:px-7 sm:py-3.5 bg-gradient-to-r from-[#C9A84C] to-[#B8962E] text-gray-900 text-sm sm:text-base font-semibold rounded-xl hover:shadow-2xl hover:shadow-[#C9A84C]/40 transition-all duration-300 transform hover:scale-105"
                 >
-                  Get Started Free <ArrowRight size={20} />
+                  Get Started Free <ArrowRight size={18} />
                 </Link>
                 <a
                   href="#features"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-[#C9A84C]/60 text-white font-semibold rounded-xl hover:bg-[#C9A84C]/15 transition-all backdrop-blur-md hover:border-[#C9A84C] group"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 sm:px-7 sm:py-3.5 border-2 border-[#C9A84C]/60 text-white text-sm sm:text-base font-semibold rounded-xl hover:bg-[#C9A84C]/15 transition-all backdrop-blur-md hover:border-[#C9A84C] group"
                 >
                   Explore Services
-                  <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                  <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </a>
               </div>
 
               {/* Social proof */}
-              <div className="flex flex-wrap items-center gap-8">
+              <div className="flex flex-wrap items-center gap-5 sm:gap-8">
                 <div>
-                  <div className="flex -space-x-3 mb-3">
+                  <div className="flex -space-x-2 sm:-space-x-3 mb-2">
                     {[1, 2, 3, 4, 5].map((i) => (
-                      <div key={i} className="h-12 w-12 rounded-full bg-gradient-to-br from-[#C9A84C] to-[#B8962E] border-3 border-white/20 flex items-center justify-center text-white text-sm font-bold shadow-lg">
+                      <div key={i} className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gradient-to-br from-[#C9A84C] to-[#B8962E] border-2 border-white/20 flex items-center justify-center text-white text-xs font-bold shadow-lg">
                         {i}
                       </div>
                     ))}
                   </div>
-                  <p className="text-sm font-semibold text-white">10,000+ Active Entrepreneurs</p>
+                  <p className="text-xs sm:text-sm font-semibold text-white">10,000+ Active Entrepreneurs</p>
                   <p className="text-xs text-white/60">Growing every single day</p>
                 </div>
-                <div className="h-14 w-px bg-gradient-to-b from-[#C9A84C]/30 via-[#C9A84C]/20 to-transparent" />
+                <div className="h-10 w-px bg-gradient-to-b from-[#C9A84C]/30 via-[#C9A84C]/20 to-transparent" />
                 <div>
-                  <div className="flex gap-1 mb-2">
+                  <div className="flex gap-0.5 mb-1.5">
                     {[1, 2, 3, 4, 5].map((i) => (
-                      <Star key={i} size={20} className="fill-[#C9A84C] text-[#C9A84C]" />
+                      <Star key={i} size={16} className="fill-[#C9A84C] text-[#C9A84C]" />
                     ))}
                   </div>
-                  <p className="text-sm font-semibold text-white">Rated 4.9/5</p>
+                  <p className="text-xs sm:text-sm font-semibold text-white">Rated 4.9/5</p>
                   <p className="text-xs text-white/60">From real members</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Right side - Premium video with glow effect */}
-            <div className="hidden lg:block relative">
-              {/* Animated glow effects */}
-              <div className="absolute -top-10 -right-10 w-96 h-96 bg-[#C9A84C]/15 rounded-full blur-3xl animate-pulse" />
-              <div className="absolute -bottom-10 -left-10 w-80 h-80 bg-[#C9A84C]/10 rounded-full blur-3xl animate-pulse delay-1000" />
-              
-              <div className="relative">
-                {/* Premium card stack effect */}
-                <div className="absolute -bottom-6 -right-6 w-full h-full rounded-3xl border-2 border-[#C9A84C]/20 bg-black/40 backdrop-blur-sm transform rotate-3 shadow-2xl" />
-                <div className="absolute -bottom-3 -right-3 w-full h-full rounded-3xl border-2 border-[#C9A84C]/30 bg-black/50 backdrop-blur-sm transform rotate-1 shadow-xl" />
-                
-                <div className="relative rounded-3xl border-2 border-[#C9A84C]/60 bg-gradient-to-br from-black/80 to-black/60 overflow-hidden shadow-2xl shadow-[#C9A84C]/40 backdrop-blur-sm">
-                  <div className="aspect-video bg-gradient-to-br from-gray-800 via-gray-900 to-black flex items-center justify-center">
-                    <iframe
-                      width="100%"
-                      height="100%"
-                      src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&modestbranding=1&rel=0"
-                      title="Community Platform Overview"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      className="rounded-2xl"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Premium stats bar with icons */}
-          <div className="mt-20 sm:mt-28 md:mt-32 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+          {/* Stats bar — 2-col on mobile, 4-col on sm+ */}
+          <div className="mt-10 sm:mt-16 md:mt-20 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
             {[
               { label: 'Active Members', value: '10K+', icon: Users },
               { label: 'Business Listings', value: '50K+', icon: Store },
@@ -346,32 +299,33 @@ export default function LandingPage() {
             ].map((stat) => {
               const Icon = stat.icon;
               return (
-                <div 
-                  key={stat.label} 
-                  className="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl border border-[#C9A84C]/30 p-4 sm:p-6 hover:border-[#C9A84C]/60 hover:from-white/15 hover:to-white/10 transition-all duration-300 hover:shadow-lg hover:shadow-[#C9A84C]/30 cursor-pointer"
+                <div
+                  key={stat.label}
+                  className="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-xl sm:rounded-2xl border border-[#C9A84C]/30 p-3 sm:p-4 md:p-5 hover:border-[#C9A84C]/60 hover:from-white/15 transition-all duration-300 cursor-pointer"
                 >
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="p-2.5 rounded-lg bg-gradient-to-br from-[#C9A84C]/30 to-[#C9A84C]/10 group-hover:from-[#C9A84C]/40 group-hover:to-[#C9A84C]/20 transition-all">
-                      <Icon size={22} className="text-[#C9A84C]" />
+                  <div className="flex items-center gap-2 sm:gap-3 mb-2">
+                    <div className="p-1.5 sm:p-2 rounded-lg bg-gradient-to-br from-[#C9A84C]/30 to-[#C9A84C]/10">
+                      <Icon size={16} className="text-[#C9A84C] sm:hidden" />
+                      <Icon size={20} className="text-[#C9A84C] hidden sm:block" />
                     </div>
-                    <h3 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-white to-[#C9A84C] bg-clip-text text-transparent">{stat.value}</h3>
+                    <h3 className="text-base sm:text-xl font-bold bg-gradient-to-r from-white to-[#C9A84C] bg-clip-text text-transparent">{stat.value}</h3>
                   </div>
-                  <p className="text-xs sm:text-sm text-white/70 group-hover:text-white/90 transition-colors">{stat.label}</p>
+                  <p className="text-xs text-white/70 group-hover:text-white/90 transition-colors leading-snug">{stat.label}</p>
                 </div>
               );
             })}
           </div>
 
-          {/* Slide indicators for content carousel */}
-          <div className="mt-12 flex justify-center gap-2">
+          {/* Slide indicators */}
+          <div className="mt-6 sm:mt-8 flex justify-center gap-2">
             {heroSlides.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setActiveHeroSlide(idx)}
                 className={`transition-all duration-300 ${
                   idx === activeHeroSlide
-                    ? 'w-8 h-2 bg-[#C9A84C] rounded-full'
-                    : 'w-2 h-2 bg-white/40 rounded-full hover:bg-white/60'
+                    ? 'w-6 h-1.5 bg-[#C9A84C] rounded-full'
+                    : 'w-1.5 h-1.5 bg-white/40 rounded-full hover:bg-white/60'
                 }`}
                 aria-label={`Go to service ${idx + 1}`}
               />
@@ -381,32 +335,33 @@ export default function LandingPage() {
       </section>
 
       {/* ═══════════════════ HOW IT WORKS ═══════════════════ */}
-      <section id="how-it-works" className="bg-gradient-to-b from-white to-gray-50 py-16 sm:py-20 md:py-28 px-5 lg:px-8">
+      <section id="how-it-works" className="bg-gradient-to-b from-white to-gray-50 py-12 sm:py-16 md:py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16 sm:mb-20">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-10 sm:mb-14">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3">
               How It Works
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base text-gray-600 max-w-xl mx-auto">
               Get started in just a few minutes and begin your entrepreneurial journey
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Horizontal scroll on mobile, 4-col grid on lg */}
+          <div className="flex lg:grid lg:grid-cols-4 overflow-x-auto gap-4 lg:gap-6 pb-4 lg:pb-0 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0 snap-x snap-mandatory scroll-smooth">
             {howItWorks.map((item, idx) => {
               const Icon = item.icon;
               return (
-                <div key={item.step} className="relative">
+                <div key={item.step} className="relative flex-shrink-0 w-64 sm:w-72 lg:w-auto snap-start">
                   {idx < howItWorks.length - 1 && (
-                    <div className="hidden lg:block absolute top-12 left-[60%] w-[40%] h-[2px] bg-gradient-to-r from-[#C9A84C] to-transparent" />
+                    <div className="hidden lg:block absolute top-10 left-[62%] w-[38%] h-[2px] bg-gradient-to-r from-[#C9A84C] to-transparent" />
                   )}
-                  <div className="relative bg-white rounded-2xl border border-gray-200 p-8 hover:shadow-lg hover:border-[#C9A84C]/30 transition-all">
-                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-[#C9A84C]/10 border border-[#C9A84C]/20 mb-5">
-                      <Icon className="text-[#C9A84C]" size={24} />
+                  <div className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 hover:shadow-md hover:border-[#C9A84C]/30 transition-all h-full">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#C9A84C]/10 border border-[#C9A84C]/20 mb-4">
+                      <Icon className="text-[#C9A84C]" size={20} />
                     </div>
-                    <div className="mb-3 text-sm font-bold text-[#C9A84C]">STEP {item.step}</div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
-                    <p className="text-gray-600">{item.desc}</p>
+                    <div className="mb-2 text-xs font-bold text-[#C9A84C] tracking-wide">STEP {item.step}</div>
+                    <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">{item.title}</h3>
+                    <p className="text-sm text-gray-600 leading-relaxed">{item.desc}</p>
                   </div>
                 </div>
               );
@@ -416,30 +371,31 @@ export default function LandingPage() {
       </section>
 
       {/* ═══════════════════ FEATURES ═══════════════════ */}
-      <section id="features" className="bg-white py-16 sm:py-20 md:py-28 px-5 lg:px-8">
+      <section id="features" className="bg-white py-12 sm:py-16 md:py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16 sm:mb-20">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-10 sm:mb-14">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3">
               Powerful Features for Growth
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base text-gray-600 max-w-xl mx-auto">
               Everything you need to build, promote, and grow your business
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Horizontal scroll on mobile, grid on md+ */}
+          <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 overflow-x-auto gap-4 md:gap-6 pb-4 md:pb-0 -mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 snap-x snap-mandatory scroll-smooth">
             {features.map((feature) => {
               const Icon = feature.icon;
               return (
                 <div
                   key={feature.title}
-                  className="bg-white rounded-2xl border border-gray-200 p-8 hover:shadow-xl hover:border-[#C9A84C]/30 transition-all group"
+                  className="flex-shrink-0 w-64 sm:w-72 md:w-auto snap-start bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 hover:shadow-xl hover:border-[#C9A84C]/30 transition-all group"
                 >
-                  <div className="w-14 h-14 bg-[#C9A84C]/10 rounded-xl flex items-center justify-center mb-5 group-hover:shadow-md transition-all">
-                    <Icon className="text-[#C9A84C]" size={28} />
+                  <div className="w-11 h-11 bg-[#C9A84C]/10 rounded-xl flex items-center justify-center mb-4 group-hover:shadow-md transition-all">
+                    <Icon className="text-[#C9A84C]" size={22} />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
-                  <p className="text-gray-600">{feature.desc}</p>
+                  <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">{feature.title}</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">{feature.desc}</p>
                 </div>
               );
             })}
@@ -448,52 +404,53 @@ export default function LandingPage() {
       </section>
 
       {/* ═══════════════════ MEMBERSHIP TIERS ═══════════════════ */}
-      <section id="pricing" className="bg-gradient-to-b from-gray-50 to-white py-16 sm:py-20 md:py-28 px-5 lg:px-8">
+      <section id="pricing" className="bg-gradient-to-b from-gray-50 to-white py-20 sm:py-28 md:py-40 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16 sm:mb-20">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-14 sm:mb-18 md:mb-20">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3">
               Choose Your Membership
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base text-gray-600 max-w-xl mx-auto">
               Flexible plans designed for every stage of your business journey
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Horizontal scroll on mobile, 3-col grid on md+ */}
+          <div className="flex md:grid md:grid-cols-3 overflow-x-auto gap-4 md:gap-6 py-12 md:pb-8 -mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 snap-x snap-mandatory scroll-smooth items-stretch min-h-[620px] md:min-h-auto">
             {membershipTiers.map((plan) => (
               <div
                 key={plan.tier}
-                className={`relative rounded-2xl border-2 ${plan.color} bg-white overflow-hidden transition-all hover:shadow-2xl ${
-                  plan.recommended ? 'shadow-xl scale-105 md:scale-110' : ''
+                className={`flex flex-col flex-shrink-0 w-72 sm:w-80 md:w-auto snap-start relative rounded-2xl border-2 ${plan.color} bg-white overflow-visible transition-all hover:shadow-2xl ${
+                  plan.recommended ? 'shadow-lg md:scale-105' : ''
                 }`}
               >
                 {plan.recommended && (
                   <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#C9A84C]/35 via-[#C9A84C] to-[#C9A84C]/35" />
                 )}
 
-                <div className="p-8">
+                <div className="p-6 sm:p-8 flex flex-col h-full">
                   {plan.recommended && (
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C9A84C]/10 border border-[#C9A84C]/20 mb-4">
-                      <BadgeCheck size={14} className="text-[#C9A84C]" />
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C9A84C]/10 border border-[#C9A84C]/20 mb-3">
+                      <BadgeCheck size={13} className="text-[#C9A84C]" />
                       <span className="text-xs font-semibold text-[#C9A84C]">Most Popular</span>
                     </div>
                   )}
 
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.tier}</h3>
-                  <div className="mb-6">
-                    <span className="text-4xl font-bold text-[#C9A84C]">{plan.price}</span>
-                    <span className="text-gray-600 ml-2">{plan.period}</span>
+                  <h3 className="text-xl font-bold text-gray-900 mb-1.5">{plan.tier}</h3>
+                  <div className="mb-5">
+                    <span className="text-3xl font-bold text-[#C9A84C]">{plan.price}</span>
+                    <span className="text-sm text-gray-600 ml-1.5">{plan.period}</span>
                   </div>
 
-                  <button className={`w-full py-3 px-4 rounded-xl font-semibold transition-colors mb-8 ${plan.buttonColor}`}>
+                  <button className={`w-full py-2.5 px-4 rounded-xl text-sm font-semibold transition-colors mb-6 ${plan.buttonColor}`}>
                     Get Started
                   </button>
 
-                  <div className="space-y-4">
+                  <div className="space-y-3.5 flex-1">
                     {plan.features.map((feature) => (
-                      <div key={feature} className="flex items-start gap-3">
-                        <CheckCircle2 size={20} className="text-[#C9A84C] flex-shrink-0 mt-0.5" />
-                        <span className="text-gray-700">{feature}</span>
+                      <div key={feature} className="flex items-start gap-2.5">
+                        <CheckCircle2 size={16} className="text-[#C9A84C] flex-shrink-0 mt-0.5" />
+                        <span className="text-sm text-gray-700">{feature}</span>
                       </div>
                     ))}
                   </div>
@@ -507,127 +464,107 @@ export default function LandingPage() {
       {/* ═══════════════════ MOBILE APP SECTION ═══════════════════ */}
       <section
         id="download-app"
-        className="relative overflow-hidden bg-gradient-to-b from-gray-900 to-gray-950 px-5 py-16 sm:py-20 md:py-28 lg:px-8"
+        className="relative overflow-hidden bg-gradient-to-b from-gray-900 to-gray-950 px-4 sm:px-6 py-12 sm:py-16 md:py-24 lg:px-8"
       >
-        {/* Background blur effects */}
-        <div className="absolute left-0 top-20 h-56 w-56 sm:h-72 sm:w-72 md:h-80 md:w-80 rounded-full bg-[#C9A84C]/15 blur-3xl" />
-        <div className="absolute right-0 bottom-0 h-64 w-64 sm:h-80 sm:w-80 md:h-96 md:w-96 rounded-full bg-[#C9A84C]/10 blur-3xl" />
+        <div className="absolute left-0 top-16 h-48 w-48 sm:h-64 sm:w-64 rounded-full bg-[#C9A84C]/15 blur-3xl" />
+        <div className="absolute right-0 bottom-0 h-56 w-56 sm:h-72 sm:w-72 rounded-full bg-[#C9A84C]/10 blur-3xl" />
 
-        <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-8 sm:gap-10 md:gap-12 lg:grid-cols-2">
+        <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-8 sm:gap-10 lg:grid-cols-2">
           {/* Left Content */}
           <div>
-            <span className="inline-block px-4 py-2 rounded-full bg-[#C9A84C]/15 border border-[#C9A84C]/30 text-sm font-semibold text-[#C9A84C] mb-6">
+            <span className="inline-block px-3 py-1.5 rounded-full bg-[#C9A84C]/15 border border-[#C9A84C]/30 text-xs sm:text-sm font-semibold text-[#C9A84C] mb-5">
               Download Now
             </span>
 
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-5 leading-tight">
               Everything you need,
               <br />
               <span className="text-[#C9A84C]">right in your pocket.</span>
             </h2>
 
-            <p className="text-lg sm:text-xl text-gray-300 mb-8 leading-relaxed max-w-md">
-              Access your business catalogue, connect with members, manage your profile, view analytics, and seize opportunities anytime, anywhere with our mobile app.
+            <p className="text-sm sm:text-base text-gray-300 mb-6 sm:mb-8 leading-relaxed max-w-md">
+              Access your business catalogue, connect with members, manage your profile, view analytics, and seize opportunities anytime, anywhere.
             </p>
 
             {/* Download Buttons */}
-            <div className="flex flex-col gap-4 w-full">
-              {/* App Store Buttons Row */}
-              <div className="flex gap-4 w-full">
+            <div className="flex flex-col gap-3 w-full">
+              <div className="flex gap-3 w-full">
                 <a
                   href="https://play.google.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 flex items-center justify-center gap-3 px-5 py-3 sm:px-6 sm:py-4 rounded-xl border border-white/20 bg-white/10 backdrop-blur text-white font-semibold transition hover:bg-white/20 hover:border-[#C9A84C]/50"
+                  className="flex-1 flex items-center justify-center gap-2.5 px-4 py-3 rounded-xl border border-white/20 bg-white/10 backdrop-blur text-white text-sm font-semibold transition hover:bg-white/20 hover:border-[#C9A84C]/50"
                 >
-                  <svg className="w-6 h-6 sm:w-7 sm:h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M9 7h6M9 11h6M9 15h6" />
                   </svg>
-                  <div className="text-left">
-                    <p className="text-xs opacity-75">Get it on</p>
-                    <p className="text-sm sm:text-base font-bold">Google Play</p>
+                  <div className="text-left min-w-0">
+                    <p className="text-xs opacity-75 leading-none mb-0.5">Get it on</p>
+                    <p className="text-sm font-bold leading-none">Google Play</p>
                   </div>
                 </a>
                 <a
                   href="https://apps.apple.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 flex items-center justify-center gap-3 px-5 py-3 sm:px-6 sm:py-4 rounded-xl border border-white/20 bg-white/10 backdrop-blur text-white font-semibold transition hover:bg-white/20 hover:border-[#C9A84C]/50"
+                  className="flex-1 flex items-center justify-center gap-2.5 px-4 py-3 rounded-xl border border-white/20 bg-white/10 backdrop-blur text-white text-sm font-semibold transition hover:bg-white/20 hover:border-[#C9A84C]/50"
                 >
-                  <svg className="w-6 h-6 sm:w-7 sm:h-7" viewBox="0 0 24 24" fill="currentColor">
+                  <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M17.05 13.5c-.91 2.92-3.44 5.23-6.55 5.23-3.83 0-6.94-3.11-6.94-6.94s3.11-6.94 6.94-6.94c1.64 0 3.15.57 4.35 1.52l2.17-2.17C15.44 2.18 13.56 1 11.5 1 5.04 1 1 5.04 1 11.5s4.04 10.5 10.5 10.5c5.05 0 9.35-3.72 10.16-8.5h-7.61z" />
                   </svg>
-                  <div className="text-left">
-                    <p className="text-xs opacity-75">Download on the</p>
-                    <p className="text-sm sm:text-base font-bold">App Store</p>
+                  <div className="text-left min-w-0">
+                    <p className="text-xs opacity-75 leading-none mb-0.5">Download on the</p>
+                    <p className="text-sm font-bold leading-none">App Store</p>
                   </div>
                 </a>
               </div>
 
-              {/* Direct Download Button - Full Width */}
               <a
                 href="#"
                 download
-                className="w-full flex items-center justify-center gap-2 sm:gap-3 px-6 py-3 sm:px-7 sm:py-4 rounded-xl bg-[#C9A84C] text-gray-900 font-semibold shadow-lg shadow-[#C9A84C]/25 transition hover:bg-[#B8962E] hover:shadow-xl hover:shadow-[#C9A84C]/35"
+                className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#C9A84C] text-gray-900 text-sm font-semibold shadow-lg shadow-[#C9A84C]/25 transition hover:bg-[#B8962E]"
               >
                 Direct Download APK
-                <ArrowRight size={20} />
+                <ArrowRight size={18} />
               </a>
             </div>
           </div>
 
-          {/* Right - Professional Phone Mockup */}
+          {/* Right - Phone Mockup */}
           <div className="relative flex justify-center lg:justify-end">
-            {/* Glow effect behind phone */}
-            <div className="absolute top-10 h-48 w-48 sm:h-60 sm:w-60 md:h-72 md:w-72 rounded-full bg-[#C9A84C]/20 blur-3xl -z-10" />
+            <div className="absolute top-8 h-40 w-40 sm:h-52 sm:w-52 rounded-full bg-[#C9A84C]/20 blur-3xl -z-10" />
 
-            {/* Phone mockup container */}
             <div className="relative">
-              {/* Outer phone body - realistic frame */}
-              <div className="relative h-[480px] w-[240px] sm:h-[600px] sm:w-[300px] md:h-[680px] md:w-[340px] rounded-[2.5rem] sm:rounded-[3rem] md:rounded-[3.5rem] bg-gradient-to-br from-gray-600 via-gray-800 to-black p-3 sm:p-3.5 md:p-4 shadow-2xl shadow-black/80">
-                {/* Phone bezel/frame inner */}
-                <div className="relative h-full w-full overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] md:rounded-[3rem] bg-black border border-gray-900">
-                  {/* Notch */}
-                  <div className="absolute left-1/2 top-0 z-30 h-6 sm:h-7 md:h-8 w-28 sm:w-36 md:w-44 -translate-x-1/2 rounded-b-3xl bg-black" />
-
-                  {/* Screen Content */}
+              <div className="relative h-[400px] w-[200px] sm:h-[500px] sm:w-[250px] md:h-[580px] md:w-[290px] rounded-[2rem] sm:rounded-[2.5rem] bg-gradient-to-br from-gray-600 via-gray-800 to-black p-2.5 sm:p-3 shadow-2xl shadow-black/80">
+                <div className="relative h-full w-full overflow-hidden rounded-[1.75rem] sm:rounded-[2rem] bg-black border border-gray-900">
+                  <div className="absolute left-1/2 top-0 z-30 h-5 sm:h-6 w-24 sm:w-32 -translate-x-1/2 rounded-b-3xl bg-black" />
                   <div className="relative h-full w-full overflow-hidden bg-gray-950">
-                    {/* App Display Image */}
                     <img
                       src="https://images.unsplash.com/photo-1512941691920-25bda36dc643?auto=format&fit=crop&w=600&h=1200&q=90"
                       alt="Community Hub App"
                       className="h-full w-full object-cover"
                     />
-
-                    {/* Overlay gradient */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
-
-                    {/* Screen shine effect */}
-                    <div className="absolute inset-0 rounded-[2rem] sm:rounded-[2.5rem] md:rounded-[3rem] bg-gradient-to-br from-white/15 via-transparent to-transparent pointer-events-none" />
+                    <div className="absolute inset-0 rounded-[1.75rem] sm:rounded-[2rem] bg-gradient-to-br from-white/15 via-transparent to-transparent pointer-events-none" />
                   </div>
-
-                  {/* Home indicator */}
-                  <div className="absolute bottom-2 sm:bottom-2.5 md:bottom-3 left-1/2 z-30 h-1 w-24 sm:w-32 md:w-40 -translate-x-1/2 rounded-full bg-white/30" />
+                  <div className="absolute bottom-2 left-1/2 z-30 h-1 w-20 sm:w-28 -translate-x-1/2 rounded-full bg-white/30" />
                 </div>
-
-                {/* Physical phone buttons - side details */}
-                <div className="absolute left-0 top-40 z-20 h-12 w-1.5 rounded-r-lg bg-gray-500/70" />
-                <div className="absolute right-0 top-56 sm:top-72 md:top-80 z-20 h-20 w-1.5 rounded-l-lg bg-gray-500/70" />
-                <div className="absolute right-0 top-80 sm:top-96 md:top-[28rem] z-20 h-20 w-1.5 rounded-l-lg bg-gray-500/70" />
+                <div className="absolute left-0 top-32 z-20 h-10 w-1 rounded-r-lg bg-gray-500/70" />
+                <div className="absolute right-0 top-44 z-20 h-16 w-1 rounded-l-lg bg-gray-500/70" />
+                <div className="absolute right-0 top-64 z-20 h-16 w-1 rounded-l-lg bg-gray-500/70" />
               </div>
 
-              {/* Floating stat card - Left side */}
-              <div className="absolute -left-12 sm:-left-16 md:-left-20 top-1/4 sm:top-1/3 z-20 rounded-2xl border border-[#C9A84C]/50 bg-gradient-to-br from-gray-700/95 to-gray-800/95 p-4 sm:p-6 shadow-2xl backdrop-blur-md">
-                <p className="text-gray-300 text-xs font-semibold uppercase tracking-wide">Active Members</p>
-                <p className="mt-3 text-[#C9A84C] font-bold text-2xl sm:text-3xl">10K+</p>
-                <p className="text-gray-400 text-xs mt-1">Growing daily</p>
+              {/* Floating stat cards */}
+              <div className="absolute -left-10 sm:-left-14 top-1/4 z-20 rounded-xl border border-[#C9A84C]/50 bg-gradient-to-br from-gray-700/95 to-gray-800/95 p-3 sm:p-4 shadow-2xl backdrop-blur-md">
+                <p className="text-gray-300 text-xs font-semibold uppercase tracking-wide">Members</p>
+                <p className="mt-1.5 text-[#C9A84C] font-bold text-xl sm:text-2xl">10K+</p>
+                <p className="text-gray-400 text-xs">Growing daily</p>
               </div>
 
-              {/* Floating stat card - Bottom right */}
-              <div className="absolute -right-12 sm:-right-16 md:-right-20 bottom-1/4 sm:bottom-1/3 z-20 rounded-2xl border border-[#C9A84C]/50 bg-gradient-to-br from-gray-700/95 to-gray-800/95 p-4 sm:p-6 shadow-2xl backdrop-blur-md">
+              <div className="absolute -right-10 sm:-right-14 bottom-1/4 z-20 rounded-xl border border-[#C9A84C]/50 bg-gradient-to-br from-gray-700/95 to-gray-800/95 p-3 sm:p-4 shadow-2xl backdrop-blur-md">
                 <p className="text-gray-300 text-xs font-semibold uppercase tracking-wide">Listings</p>
-                <p className="mt-3 text-[#C9A84C] font-bold text-2xl sm:text-3xl">50K+</p>
-                <p className="text-gray-400 text-xs mt-1">Active now</p>
+                <p className="mt-1.5 text-[#C9A84C] font-bold text-xl sm:text-2xl">50K+</p>
+                <p className="text-gray-400 text-xs">Active now</p>
               </div>
             </div>
           </div>
@@ -635,40 +572,41 @@ export default function LandingPage() {
       </section>
 
       {/* ═══════════════════ TESTIMONIALS ═══════════════════ */}
-      <section id="testimonials" className="bg-white py-16 sm:py-20 md:py-28 px-5 lg:px-8">
+      <section id="testimonials" className="bg-white py-12 sm:py-16 md:py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16 sm:mb-20">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-10 sm:mb-14">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3">
               Loved by Our Members
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base text-gray-600 max-w-xl mx-auto">
               See how entrepreneurs and business owners are thriving
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, idx) => (
+          {/* Horizontal scroll on mobile, 3-col grid on md+ */}
+          <div className="flex md:grid md:grid-cols-3 overflow-x-auto gap-4 md:gap-6 pb-4 md:pb-0 -mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 snap-x snap-mandatory scroll-smooth">
+            {testimonials.map((testimonial) => (
               <div
                 key={testimonial.name}
-                className="bg-white rounded-2xl border border-gray-200 p-8 hover:shadow-lg hover:border-[#C9A84C]/30 transition-all"
+                className="flex-shrink-0 w-72 sm:w-80 md:w-auto snap-start bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 hover:shadow-lg hover:border-[#C9A84C]/30 transition-all"
               >
-                <div className="flex gap-1 mb-4">
+                <div className="flex gap-0.5 mb-3">
                   {Array.from({ length: testimonial.rating }).map((_, i) => (
-                    <Star key={i} size={18} className="fill-[#C9A84C] text-[#C9A84C]" />
+                    <Star key={i} size={15} className="fill-[#C9A84C] text-[#C9A84C]" />
                   ))}
                 </div>
 
-                <p className="text-gray-700 mb-6 italic">"{testimonial.text}"</p>
+                <p className="text-sm text-gray-700 mb-4 italic leading-relaxed">"{testimonial.text}"</p>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
                   <img
                     src={testimonial.image}
                     alt={testimonial.name}
-                    className="w-12 h-12 rounded-full object-cover"
+                    className="w-10 h-10 rounded-full object-cover flex-shrink-0"
                   />
                   <div>
-                    <h4 className="font-bold text-gray-900">{testimonial.name}</h4>
-                    <p className="text-sm text-gray-600">{testimonial.role}</p>
+                    <h4 className="text-sm font-bold text-gray-900">{testimonial.name}</h4>
+                    <p className="text-xs text-gray-600">{testimonial.role}</p>
                   </div>
                 </div>
               </div>
@@ -678,20 +616,20 @@ export default function LandingPage() {
       </section>
 
       {/* ═══════════════════ STATS ═══════════════════ */}
-      <section id="stats" className="bg-gradient-to-r from-[#C9A84C]/5 to-transparent py-16 sm:py-20 md:py-28 px-5 lg:px-8">
+      <section id="stats" className="bg-gradient-to-r from-[#C9A84C]/5 to-transparent py-12 sm:py-16 md:py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {stats.map((stat) => {
               const Icon = stat.icon;
               return (
                 <div key={stat.label} className="text-center">
-                  <div className="flex justify-center mb-4">
-                    <div className="flex items-center justify-center w-16 h-16 rounded-full bg-[#C9A84C]/10 border border-[#C9A84C]/20">
-                      <Icon className="text-[#C9A84C]" size={32} />
+                  <div className="flex justify-center mb-3">
+                    <div className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#C9A84C]/10 border border-[#C9A84C]/20">
+                      <Icon className="text-[#C9A84C]" size={22} />
                     </div>
                   </div>
-                  <h3 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">{stat.value}</h3>
-                  <p className="text-gray-600">{stat.label}</p>
+                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">{stat.value}</h3>
+                  <p className="text-xs sm:text-sm text-gray-600">{stat.label}</p>
                 </div>
               );
             })}
@@ -700,25 +638,25 @@ export default function LandingPage() {
       </section>
 
       {/* ═══════════════════ CTA SECTION ═══════════════════ */}
-      <section className="bg-white py-16 sm:py-20 md:py-28 px-5 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+      <section className="bg-white py-12 sm:py-16 md:py-24 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Ready to Join the Community?
           </h2>
-          <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 max-w-xl mx-auto">
             Start building your network and growing your business today. Join thousands of successful entrepreneurs on our platform.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
             <Link
               href="/auth/register"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#C9A84C] text-white font-semibold rounded-xl hover:bg-[#B8962E] transition-colors shadow-md shadow-[#C9A84C]/25"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 sm:px-7 sm:py-3.5 bg-[#C9A84C] text-white text-sm sm:text-base font-semibold rounded-xl hover:bg-[#B8962E] transition-colors shadow-md shadow-[#C9A84C]/25"
             >
-              Create Free Account <ArrowRight size={20} />
+              Create Free Account <ArrowRight size={18} />
             </Link>
             <a
               href="#features"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-gray-200 text-gray-900 font-semibold rounded-xl hover:bg-gray-50 transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 sm:px-7 sm:py-3.5 border-2 border-gray-200 text-gray-900 text-sm sm:text-base font-semibold rounded-xl hover:bg-gray-50 transition-colors"
             >
               Explore Features
             </a>
@@ -727,25 +665,25 @@ export default function LandingPage() {
       </section>
 
       {/* ═══════════════════ FOOTER ═══════════════════ */}
-      <footer className="bg-gray-900 text-gray-300 py-12 sm:py-14 md:py-16 px-5 lg:px-8">
+      <footer className="bg-gray-900 text-gray-300 py-10 sm:py-12 md:py-14 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-            <div>
-              <div className="flex items-center gap-2.5 mb-4">
-                <Image src="/icon.png" alt="Logo" width={40} height={40} className="h-9 w-9 sm:h-10 sm:w-10" />
-                <span className="font-bold text-white text-lg">Community</span>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-10">
+            <div className="col-span-2 lg:col-span-1">
+              <div className="flex items-center gap-2 mb-3">
+                <Image src="/icon.png" alt="Logo" width={36} height={36} className="h-8 w-8 sm:h-9 sm:w-9" />
+                <span className="font-bold text-white text-base sm:text-lg">Community</span>
               </div>
-              <p className="text-sm text-gray-400 leading-relaxed">
+              <p className="text-xs sm:text-sm text-gray-400 leading-relaxed">
                 Empowering entrepreneurs and business owners through community, connection, and opportunity.
               </p>
             </div>
 
             <div>
-              <h3 className="font-bold text-white mb-4">Company</h3>
-              <ul className="space-y-2.5">
+              <h3 className="font-bold text-white text-sm mb-3">Company</h3>
+              <ul className="space-y-2">
                 {[['About Us', '/about'], ['Blog', '/'], ['Careers', '/about'], ['Contact', '/support']].map(([label, href]) => (
                   <li key={label}>
-                    <Link href={href} className="text-sm text-gray-400 hover:text-[#C9A84C] transition-colors">
+                    <Link href={href} className="text-xs sm:text-sm text-gray-400 hover:text-[#C9A84C] transition-colors">
                       {label}
                     </Link>
                   </li>
@@ -754,11 +692,11 @@ export default function LandingPage() {
             </div>
 
             <div>
-              <h3 className="font-bold text-white mb-4">Resources</h3>
-              <ul className="space-y-2.5">
+              <h3 className="font-bold text-white text-sm mb-3">Resources</h3>
+              <ul className="space-y-2">
                 {[['Help Center', '/support'], ['Documentation', '/'], ['Terms of Service', '/terms'], ['Privacy Policy', '/privacy']].map(([label, href]) => (
                   <li key={label}>
-                    <Link href={href} className="text-sm text-gray-400 hover:text-[#C9A84C] transition-colors">
+                    <Link href={href} className="text-xs sm:text-sm text-gray-400 hover:text-[#C9A84C] transition-colors">
                       {label}
                     </Link>
                   </li>
@@ -767,21 +705,21 @@ export default function LandingPage() {
             </div>
 
             <div>
-              <h3 className="font-bold text-white mb-4">Connect</h3>
-              <div className="flex gap-3">
-                <a href="#" className="flex items-center justify-center w-10 h-10 rounded-lg bg-gray-800 hover:bg-[#C9A84C]/20 transition-colors">
-                  <Linkedin size={20} />
+              <h3 className="font-bold text-white text-sm mb-3">Connect</h3>
+              <div className="flex gap-2.5">
+                <a href="#" className="flex items-center justify-center w-9 h-9 rounded-lg bg-gray-800 hover:bg-[#C9A84C]/20 transition-colors">
+                  <Linkedin size={17} />
                 </a>
-                <a href="mailto:support@community.com" className="flex items-center justify-center w-10 h-10 rounded-lg bg-gray-800 hover:bg-[#C9A84C]/20 transition-colors">
-                  <Mail size={20} />
+                <a href="mailto:support@community.com" className="flex items-center justify-center w-9 h-9 rounded-lg bg-gray-800 hover:bg-[#C9A84C]/20 transition-colors">
+                  <Mail size={17} />
                 </a>
               </div>
             </div>
           </div>
 
-          <div className="border-t border-gray-800 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-gray-500">© 2026 Community Platform. All rights reserved.</p>
-            <p className="text-sm text-gray-500">
+          <div className="border-t border-gray-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <p className="text-xs text-gray-500">© 2026 Community Platform. All rights reserved.</p>
+            <p className="text-xs text-gray-500">
               Made with <span className="text-[#C9A84C]">♥</span> for entrepreneurs
             </p>
           </div>

@@ -84,7 +84,7 @@ export default function PreviewAndSend({
                 <div className="flex items-center gap-2 text-xs text-gray-500">
                   <span className="w-8 font-medium text-gray-400">From</span>
                   <span className="bg-white border border-gray-200 rounded px-2 py-0.5 font-medium text-gray-700">
-                    Ascending Titans@noreply.com
+                    Accending titans@noreply.com
                   </span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-gray-500">

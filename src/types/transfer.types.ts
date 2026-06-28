@@ -1,6 +1,6 @@
 /**
  * Transfer Types
- * Comprehensive type definitions for Ascending Titans-to-Ascending Titans and Bank Transfers
+ * Comprehensive type definitions for Accending titans-to-Accending titans and Bank Transfers
  */
 
 /**
@@ -114,7 +114,7 @@ export interface RecipientsListResponse {
 }
 
 /**
- * Ascending Titans Transfer types
+ * Accending titans Transfer types
  */
 export interface AscendingTitansTransferRequest {
   identifier: string; // Normalized phone (10 digits) or email

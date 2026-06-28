@@ -1,11 +1,11 @@
-# Ascending Titans - Professional Marketplace & Networking Platform
+# Accending titans - Professional Marketplace & Networking Platform
 
 > **Africa's Premier Marketplace for Entrepreneurs**
-> Connect, collaborate, and grow your business with Ascending Titans
+> Connect, collaborate, and grow your business with Accending titans
 
 ## 🎯 Overview
 
-Ascending Titans is a comprehensive, production-ready **frontend marketplace platform** designed specifically for African entrepreneurs, professionals, and small to medium businesses. It's built with Next.js and connects to a Laravel backend API.
+Accending titans is a comprehensive, production-ready **frontend marketplace platform** designed specifically for African entrepreneurs, professionals, and small to medium businesses. It's built with Next.js and connects to a Laravel backend API.
 
 ### Key Features
 

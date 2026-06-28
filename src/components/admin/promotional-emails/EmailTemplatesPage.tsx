@@ -38,7 +38,7 @@ export default function EmailTemplatesPage() {
   const apiExampleJson = {
     name: 'Welcome Email',
     slug: 'welcome-email',
-    description: 'Welcome new users to Ascending Titans',
+    description: 'Welcome new users to Accending titans',
     email_type: 'promotional',
     required_fields: ['subject', 'content', 'call_to_action'],
     optional_fields: ['image_url', 'footer_text'],

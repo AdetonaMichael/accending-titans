@@ -290,8 +290,8 @@ class ReferralService {
       }
 
       await navigator.share({
-        title: 'Join Ascending Titans',
-        text: `Join me on Ascending Titans and earn rewards! Use my referral code: ${code}`,
+        title: 'Join Accending titans',
+        text: `Join me on Accending titans and earn rewards! Use my referral code: ${code}`,
         url: link,
       });
 

@@ -96,11 +96,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {!mobile && (
         <div className="border-b border-white/10 px-5 py-6">
           <Link href="/admin" className="flex items-center gap-3">
-            <Image src="/icon.png" alt="Ascending Titans Admin" width={42} height={42} />
+            <Image src="/icon.png" alt="Accending titans Admin" width={42} height={42} />
             {(sidebarOpen || mobile) && (
               <div>
                 <p className="text-xl font-black tracking-tight text-white">
-                  Ascending Titans
+                  Accending titans
                 </p>
                 <p className="text-xs font-semibold text-white/45">
                   Admin
@@ -187,9 +187,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         >
           <div className="border-b border-white/10 px-5 py-5 flex items-center justify-between">
             <Link href="/admin" className="flex items-center gap-3">
-              <Image src="/icon.png" alt="Ascending Titans Admin" width={42} height={42} />
+              <Image src="/icon.png" alt="Accending titans Admin" width={42} height={42} />
               <div>
-                <p className="text-xl font-black tracking-tight text-white">Ascending Titans</p>
+                <p className="text-xl font-black tracking-tight text-white">Accending titans</p>
                 <p className="text-xs font-semibold text-white/45">Admin</p>
               </div>
             </Link>

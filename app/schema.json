@@ -1,14 +1,14 @@
 {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "name": "Ascending Titans",
+  "name": "Accending titans",
   "url": " https://Ascending-titans.vercel.app",
   "logo": " https://Ascending-titans.vercel.app/icon.png",
-  "description": "Ascending Titans is a modern digital finance platform that empowers individuals and businesses with secure USD accounts, virtual dollar cards, seamless money transfers, and everyday payment solutions.",
+  "description": "Accending titans is a modern digital finance platform that empowers individuals and businesses with secure USD accounts, virtual dollar cards, seamless money transfers, and everyday payment solutions.",
   "sameAs": [
-    "https://twitter.com/Ascending Titans",
-    "https://facebook.com/Ascending Titans",
-    "https://linkedin.com/company/Ascending Titans"
+    "https://twitter.com/Accending titans",
+    "https://facebook.com/Accending titans",
+    "https://linkedin.com/company/Accending titans"
   ],
   "contactPoint": {
     "@type": "ContactPoint",
@@ -56,7 +56,7 @@
     {
       "@type": "Service",
       "name": "Wallet Transfers",
-      "description": "Fast and secure transfers between Ascending Titans users.",
+      "description": "Fast and secure transfers between Accending titans users.",
       "url": " https://Ascending-titans.vercel.app/services/money-transfer"
     },
     {

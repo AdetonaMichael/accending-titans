@@ -17,7 +17,7 @@ export const AnalyticsInitializer = () => {
     // Initialize GA on mount
     if (typeof window !== 'undefined') {
       // Track initial page view
-      const pageTitle = document.title || 'Ascending Titans';
+      const pageTitle = document.title || 'Accending titans';
       (window as any).gtag?.('event', 'page_view', {
         'page_title': pageTitle,
         'page_path': window.location.pathname,

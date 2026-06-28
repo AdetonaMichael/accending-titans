@@ -68,7 +68,7 @@ export function validatePIN(pin: string): boolean {
 }
 
 /**
- * Validate amount for Ascending Titans transfer
+ * Validate amount for Accending titans transfer
  * Min: 50 NGN, Max: 100,000 NGN
  */
 export function validateAscendingTitansAmount(amount: number): { valid: boolean; error?: string } {
@@ -205,7 +205,7 @@ export function formatPINLockTime(seconds: number): string {
 }
 
 /**
- * Validate complete Ascending Titans transfer form data
+ * Validate complete Accending titans transfer form data
  */
 export function validateAscendingTitansTransferForm(
   identifier: string,

@@ -5,8 +5,8 @@ import { Footer } from '@/components/shared/Footer';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Buy Airtime Online | Fast & Cheap Airtime - Ascending Titans',
-  description: 'Buy airtime instantly for MTN, Airtel, Glo, and 9mobile at the best rates. Instant delivery and 24/7 availability on Ascending Titans.',
+  title: 'Buy Airtime Online | Fast & Cheap Airtime - Accending titans',
+  description: 'Buy airtime instantly for MTN, Airtel, Glo, and 9mobile at the best rates. Instant delivery and 24/7 availability on Accending titans.',
   keywords: 'buy airtime, airtime top-up, MTN airtime, Airtel airtime, Glo airtime, 9mobile airtime, cheap airtime online',
 };
 
@@ -93,7 +93,7 @@ export default function AirtimePage() {
       <section className="bg-gray-50 py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-gray-900">Why Buy From Ascending Titans?</h2>
+            <h2 className="mb-4 text-3xl font-bold text-gray-900">Why Buy From Accending titans?</h2>
           </div>
 
           <div className="grid gap-8 md:grid-cols-3">

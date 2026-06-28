@@ -39,7 +39,7 @@ function formatDate(date: string) {
 
 function normalizeReferralLink(link: string, code: string) {
   // Transform the referral link to the correct format
-  // From: http://Ascending Titans-nginx/register?ref=CODE
+  // From: http://Accending titans-nginx/register?ref=CODE
   // To:  https://Ascending-titans.vercel.app/auth/register?ref=CODE
   return ` https://Ascending-titans.vercel.app/auth/register?ref=${code}`;
 }
@@ -236,7 +236,7 @@ export default function ReferralPage() {
         <div className="relative z-10 space-y-8">
           <div>
             <h1 className="mt-4 max-w-2xl text-3xl font-black tracking-tight text-white sm:text-4xl">
-              Earn rewards by inviting friends to Ascending Titans.
+              Earn rewards by inviting friends to Accending titans.
             </h1>
 
             <p className="mt-3 max-w-2xl text-sm leading-7 text-white/60 sm:text-base">

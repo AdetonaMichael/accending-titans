@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-const IDEMPOTENCY_STORAGE_KEY = 'Ascending Titans_idempotency_keys';
+const IDEMPOTENCY_STORAGE_KEY = 'Accending titans_idempotency_keys';
 const KEY_EXPIRY_TIME = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
 interface StoredIdempotencyKey {

@@ -1,4 +1,4 @@
-# Ascending Titans - Frontend + Laravel Backend Integration
+# Accending titans - Frontend + Laravel Backend Integration
 
 ## ✅ Completed (Do Not Repeat)
 

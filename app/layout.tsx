@@ -6,12 +6,12 @@ import { Providers } from "@/components/Providers";
 // Using system fonts instead of Google Fonts to avoid network dependency during build
 
 export const metadata: Metadata = {
-  title: "Ascending Titans - Community Hub for Entrepreneurs | Business Networking Platform",
-  description: "Connect, showcase, and grow with Ascending Titans - the ultimate community platform for entrepreneurs. Build your business catalogue, network with like-minded professionals, advertise your services, and unlock unlimited opportunities.",
+  title: "Accending titans - Community Hub for Entrepreneurs | Business Networking Platform",
+  description: "Connect, showcase, and grow with Accending titans - the ultimate community platform for entrepreneurs. Build your business catalogue, network with like-minded professionals, advertise your services, and unlock unlimited opportunities.",
   keywords: "entrepreneur community, business networking, business catalogue, professional network, startup community, entrepreneurship, small business, networking platform, business opportunities, job listings, entrepreneur platform, business growth, professional community, direct messaging, business advertising, referral program",
-  authors: [{ name: "Ascending Titans" }],
-  creator: "Ascending Titans",
-  publisher: "Ascending Titans",
+  authors: [{ name: "Accending titans" }],
+  creator: "Accending titans",
+  publisher: "Accending titans",
   robots: "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
   metadataBase: new URL("https://ascendingtitans.com"),
   alternates: {
@@ -46,21 +46,21 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "https://ascendingtitans.com",
-    title: "Ascending Titans - Connect, Showcase, and Grow Together",
+    title: "Accending titans - Connect, Showcase, and Grow Together",
     description: "Join 10,000+ entrepreneurs on Africa's premier business networking platform. Showcase your products, find collaborators, advertise your services, and grow your business.",
-    siteName: "Ascending Titans",
+    siteName: "Accending titans",
     images: [
       {
         url: "https://ascendingtitans.com/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Ascending Titans - Community Platform for Entrepreneurs",
+        alt: "Accending titans - Community Platform for Entrepreneurs",
       },
       {
         url: "https://ascendingtitans.com/banner.png",
         width: 800,
         height: 420,
-        alt: "Ascending Titans - Your business community hub",
+        alt: "Accending titans - Your business community hub",
         type: "image/png",
       },
     ],
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ascending Titans - Connect with 10,000+ Entrepreneurs",
+    title: "Accending titans - Connect with 10,000+ Entrepreneurs",
     description: "Showcase your business, network with professionals, and unlock opportunities on Africa's leading entrepreneur community platform.",
     images: ["https://ascendingtitans.com/banner.png"],
     creator: "@AscendingTitans",
@@ -96,10 +96,10 @@ export default function RootLayout({
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Ascending Titans",
+    name: "Accending titans",
     url: "https://ascendingtitans.com",
     logo: "https://ascendingtitans.com/icon.png",
-    description: "Ascending Titans is Africa's premier community platform where entrepreneurs, business owners, and professionals connect, showcase their businesses, collaborate, and unlock unlimited growth opportunities.",
+    description: "Accending titans is Africa's premier community platform where entrepreneurs, business owners, and professionals connect, showcase their businesses, collaborate, and unlock unlimited growth opportunities.",
     sameAs: [
       "https://www.facebook.com/AscendingTitans",
       "https://www.twitter.com/AscendingTitans",
@@ -170,7 +170,7 @@ export default function RootLayout({
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Ascending Titans",
+    name: "Accending titans",
     url: "https://ascendingtitans.com",
     potentialAction: {
       "@type": "SearchAction",
@@ -186,7 +186,7 @@ export default function RootLayout({
   const serviceSchema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    name: "Ascending Titans",
+    name: "Accending titans",
     image: "https://ascendingtitans.com/banner.png",
     description: "Africa's premier community platform connecting entrepreneurs, business owners, and professionals for networking, business growth, and collaboration.",
     url: "https://ascendingtitans.com",
@@ -243,7 +243,7 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="Ascending Titans" />
+        <meta name="apple-mobile-web-app-title" content="Accending titans" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
         <meta name="msapplication-TileColor" content="#C9A84C" />
         <meta name="msapplication-TileImage" content="/icon.png" />

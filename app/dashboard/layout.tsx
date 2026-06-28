@@ -90,12 +90,12 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
     <>
       <div className="border-b border-white/10 px-5 py-6">
         <Link href="/dashboard" className="flex items-center gap-3">
-          <Image src="/icon.png" alt="Ascending Titans" width={42} height={42} />
+          <Image src="/icon.png" alt="Accending titans" width={42} height={42} />
 
           {(sidebarOpen || mobile) && (
             <div>
               <p className="text-xl font-black tracking-tight text-white">
-                Ascending Titans
+                Accending titans
               </p>
               <p className="text-xs font-semibold text-white/45">
                 Payment Wallet
@@ -140,7 +140,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
           <div className="mb-3 rounded-2xl border border-white/10 bg-white/[0.06] p-4">
             <p className="text-xs font-semibold text-white/45">Signed in as</p>
             <p className="mt-1 truncate text-sm font-black text-white">
-              {user?.first_name || 'Ascending Titans User'}
+              {user?.first_name || 'Accending titans User'}
             </p>
           </div>
         )}
@@ -193,10 +193,10 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
           >
             <div className="border-b border-white/10 px-5 py-5 flex items-center justify-between">
               <Link href="/dashboard" className="flex items-center gap-3">
-                <Image src="/icon.png" alt="Ascending Titans" width={42} height={42} />
+                <Image src="/icon.png" alt="Accending titans" width={42} height={42} />
                 <div>
                   <p className="text-xl font-black tracking-tight text-white">
-                    Ascending Titans
+                    Accending titans
                   </p>
                   <p className="text-xs font-semibold text-white/45">
                     Payment Wallet
@@ -245,7 +245,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
               <div className="mb-3 rounded-2xl border border-white/10 bg-white/[0.06] p-4">
                 <p className="text-xs font-semibold text-white/45">Signed in as</p>
                 <p className="mt-1 truncate text-sm font-black text-white">
-                  {user?.first_name || 'Ascending Titans User'}
+                  {user?.first_name || 'Accending titans User'}
                 </p>
               </div>
 

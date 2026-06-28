@@ -1,6 +1,6 @@
 /**
  * TransferTypeSelector Component
- * Allows user to choose between Ascending Titans and Bank transfer
+ * Allows user to choose between Accending titans and Bank transfer
  */
 
 'use client';
@@ -11,14 +11,14 @@ import { Button } from './Button';
 import { Send, Building2 } from 'lucide-react';
 
 interface TransferTypeSelectorProps {
-  onSelect: (type: 'Ascending Titans' | 'bank') => void;
+  onSelect: (type: 'Accending titans' | 'bank') => void;
   disabled?: boolean;
 }
 
 export const TransferTypeSelector = ({ onSelect, disabled = false }: TransferTypeSelectorProps) => {
-  const [selected, setSelected] = useState<'Ascending Titans' | 'bank' | null>(null);
+  const [selected, setSelected] = useState<'Accending titans' | 'bank' | null>(null);
 
-  const handleSelect = (type: 'Ascending Titans' | 'bank') => {
+  const handleSelect = (type: 'Accending titans' | 'bank') => {
     setSelected(type);
     onSelect(type);
   };
@@ -28,19 +28,19 @@ export const TransferTypeSelector = ({ onSelect, disabled = false }: TransferTyp
       <h3 className="text-lg font-semibold text-white">Choose Transfer Type</h3>
 
       <div className="grid grid-cols-2 gap-4">
-        {/* Ascending Titans Transfer Card */}
+        {/* Accending titans Transfer Card */}
         <Card
           className={`cursor-pointer transition-all ${
-            selected === 'Ascending Titans'
+            selected === 'Accending titans'
               ? 'border-[#d71927] bg-white/5'
               : 'hover:border-white/20'
           }`}
-          onClick={() => !disabled && handleSelect('Ascending Titans')}
+          onClick={() => !disabled && handleSelect('Accending titans')}
         >
           <div className="flex flex-col items-center gap-3 py-6">
-            <Send className={`w-8 h-8 ${selected === 'Ascending Titans' ? 'text-[#d71927]' : 'text-white/60'}`} />
-            <h4 className="font-semibold text-white">Ascending Titans User</h4>
-            <p className="text-xs text-white/60 text-center">Transfer to another Ascending Titans user</p>
+            <Send className={`w-8 h-8 ${selected === 'Accending titans' ? 'text-[#d71927]' : 'text-white/60'}`} />
+            <h4 className="font-semibold text-white">Accending titans User</h4>
+            <p className="text-xs text-white/60 text-center">Transfer to another Accending titans user</p>
           </div>
         </Card>
 

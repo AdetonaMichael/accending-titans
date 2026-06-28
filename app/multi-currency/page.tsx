@@ -22,7 +22,7 @@ export default function MultiCurrencyPage() {
             </h1>
 
             <p className="text-xl sm:text-2xl text-gray-600 mb-12 leading-relaxed max-w-3xl mx-auto">
-              We're building new features for Ascending Titans. Stay tuned for exciting updates that will help you grow your business and expand your network.
+              We're building new features for Accending titans. Stay tuned for exciting updates that will help you grow your business and expand your network.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

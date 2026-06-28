@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import PromotionalEmailCampaigns from '@/components/admin/promotional-emails/PromotionalEmailCampaigns';
 
 export const metadata: Metadata = {
-  title: 'Email Campaigns - Ascending Titans Admin',
+  title: 'Email Campaigns - Accending titans Admin',
   description: 'Manage promotional email campaigns',
 };
 

@@ -5,8 +5,8 @@ import { Footer } from '@/components/shared/Footer';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Pay Bills Online | Electricity, Water & More - Ascending Titans',
-  description: 'Pay your electricity, water, and other utility bills online instantly through Ascending Titans. Secure payment and instant confirmation.',
+  title: 'Pay Bills Online | Electricity, Water & More - Accending titans',
+  description: 'Pay your electricity, water, and other utility bills online instantly through Accending titans. Secure payment and instant confirmation.',
   keywords: 'pay bills online, electricity bills, water bills, utility bills, online bill payment Nigeria',
 };
 
@@ -74,7 +74,7 @@ export default function BillsPage() {
       <section className="bg-gray-50 py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-gray-900">Why Pay with Ascending Titans?</h2>
+            <h2 className="mb-4 text-3xl font-bold text-gray-900">Why Pay with Accending titans?</h2>
           </div>
 
           <div className="grid gap-8 md:grid-cols-3">
@@ -144,7 +144,7 @@ export default function BillsPage() {
       <section className="bg-white py-20">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
           <h2 className="mb-6 text-3xl font-bold text-gray-900">Pay Your Bills Today</h2>
-          <p className="mb-8 text-gray-600">Make bill payments easy and convenient with Ascending Titans</p>
+          <p className="mb-8 text-gray-600">Make bill payments easy and convenient with Accending titans</p>
           <Link
             href="/auth/register"
             className="inline-flex items-center rounded-lg bg-red-600 px-8 py-3 font-semibold text-white transition-all hover:bg-red-700 hover:shadow-lg shadow-red-600/30"

@@ -5,7 +5,7 @@ import { Footer } from '@/components/shared/Footer';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Buy Data Bundles Online | Cheap Data Plans - Ascending Titans',
+  title: 'Buy Data Bundles Online | Cheap Data Plans - Accending titans',
   description: 'Get cheap data bundles for MTN, Airtel, Glo, and 9mobile. Instant activation, various plan sizes, and the best rates in Nigeria.',
   keywords: 'buy data, data bundles, MTN data, Airtel data, Glo data, 9mobile data, cheapest data plans Nigeria',
 };
@@ -80,7 +80,7 @@ export default function DataPage() {
       <section className="bg-gray-50 py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-gray-900">Why Choose Ascending Titans for Data?</h2>
+            <h2 className="mb-4 text-3xl font-bold text-gray-900">Why Choose Accending titans for Data?</h2>
           </div>
 
           <div className="grid gap-8 md:grid-cols-3">
@@ -139,7 +139,7 @@ export default function DataPage() {
       <section className="bg-white py-20">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
           <h2 className="mb-6 text-3xl font-bold text-gray-900">Get Data Now</h2>
-          <p className="mb-8 text-gray-600">Join millions of users enjoying fast data bundles on Ascending Titans</p>
+          <p className="mb-8 text-gray-600">Join millions of users enjoying fast data bundles on Accending titans</p>
           <Link
             href="/auth/register"
             className="inline-flex items-center rounded-lg bg-blue-600 px-8 py-3 font-semibold text-white transition-all hover:bg-blue-700 hover:shadow-lg shadow-blue-600/30"

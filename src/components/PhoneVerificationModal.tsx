@@ -129,7 +129,7 @@ export function PhoneVerificationModal({ onVerified }: { onVerified?: () => void
           <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
           <div className="text-sm text-blue-700">
             <p className="font-semibold">Phone Verification Required</p>
-            <p className="text-xs mt-1 opacity-90">You must verify your phone number to continue using Ascending Titans</p>
+            <p className="text-xs mt-1 opacity-90">You must verify your phone number to continue using Accending titans</p>
           </div>
         </div>
         {/* Phone Input Step */}
