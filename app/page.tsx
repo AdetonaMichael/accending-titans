@@ -168,42 +168,56 @@ const stats = [
   { value: '98%', label: 'Member Satisfaction', icon: Star },
 ];
 
+const heroSlides = [
+  {
+    image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1920&q=90',
+    headline: 'Showcase Your Business',
+    subtext: 'Display your products and services to thousands of engaged entrepreneurs and grow your sales',
+    service: '📦 Business Catalogue',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=1920&q=90',
+    headline: 'Network & Collaborate',
+    subtext: 'Connect with like-minded business owners, find partners, and unlock unlimited opportunities',
+    service: '🤝 Community Networking',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1920&q=90',
+    headline: 'Promote Your Services',
+    subtext: 'Reach thousands of members with targeted advertising through text, images, and video content',
+    service: '📢 Advertising Platform',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1920&q=90',
+    headline: 'Find Jobs & Opportunities',
+    subtext: 'Post gigs, find skilled professionals, and discover new business opportunities in your network',
+    service: '💼 Job Opportunities',
+  },
+];
+
 export default function LandingPage() {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const testimonialsRef = useRef<HTMLDivElement>(null);
   const [activeHeroSlide, setActiveHeroSlide] = useState(0);
+  const [isTextVisible, setIsTextVisible] = useState(true);
 
-  const heroSlides = [
-    {
-      image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1920&q=90',
-      headline: 'Showcase Your Business',
-      subtext: 'Display your products and services to thousands of engaged entrepreneurs and grow your sales',
-      service: '📦 Business Catalogue',
-    },
-    {
-      image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1920&q=90',
-      headline: 'Network & Collaborate',
-      subtext: 'Connect with like-minded business owners, find partners, and unlock unlimited opportunities',
-      service: '🤝 Community Networking',
-    },
-    {
-      image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1920&q=90',
-      headline: 'Promote Your Services',
-      subtext: 'Reach thousands of members with targeted advertising through text, images, and video content',
-      service: '📢 Advertising Platform',
-    },
-    {
-      image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1920&q=90',
-      headline: 'Find Jobs & Opportunities',
-      subtext: 'Post gigs, find skilled professionals, and discover new business opportunities in your network',
-      service: '💼 Job Opportunities',
-    },
-  ];
+  const goToSlide = (idx: number) => {
+    if (idx === activeHeroSlide) return;
+    setIsTextVisible(false);
+    setTimeout(() => {
+      setActiveHeroSlide(idx);
+      setIsTextVisible(true);
+    }, 350);
+  };
 
   // Auto-advance hero slides
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveHeroSlide((prev) => (prev + 1) % heroSlides.length);
+      setIsTextVisible(false);
+      setTimeout(() => {
+        setActiveHeroSlide((prev) => (prev + 1) % heroSlides.length);
+        setIsTextVisible(true);
+      }, 350);
     }, 6000);
     return () => clearInterval(interval);
   }, []);
@@ -214,14 +228,22 @@ export default function LandingPage() {
 
       {/* ═══════════════════ HERO SECTION ═══════════════════ */}
       <section id="hero" className="relative overflow-hidden pt-14 sm:pt-16 md:pt-20 min-h-screen flex items-center">
-        {/* Background */}
+
+        {/* Stacked background images — crossfade in sync with text */}
         <div className="absolute inset-0 z-0">
-          <img
-            src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1920&q=90"
-            alt="Community background"
-            className="w-full h-full object-cover brightness-110 contrast-105"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/50 to-black/30" />
+          {heroSlides.map((slide, idx) => (
+            <img
+              key={idx}
+              src={slide.image}
+              alt=""
+              aria-hidden="true"
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${
+                idx === activeHeroSlide ? 'opacity-100' : 'opacity-0'
+              }`}
+            />
+          ))}
+          {/* Overlay gradients — sit above all images */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/55 to-black/35" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/65" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,rgba(201,168,76,0.15),transparent_60%)]" />
           <div className="absolute inset-y-0 right-0 w-72 bg-gradient-to-l from-[#C9A84C]/8 via-[#C9A84C]/3 to-transparent blur-3xl" />
@@ -232,16 +254,23 @@ export default function LandingPage() {
         {/* Content */}
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14 md:py-20 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10 items-center">
-            {/* Left content */}
-            <div>
+            {/* Left content — text fades in/out in sync with background */}
+            <div
+              className="transition-all duration-350 ease-in-out"
+              style={{
+                opacity: isTextVisible ? 1 : 0,
+                transform: isTextVisible ? 'translateY(0px)' : 'translateY(10px)',
+                transition: 'opacity 350ms ease-in-out, transform 350ms ease-in-out',
+              }}
+            >
               {/* Main headline */}
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-white mb-4 sm:mb-5 transition-all duration-700 ease-in-out min-h-[80px] sm:min-h-[100px] md:min-h-[130px]">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-white mb-4 sm:mb-5 min-h-[80px] sm:min-h-[100px] md:min-h-[130px]">
                 {heroSlides[activeHeroSlide].headline}
                 <span className="block text-[#C9A84C] mt-2">with Accending Titans</span>
               </h1>
 
               {/* Subheading */}
-              <p className="text-sm sm:text-base md:text-lg text-white/85 mb-6 sm:mb-8 leading-relaxed max-w-lg transition-all duration-700 ease-in-out font-light min-h-[48px] sm:min-h-[60px] md:min-h-[72px]">
+              <p className="text-sm sm:text-base md:text-lg text-white/85 mb-6 sm:mb-8 leading-relaxed max-w-lg font-light min-h-[48px] sm:min-h-[60px] md:min-h-[72px]">
                 {heroSlides[activeHeroSlide].subtext}
               </p>
 
@@ -321,7 +350,7 @@ export default function LandingPage() {
             {heroSlides.map((_, idx) => (
               <button
                 key={idx}
-                onClick={() => setActiveHeroSlide(idx)}
+                onClick={() => goToSlide(idx)}
                 className={`transition-all duration-300 ${
                   idx === activeHeroSlide
                     ? 'w-6 h-1.5 bg-[#C9A84C] rounded-full'
