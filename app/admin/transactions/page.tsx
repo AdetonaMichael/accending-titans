@@ -315,7 +315,7 @@ export default function AdminTransactionsPage() {
           onClick={openFilters}
           className={`h-11 rounded-xl px-4 font-semibold transition ${
             hasActiveFilters
-              ? 'bg-[#d71927] text-white shadow-lg shadow-[#d71927]/20 hover:bg-[#b91521]'
+              ? 'bg-[#c9a84c] text-white shadow-lg shadow-[#c9a84c]/20 hover:bg-[#b91521]'
               : 'border border-black/10 text-white hover:bg-[#f8f8f8]'
           }`}
         >

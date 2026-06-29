@@ -92,7 +92,7 @@ export const BankSelector = ({
                   text-sm text-white
                   bg-white/5 border border-white/10
                   rounded-lg
-                  focus:outline-none focus:border-[#d71927]
+                  focus:outline-none focus:border-[#c9a84c]
                 "
               />
             </div>
@@ -114,7 +114,7 @@ export const BankSelector = ({
                     border-b border-white/5
                     hover:bg-white/5 transition
                     ${selectedBank?.id === bank.id
-                      ? 'text-[#d71927] bg-[#d71927]/10'
+                      ? 'text-[#c9a84c] bg-[#c9a84c]/10'
                       : 'text-white/80'}
                   `}
                 >

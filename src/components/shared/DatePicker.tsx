@@ -69,7 +69,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
       {label && (
         <label className="block text-sm font-black text-[#111] mb-2">
           {label}
-          {required && <span className="text-[#d71927] ml-1">*</span>}
+          {required && <span className="text-[#c9a84c] ml-1">*</span>}
         </label>
       )}
 
@@ -85,13 +85,13 @@ export const DatePicker: React.FC<DatePickerProps> = ({
           min={minDateAttr}
           max={maxDateAttr}
           className={`w-full pl-12 pr-4 py-3 rounded-2xl border-2 bg-white text-[#111] text-sm font-medium outline-none transition placeholder:text-black/35
-            ${error ? 'border-[#d71927] focus:ring-4 focus:ring-[#d71927]/10' : 'border-black/10 focus:border-[#d71927] focus:ring-4 focus:ring-[#d71927]/10'}
+            ${error ? 'border-[#c9a84c] focus:ring-4 focus:ring-[#c9a84c]/10' : 'border-black/10 focus:border-[#c9a84c] focus:ring-4 focus:ring-[#c9a84c]/10'}
             ${disabled ? 'bg-[#f8f8f8] text-black/50 cursor-not-allowed' : 'hover:border-black/20'}`}
           aria-label={label}
         />
       </div>
 
-      {error && <p className="mt-2 text-sm font-semibold text-[#d71927]">{error}</p>}
+      {error && <p className="mt-2 text-sm font-semibold text-[#c9a84c]">{error}</p>}
       {helperText && !error && <p className="mt-1 text-xs text-black/50">{helperText}</p>}
     </div>
   );

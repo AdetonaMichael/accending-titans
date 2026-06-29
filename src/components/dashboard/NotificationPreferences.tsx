@@ -1,237 +1,366 @@
-/**
- * NotificationPreferences Component
- * Manage notification settings and preferences - Full screen slide-in panel
- */
-
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useNotifications } from '@/hooks/useNotifications';
-import { NotificationPreference } from '@/types/notification.types';
 import {
   AlertCircle,
-  CheckCircle,
-  Loader,
   Bell,
-  Zap,
-  X,
-  Smartphone,
+  CheckCircle,
+  Loader2,
   Mail,
+  Smartphone,
+  Zap,
 } from 'lucide-react';
+import { useNotifications } from '@/hooks/useNotifications';
+import type { NotificationPreference } from '@/types/notification.types';
 
 interface NotificationPreferencesProps {
   isOpen?: boolean;
   onClose?: () => void;
 }
 
-type UpdatablePreferenceField = 
-  | 'enabled' 
-  | 'transaction_notifications' 
-  | 'system_notifications' 
-  | 'promotion_notifications' 
-  | 'update_notifications' 
-  | 'alert_notifications' 
-  | 'email_notifications' 
-  | 'push_notifications';
+type ToggleableField = 
+  | 'enabled'
+  | 'transaction_notifications'
+  | 'system_notifications'
+  | 'promotion_notifications'
+  | 'update_notifications'
+  | 'alert_notifications'
+  | 'email_notifications'
+  | 'push_notifications'
+;
 
-export const NotificationPreferences: React.FC<NotificationPreferencesProps> = ({ 
-  isOpen = true, 
-  onClose 
+// ── Reusable toggle row ──────────────────────────────────────────────────────
+interface ToggleRowProps {
+  label: string;
+  description: string;
+  checked: boolean;
+  disabled: boolean;
+  saving: boolean;
+  gold?: boolean;
+  icon?: React.ElementType;
+  onChange: () => void;
+}
+
+const ToggleRow: React.FC<ToggleRowProps> = ({
+  label,
+  description,
+  checked,
+  disabled,
+  saving,
+  gold = false,
+  icon: Icon,
+  onChange,
+}) => (
+  <label
+    className={`flex cursor-pointer items-center gap-4 rounded-xl border p-4 transition-all ${
+      disabled
+        ? 'cursor-not-allowed opacity-50'
+        : 'hover:border-[#C9A84C]/30 hover:bg-[#FDFAF3]/40'
+    } ${checked && !disabled ? 'border-[#C9A84C]/25 bg-[#FDFAF3]/60' : 'border-gray-100 bg-white'}`}
+  >
+    {/* Toggle knob */}
+    <div
+      className="relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors duration-200"
+      style={{
+        backgroundColor:
+          checked && !disabled
+            ? gold
+              ? '#C9A84C'
+              : '#C9A84C'
+            : '#e5e7eb',
+      }}
+    >
+      <span
+        className={`inline-block h-3.5 w-3.5 rounded-full bg-white shadow-sm transition-transform duration-200 ${
+          checked && !disabled ? 'translate-x-[18px]' : 'translate-x-[3px]'
+        }`}
+      />
+    </div>
+
+    {/* Label */}
+    <div className="flex-1 min-w-0">
+      <p className="flex items-center gap-1.5 text-sm font-semibold text-gray-900">
+        {Icon && <Icon size={14} className="flex-shrink-0 text-gray-400" />}
+        {label}
+      </p>
+      <p className="mt-0.5 text-xs text-gray-400">{description}</p>
+    </div>
+
+    {saving && (
+      <Loader2 size={14} className="flex-shrink-0 animate-spin text-[#C9A84C]" />
+    )}
+
+    <input
+      type="checkbox"
+      checked={checked}
+      onChange={onChange}
+      disabled={disabled}
+      className="sr-only"
+    />
+  </label>
+);
+
+// ── Section wrapper ──────────────────────────────────────────────────────────
+interface SectionProps {
+  title: string;
+  description: string;
+  icon: React.ElementType;
+  children: React.ReactNode;
+}
+
+const Section: React.FC<SectionProps> = ({ title, description, icon: Icon, children }) => (
+  <div>
+    <div className="mb-3 flex items-center gap-3">
+      <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#C9A84C]/20 bg-[#FDFAF3]">
+        <Icon size={15} className="text-[#C9A84C]" />
+      </div>
+      <div>
+        <h3 className="text-sm font-black text-gray-900">{title}</h3>
+        <p className="text-[11px] text-gray-400">{description}</p>
+      </div>
+    </div>
+    <div className="space-y-2">{children}</div>
+  </div>
+);
+
+// ── Main component ───────────────────────────────────────────────────────────
+export const NotificationPreferences: React.FC<NotificationPreferencesProps> = ({
+  isOpen = true,
 }) => {
-  const { preferences, preferencesLoading, fetchPreferences, updatePreferences, error } =
+  const { preferences, preferencesLoading, fetchPreferences, updatePreferences } =
     useNotifications();
 
-  const [isSaving, setIsSaving] = useState(false);
+  const [savingField, setSavingField] = useState<ToggleableField | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
-  // Fetch preferences on component mount
   useEffect(() => {
     fetchPreferences();
   }, [fetchPreferences]);
 
-  const handleToggle = async (
-    field: keyof Pick<NotificationPreference, 'enabled' | 'transaction_notifications' | 'system_notifications' | 'promotion_notifications' | 'update_notifications' | 'alert_notifications' | 'email_notifications' | 'push_notifications'>,
-    currentValue: boolean
-  ) => {
-    if (!preferences) return;
+  const handleToggle = async (field: ToggleableField, currentValue: boolean) => {
+    if (!preferences || savingField) return;
 
-    setIsSaving(true);
+    setSavingField(field);
     setSaveError(null);
     setSaveSuccess(false);
 
     try {
-      await updatePreferences({
-        [field]: !currentValue,
-      });
+      await updatePreferences({ [field]: !currentValue });
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
-    } catch (err: any) {
-      const message = err?.response?.data?.message || err.message || 'Failed to update preferences';
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??
+            'Failed to update preferences';
       setSaveError(message);
     } finally {
-      setIsSaving(false);
+      setSavingField(null);
     }
   };
 
   if (!isOpen) return null;
 
+  const notificationTypes: Array<{
+    key: ToggleableField;
+    label: string;
+    description: string;
+  }> = [
+    {
+      key: 'transaction_notifications',
+      label: 'Transactions',
+      description: 'Payments, transfers and wallet updates',
+    },
+    {
+      key: 'system_notifications',
+      label: 'System Updates',
+      description: 'Platform maintenance and important notices',
+    },
+    {
+      key: 'promotion_notifications',
+      label: 'Promotions',
+      description: 'Exclusive offers, deals and campaigns',
+    },
+    {
+      key: 'update_notifications',
+      label: 'New Features',
+      description: 'Product improvements and feature launches',
+    },
+    {
+      key: 'alert_notifications',
+      label: 'Security Alerts',
+      description: 'Login alerts and suspicious activity',
+    },
+  ];
+
+  const deliveryChannels: Array<{
+    key: ToggleableField;
+    label: string;
+    description: string;
+    icon: React.ElementType;
+  }> = [
+    {
+      key: 'push_notifications',
+      label: 'Push Notifications',
+      description: 'Instant alerts on your device',
+      icon: Smartphone,
+    },
+    {
+      key: 'email_notifications',
+      label: 'Email Notifications',
+      description: 'Summaries delivered to your inbox',
+      icon: Mail,
+    },
+  ];
+
   return (
-    <div className="w-full bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-      {/* Content */}
-      <div className="p-6 md:p-8 space-y-6">
-            
-            {preferencesLoading ? (
-              <div className="flex items-center justify-center py-20">
-                <div className="text-center">
-                  <div className="h-12 w-12 rounded-full border-4 border-slate-200 border-t-red-600 animate-spin mx-auto mb-4" />
-                  <p className="text-slate-600 font-medium">Loading your preferences...</p>
+    <div className="overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-sm">
+      <div className="h-[3px] bg-gradient-to-r from-[#C9A84C]/30 via-[#C9A84C] to-[#C9A84C]/30" />
+
+      <div className="p-6 sm:p-8">
+
+        {/* ── Loading ── */}
+        {preferencesLoading ? (
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-[#C9A84C]/20 bg-[#FDFAF3]">
+              <Loader2 size={20} className="animate-spin text-[#C9A84C]" />
+            </div>
+            <p className="text-sm font-semibold text-gray-500">Loading your preferences…</p>
+          </div>
+        ) : !preferences ? (
+          /* ── Error loading ── */
+          <div className="flex items-start gap-3 rounded-xl border border-red-100 bg-red-50 p-4">
+            <AlertCircle size={16} className="mt-0.5 flex-shrink-0 text-red-500" />
+            <div>
+              <p className="text-sm font-semibold text-red-800">Unable to load preferences</p>
+              <p className="mt-0.5 text-xs text-red-600">
+                We couldn't fetch your notification settings. Please try again later.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-7">
+
+            {/* ── Toast banners ── */}
+            {saveSuccess && (
+              <div className="flex items-start gap-3 rounded-xl border border-green-100 bg-green-50 p-4">
+                <CheckCircle size={16} className="mt-0.5 flex-shrink-0 text-green-600" />
+                <div>
+                  <p className="text-sm font-semibold text-green-800">Preferences saved</p>
+                  <p className="mt-0.5 text-xs text-green-600">
+                    Your notification settings have been updated.
+                  </p>
                 </div>
               </div>
-            ) : !preferences ? (
-              <div className="rounded-xl bg-red-50 border border-red-200 p-4 flex gap-4">
-                <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-0.5" />
-                <div className="min-w-0 flex-1">
-                  <h3 className="font-semibold text-red-900">Unable to load preferences</h3>
-                  <p className="text-sm text-red-700 mt-1">We couldn't fetch your notification settings. Please try again later or contact support.</p>
-                </div>
-              </div>
-            ) : (
-              <>
-                {/* Success message */}
-                {saveSuccess && (
-                  <div className="rounded-xl bg-green-50 border border-green-200 p-4 flex gap-4 animate-in fade-in duration-200">
-                    <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0 mt-0.5" />
-                    <div className="min-w-0 flex-1">
-                      <h3 className="font-semibold text-green-900">Preferences saved successfully</h3>
-                      <p className="text-sm text-green-700 mt-0.5">Your notification settings have been updated.</p>
-                    </div>
-                  </div>
-                )}
-
-                {/* Error message */}
-                {saveError && (
-                  <div className="rounded-xl bg-red-50 border border-red-200 p-4 flex gap-4 animate-in fade-in duration-200">
-                    <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-0.5" />
-                    <div className="min-w-0 flex-1">
-                      <h3 className="font-semibold text-red-900">Failed to save preferences</h3>
-                      <p className="text-sm text-red-700 mt-0.5 break-words">{saveError}</p>
-                    </div>
-                  </div>
-                )}
-
-                {/* Master Control Section - Full Width */}
-                <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-xl border border-slate-200 p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="flex-1">
-                      <h3 className="text-base font-semibold text-gray-900">Master Control</h3>
-                      <p className="text-sm text-gray-600 mt-1">Enable or disable all notifications at once</p>
-                    </div>
-                  </div>
-                  
-                  <label className="flex items-center gap-4 mt-4 p-4 rounded-lg bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer">
-                    <div className="relative inline-flex h-6 w-11 items-center rounded-full flex-shrink-0 bg-gradient-to-r from-gray-200 to-gray-300" style={{backgroundColor: preferences.enabled ? 'rgb(220, 38, 38)' : 'rgb(203, 213, 225)'}}>
-                      <span className={`inline-block h-5 w-5 rounded-full bg-white shadow-md transition-transform ${preferences.enabled ? 'translate-x-5' : 'translate-x-0.5'}`} />
-                    </div>
-                    <span className="text-sm font-medium text-gray-900 flex-1">All Notifications</span>
-                    {isSaving && <Loader className="h-4 w-4 animate-spin text-red-600 flex-shrink-0" />}
-                    <input
-                      type="checkbox"
-                      checked={preferences.enabled}
-                      onChange={() => handleToggle('enabled', preferences.enabled)}
-                      disabled={isSaving}
-                      className="hidden"
-                    />
-                  </label>
-                </div>
-
-                {/* Two Column Layout */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Notification Types Section - Left Column */}
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="p-2 bg-amber-50 rounded-lg">
-                        <Zap className="h-5 w-5 text-amber-600" />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-gray-900">Notification Types</h3>
-                        <p className="text-xs text-gray-600">Choose what kinds of notifications to receive</p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      {[
-                        { key: 'transaction_notifications' as const, label: 'Transactions', desc: 'Payments, transfers & wallet updates' },
-                        { key: 'system_notifications' as const, label: 'System Updates', desc: 'Platform maintenance & important updates' },
-                        { key: 'promotion_notifications' as const, label: 'Promotions', desc: 'Exclusive offers, deals & campaigns' },
-                        { key: 'update_notifications' as const, label: 'New Features', desc: 'New features & product improvements' },
-                        { key: 'alert_notifications' as const, label: 'Security Alerts', desc: 'Login alerts & suspicious activity' },
-                      ].map((item) => (
-                        <label key={item.key} className="flex items-center gap-3 p-4 rounded-lg bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer has-[:disabled]:opacity-60 has-[:disabled]:cursor-not-allowed">
-                          <div className="relative inline-flex h-5 w-9 items-center rounded-full flex-shrink-0 bg-gray-300" style={{backgroundColor: preferences[item.key] && preferences.enabled ? '#3b82f6' : '#cbd5e1'}}>
-                            <span className={`inline-block h-3 w-3 rounded-full bg-white shadow-sm transition-transform ${preferences[item.key] && preferences.enabled ? 'translate-x-4' : 'translate-x-0.5'}`} />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900">{item.label}</p>
-                            <p className="text-xs text-gray-500">{item.desc}</p>
-                          </div>
-                          <input
-                            type="checkbox"
-                            checked={preferences[item.key]}
-                            onChange={() => handleToggle(item.key, preferences[item.key])}
-                            disabled={isSaving || !preferences.enabled}
-                            className="hidden"
-                          />
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Delivery Channels Section - Right Column */}
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="p-2 bg-purple-50 rounded-lg">
-                        <Mail className="h-5 w-5 text-purple-600" />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-gray-900">Delivery Channels</h3>
-                        <p className="text-xs text-gray-600">How you want to receive notifications</p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      {[
-                        { key: 'push_notifications' as const, label: 'Push Notifications', icon: Smartphone, desc: 'Instant alerts on your device' },
-                        { key: 'email_notifications' as const, label: 'Email Notifications', icon: Mail, desc: 'Daily or weekly email summaries' },
-                      ].map((item) => {
-                        const Icon = item.icon;
-                        return (
-                          <label key={item.key} className="flex items-center gap-3 p-4 rounded-lg bg-white border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer has-[:disabled]:opacity-60 has-[:disabled]:cursor-not-allowed">
-                            <div className="relative inline-flex h-5 w-9 items-center rounded-full flex-shrink-0 bg-gray-300" style={{backgroundColor: preferences[item.key] && preferences.enabled ? '#3b82f6' : '#cbd5e1'}}>
-                              <span className={`inline-block h-3 w-3 rounded-full bg-white shadow-sm transition-transform ${preferences[item.key] && preferences.enabled ? 'translate-x-4' : 'translate-x-0.5'}`} />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-gray-900 flex items-center gap-2">
-                                <Icon className="h-4 w-4 flex-shrink-0" />
-                                {item.label}
-                              </p>
-                              <p className="text-xs text-gray-500">{item.desc}</p>
-                            </div>
-                            <input
-                              type="checkbox"
-                              checked={preferences[item.key]}
-                              onChange={() => handleToggle(item.key, preferences[item.key])}
-                              disabled={isSaving || !preferences.enabled}
-                              className="hidden"
-                            />
-                          </label>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </>
             )}
+
+            {saveError && (
+              <div className="flex items-start gap-3 rounded-xl border border-red-100 bg-red-50 p-4">
+                <AlertCircle size={16} className="mt-0.5 flex-shrink-0 text-red-500" />
+                <div>
+                  <p className="text-sm font-semibold text-red-800">Failed to save</p>
+                  <p className="mt-0.5 text-xs text-red-600">{saveError}</p>
+                </div>
+              </div>
+            )}
+
+            {/* ── Master toggle ── */}
+            <div className="rounded-xl border border-[#C9A84C]/15 bg-[#FDFAF3] p-5">
+              <div className="mb-4 flex items-start gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#C9A84C]/20 bg-white">
+                  <Bell size={15} className="text-[#C9A84C]" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-black text-gray-900">Master Control</h3>
+                  <p className="text-[11px] text-gray-400">
+                    Enable or disable all notifications at once.
+                  </p>
+                </div>
+              </div>
+
+              <ToggleRow
+                label="All Notifications"
+                description={
+                  preferences.enabled
+                    ? 'Notifications are currently active'
+                    : 'All notifications are paused'
+                }
+                checked={preferences.enabled}
+                disabled={savingField !== null && savingField !== 'enabled'}
+                saving={savingField === 'enabled'}
+                gold
+                onChange={() => handleToggle('enabled', preferences.enabled)}
+              />
+            </div>
+
+            {/* ── Two-column grid ── */}
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+              {/* Notification types */}
+              <Section
+                title="Notification Types"
+                description="Choose what kinds of notifications to receive"
+                icon={Zap}
+              >
+                {notificationTypes.map((item) => (
+                  <ToggleRow
+                    key={item.key}
+                    label={item.label}
+                    description={item.description}
+                    checked={preferences[item.key]}
+                    disabled={
+                      !preferences.enabled ||
+                      (savingField !== null && savingField !== item.key)
+                    }
+                    saving={savingField === item.key}
+                    onChange={() => handleToggle(item.key, preferences[item.key])}
+                  />
+                ))}
+              </Section>
+
+              {/* Delivery channels */}
+              <Section
+                title="Delivery Channels"
+                description="How you want to receive notifications"
+                icon={Mail}
+              >
+                {deliveryChannels.map((item) => (
+                  <ToggleRow
+                    key={item.key}
+                    label={item.label}
+                    description={item.description}
+                    checked={preferences[item.key]}
+                    disabled={
+                      !preferences.enabled ||
+                      (savingField !== null && savingField !== item.key)
+                    }
+                    saving={savingField === item.key}
+                    icon={item.icon}
+                    onChange={() => handleToggle(item.key, preferences[item.key])}
+                  />
+                ))}
+
+                {/* Informational note */}
+                <div className="mt-2 rounded-xl border border-gray-100 bg-gray-50 p-4">
+                  <p className="text-xs font-semibold text-gray-500">
+                    Delivery channels only apply when master notifications are enabled.
+                    Individual notification types can still be toggled independently.
+                  </p>
+                </div>
+              </Section>
+            </div>
+
+            {/* ── Footer note ── */}
+            <div className="border-t border-gray-100 pt-5">
+              <p className="text-[11px] text-gray-400">
+                Changes are saved automatically when you toggle a setting. Some notifications
+                may be required for security purposes and cannot be disabled.
+              </p>
+            </div>
+
+          </div>
+        )}
       </div>
     </div>
   );

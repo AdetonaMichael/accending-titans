@@ -124,7 +124,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               className={clsx(
                 'group flex items-center gap-4 rounded-2xl px-4 py-3 text-sm font-bold transition-all',
                 active
-                  ? 'bg-[#d71927] text-white shadow-lg shadow-[#d71927]/25'
+                  ? 'bg-[#c9a84c] text-white shadow-lg shadow-[#c9a84c]/25'
                   : 'text-white/60 hover:bg-white/10 hover:text-white'
               )}
             >

@@ -97,10 +97,10 @@ export default function TierUpgradePage() {
           {TIERS.map((tier) => (
             <Card
               key={tier.name}
-              className="rounded-2xl border border-gray-200 bg-white p-6 cursor-pointer hover:border-[#d71927] hover:shadow-lg transition"
+              className="rounded-2xl border border-gray-200 bg-white p-6 cursor-pointer hover:border-[#c9a84c] hover:shadow-lg transition"
               onClick={() => setSelectedTier(tier.name)}
             >
-              <div className="text-[#d71927] mb-4">{tier.icon}</div>
+              <div className="text-[#c9a84c] mb-4">{tier.icon}</div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">{tier.title}</h3>
               <p className="text-sm text-gray-600 mb-4">{tier.description}</p>
 

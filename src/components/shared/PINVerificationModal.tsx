@@ -134,9 +134,9 @@ export const PINVerificationModal: React.FC<PINVerificationModalProps> = ({
               disabled={isLoading}
               className={`w-16 h-16 text-center text-3xl font-bold rounded-xl border-2 transition-all duration-200 ${
                 digit
-                  ? 'border-[#d71927] bg-red-50 text-gray-900 shadow-md'
+                  ? 'border-[#c9a84c] bg-red-50 text-gray-900 shadow-md'
                   : 'border-gray-200 bg-white hover:border-gray-300'
-              } focus:outline-none focus:border-[#d71927] focus:ring-2 focus:ring-red-200 focus:shadow-md disabled:opacity-50 disabled:cursor-not-allowed`}
+              } focus:outline-none focus:border-[#c9a84c] focus:ring-2 focus:ring-red-200 focus:shadow-md disabled:opacity-50 disabled:cursor-not-allowed`}
             />
           ))}
         </div>
@@ -163,7 +163,7 @@ export const PINVerificationModal: React.FC<PINVerificationModalProps> = ({
             fullWidth
             onClick={handleVerify}
             disabled={!pinComplete || isLoading}
-            className={`rounded-xl text-white h-12 font-semibold bg-[#d71927] hover:bg-[#b81420] ${!pinComplete || isLoading ? 'opacity-60 cursor-not-allowed' : ''}`}
+            className={`rounded-xl text-white h-12 font-semibold bg-[#c9a84c] hover:bg-[#b81420] ${!pinComplete || isLoading ? 'opacity-60 cursor-not-allowed' : ''}`}
           >
             {isLoading ? 'Verifying...' : 'Confirm'}
           </Button>

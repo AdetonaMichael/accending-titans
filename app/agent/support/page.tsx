@@ -124,7 +124,7 @@ export default function AgentSupportPage() {
                 onClick={() => setSelectedTab(tab)}
                 className={`px-4 py-2 font-medium border-b-2 transition ${
                   selectedTab === tab
-                    ? 'border-[#d71927] text-[#d71927]'
+                    ? 'border-[#c9a84c] text-[#c9a84c]'
                     : 'border-transparent text-gray-600 hover:text-gray-900'
                 }`}
               >
@@ -166,7 +166,7 @@ export default function AgentSupportPage() {
 
               <div className="mt-3 pt-3 border-t border-gray-100 flex justify-between items-center">
                 <span className="text-xs text-gray-500">Last reply: {ticket.last_reply}</span>
-                <button className="text-[#d71927] hover:text-[#9da9ff] font-medium text-sm">
+                <button className="text-[#c9a84c] hover:text-[#9da9ff] font-medium text-sm">
                   View Ticket
                 </button>
               </div>

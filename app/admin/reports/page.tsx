@@ -306,7 +306,7 @@ export default function AdminReportsPage() {
           onClick={openFilters}
           className={`h-11 rounded-xl px-4 font-semibold transition ${
             hasActiveFilters
-              ? 'bg-[#d71927] text-white shadow-lg shadow-[#d71927]/20 hover:bg-[#b91521]'
+              ? 'bg-[#c9a84c] text-white shadow-lg shadow-[#c9a84c]/20 hover:bg-[#b91521]'
               : 'border border-black/10 text-[#111] hover:bg-[#f8f8f8]'
           }`}
         >

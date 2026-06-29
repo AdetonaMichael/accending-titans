@@ -6,15 +6,16 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   Activity,
+  Award,
   FileText,
   Gift,
   Home,
   LogOut,
+  Menu,
   Send,
   Settings,
-  X,
-  Award,
   Users,
+  X,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -23,7 +24,6 @@ import { useAuthStore } from '@/store/auth.store';
 import { useUIStore } from '@/store/ui.store';
 import { Topbar } from '@/components/shared/Topbar';
 import { AuthProtected } from '@/components/AuthProtected';
-import { PageSkeleton } from '@/components/shared/SkeletonLoader';
 
 const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const pathname = usePathname();
@@ -36,39 +36,27 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Check email verification and role authorization
   useEffect(() => {
     if (!user) {
       setLoading(true);
       return;
     }
 
-    // Email verification is now handled by AuthInitializer at app level
-    // This is just a safety check for edge cases
     if (!user.isEmailVerified) {
       router.replace(`/auth/verify-email?email=${encodeURIComponent(user.email)}`);
       return;
     }
 
-    // Dashboard-specific pages should not trigger admin/agent redirect
-    const dashboardSpecificPages = [
-      '/dashboard/profile',
-      '/dashboard/catalogue',
-    ];
-    const isDashboardSpecificPage = dashboardSpecificPages.some(page => pathname?.startsWith(page));
+    const dashboardSpecificPages = ['/dashboard/profile', '/dashboard/catalogue'];
+    const isDashboardSpecificPage = dashboardSpecificPages.some((page) =>
+      pathname?.startsWith(page)
+    );
 
-    // If on dashboard-specific page, allow it to render
     if (isDashboardSpecificPage) {
       setLoading(false);
       return;
     }
 
-    // NOTE: Role-based redirects (admin/agent) are now handled by AuthInitializer
-    // at app level during initialization, not here. This prevents race conditions.
-    // Dashboard layout only handles:
-    // 1. Email verification safety check (above)
-    // 2. Renders dashboard UI for customers with verified email
-    
     setLoading(false);
   }, [user, router, pathname]);
 
@@ -86,18 +74,24 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
   const isActive = (href: string) => pathname === href;
 
+  const initials = user?.first_name
+    ? user.first_name.slice(0, 1).toUpperCase() + (user?.last_name?.slice(0, 1).toUpperCase() ?? '')
+    : 'AT';
+
   const SidebarContent = ({ mobile = false }: { mobile?: boolean }) => (
     <>
-      <div className="border-b border-white/10 px-5 py-6">
+      {/* Logo */}
+      <div className="border-b border-gray-100 px-5 py-5">
         <Link href="/dashboard" className="flex items-center gap-3">
-          <Image src="/icon.png" alt="Accending titans" width={42} height={42} />
-
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#C9A84C]/25 bg-[#FDFAF3] flex-shrink-0">
+            <div className="h-[14px] w-[14px] rounded-[4px] bg-[#C9A84C]" />
+          </div>
           {(sidebarOpen || mobile) && (
             <div>
-              <p className="text-xl font-black tracking-tight text-white">
+              <p className="text-sm font-black tracking-tight text-gray-900 leading-tight">
                 Accending titans
               </p>
-              <p className="text-xs font-semibold text-white/45">
+              <p className="text-[11px] font-semibold text-gray-400 leading-tight">
                 Payment Wallet
               </p>
             </div>
@@ -105,7 +99,8 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
         </Link>
       </div>
 
-      <nav className="flex-1 space-y-2 overflow-y-auto px-3 py-6">
+      {/* Nav */}
+      <nav className="flex-1 space-y-0.5 overflow-y-auto px-3 py-4">
         {navItems.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.href);
@@ -116,30 +111,33 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
               href={item.href}
               onClick={() => mobile && setMobileMenuOpen(false)}
               className={clsx(
-                'group flex items-center gap-4 rounded-2xl px-4 py-3 text-sm font-bold transition-all',
+                'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all',
                 active
-                  ? 'bg-[#d71927] text-white shadow-lg shadow-[#d71927]/25'
-                  : 'text-white/60 hover:bg-white/10 hover:text-white'
+                  ? 'bg-[#C9A84C] text-white shadow-sm shadow-[#C9A84C]/20'
+                  : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
               )}
             >
               <Icon
-                size={20}
+                size={17}
                 className={clsx(
-                  active ? 'text-white' : 'text-white/50 group-hover:text-white'
+                  'flex-shrink-0',
+                  active ? 'text-white' : 'text-gray-400 group-hover:text-gray-600'
                 )}
               />
-
               {(sidebarOpen || mobile) && <span>{item.label}</span>}
             </Link>
           );
         })}
       </nav>
 
-      <div className="border-t border-white/10 p-3">
+      {/* Footer */}
+      <div className="border-t border-gray-100 p-3 space-y-1">
         {(sidebarOpen || mobile) && (
-          <div className="mb-3 rounded-2xl border border-white/10 bg-white/[0.06] p-4">
-            <p className="text-xs font-semibold text-white/45">Signed in as</p>
-            <p className="mt-1 truncate text-sm font-black text-white">
+          <div className="mb-2 rounded-xl border border-[#C9A84C]/15 bg-[#FDFAF3] px-3.5 py-3">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-[#C9A84C]/70">
+              Signed in as
+            </p>
+            <p className="mt-0.5 truncate text-sm font-black text-gray-900">
               {user?.first_name || 'Accending titans User'}
             </p>
           </div>
@@ -150,89 +148,112 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
             logout();
             if (mobile) setMobileMenuOpen(false);
           }}
-          className="flex w-full items-center gap-4 rounded-2xl px-4 py-3 text-sm font-bold text-white/60 transition hover:bg-white/10 hover:text-white"
+          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-gray-400 transition hover:bg-red-50 hover:text-red-600"
         >
-          <LogOut size={20} />
+          <LogOut size={17} className="flex-shrink-0" />
           {(sidebarOpen || mobile) && <span>Logout</span>}
         </button>
       </div>
     </>
   );
 
-
   return (
     <AuthProtected requireAuth>
-      <div className="flex h-screen overflow-hidden bg-[#100303] text-white">
+      <div className="flex h-screen overflow-hidden bg-[#f8f8f8] text-gray-900">
+
+        {/* Desktop Sidebar */}
         <aside
           className={clsx(
-            'hidden shrink-0 flex-col border-r border-white/10 bg-[#140404] transition-all duration-300 md:flex',
-            sidebarOpen ? 'w-72' : 'w-24'
+            'hidden shrink-0 flex-col border-r border-gray-100 bg-white transition-all duration-300 md:flex',
+            sidebarOpen ? 'w-64' : 'w-[72px]'
           )}
         >
           <SidebarContent />
         </aside>
 
         <div className="flex min-w-0 flex-1 flex-col">
-          <Topbar
-            onMenuToggle={() => setMobileMenuOpen((open) => !open)}
-            mobileMenuOpen={mobileMenuOpen}
-          />
+          {/* Topbar */}
+          <header className="flex h-14 items-center justify-between border-b border-gray-100 bg-white px-4 sm:px-6">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setMobileMenuOpen((open) => !open)}
+                className="rounded-lg p-1.5 text-gray-400 transition hover:bg-gray-50 hover:text-gray-700 md:hidden"
+                aria-label="Open menu"
+              >
+                <Menu size={20} />
+              </button>
+              <p className="hidden text-sm font-medium text-gray-400 sm:block">
+                Good day, {user?.first_name || 'there'}
+              </p>
+            </div>
 
+            <div className="flex items-center gap-3">
+              {/* Avatar */}
+              <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[#C9A84C]/25 bg-[#FDFAF3] text-xs font-black text-[#B8962E]">
+                {initials}
+              </div>
+            </div>
+          </header>
+
+          {/* Mobile overlay */}
           {mobileMenuOpen && (
             <div
-              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
+              className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm md:hidden"
               onClick={() => setMobileMenuOpen(false)}
             />
           )}
 
+          {/* Mobile Sidebar */}
           <aside
             className={clsx(
-              'fixed left-0 top-0 z-50 flex h-screen w-72 flex-col border-r border-white/10 bg-[#140404] text-white transition-transform duration-300 md:hidden',
+              'fixed left-0 top-0 z-50 flex h-screen w-64 flex-col border-r border-gray-100 bg-white transition-transform duration-300 md:hidden',
               mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
             )}
           >
-            <div className="border-b border-white/10 px-5 py-5 flex items-center justify-between">
+            <div className="flex items-center justify-between border-b border-gray-100 px-5 py-5">
               <Link href="/dashboard" className="flex items-center gap-3">
-                <Image src="/icon.png" alt="Accending titans" width={42} height={42} />
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#C9A84C]/25 bg-[#FDFAF3] flex-shrink-0">
+                  <div className="h-[14px] w-[14px] rounded-[4px] bg-[#C9A84C]" />
+                </div>
                 <div>
-                  <p className="text-xl font-black tracking-tight text-white">
+                  <p className="text-sm font-black tracking-tight text-gray-900 leading-tight">
                     Accending titans
                   </p>
-                  <p className="text-xs font-semibold text-white/45">
+                  <p className="text-[11px] font-semibold text-gray-400 leading-tight">
                     Payment Wallet
                   </p>
                 </div>
               </Link>
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="rounded-xl p-2 text-white/60 transition hover:bg-white/10 hover:text-white flex-shrink-0"
+                className="rounded-lg p-1.5 text-gray-400 transition hover:bg-gray-50"
                 aria-label="Close menu"
               >
-                <X size={22} />
+                <X size={18} />
               </button>
             </div>
 
-            <nav className="flex-1 space-y-2 overflow-y-auto px-3 py-6">
+            <nav className="flex-1 space-y-0.5 overflow-y-auto px-3 py-4">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const active = isActive(item.href);
-
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
                     className={clsx(
-                      'group flex items-center gap-4 rounded-2xl px-4 py-3 text-sm font-bold transition-all',
+                      'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all',
                       active
-                        ? 'bg-[#d71927] text-white shadow-lg shadow-[#d71927]/25'
-                        : 'text-white/60 hover:bg-white/10 hover:text-white'
+                        ? 'bg-[#C9A84C] text-white shadow-sm shadow-[#C9A84C]/20'
+                        : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
                     )}
                   >
                     <Icon
-                      size={20}
+                      size={17}
                       className={clsx(
-                        active ? 'text-white' : 'text-white/50 group-hover:text-white'
+                        'flex-shrink-0',
+                        active ? 'text-white' : 'text-gray-400 group-hover:text-gray-600'
                       )}
                     />
                     <span>{item.label}</span>
@@ -241,28 +262,27 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
               })}
             </nav>
 
-            <div className="border-t border-white/10 p-3">
-              <div className="mb-3 rounded-2xl border border-white/10 bg-white/[0.06] p-4">
-                <p className="text-xs font-semibold text-white/45">Signed in as</p>
-                <p className="mt-1 truncate text-sm font-black text-white">
+            <div className="border-t border-gray-100 p-3 space-y-1">
+              <div className="mb-2 rounded-xl border border-[#C9A84C]/15 bg-[#FDFAF3] px-3.5 py-3">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-[#C9A84C]/70">
+                  Signed in as
+                </p>
+                <p className="mt-0.5 truncate text-sm font-black text-gray-900">
                   {user?.first_name || 'Accending titans User'}
                 </p>
               </div>
-
               <button
-                onClick={() => {
-                  logout();
-                  setMobileMenuOpen(false);
-                }}
-                className="flex w-full items-center gap-4 rounded-2xl px-4 py-3 text-sm font-bold text-white/60 transition hover:bg-white/10 hover:text-white"
+                onClick={() => { logout(); setMobileMenuOpen(false); }}
+                className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-gray-400 transition hover:bg-red-50 hover:text-red-600"
               >
-                <LogOut size={20} />
+                <LogOut size={17} />
                 <span>Logout</span>
               </button>
             </div>
           </aside>
 
-          <main className="flex-1 overflow-y-auto bg-[radial-gradient(circle_at_top_right,rgba(215,25,39,0.12),transparent_32%),#f8f8f8] p-2 text-[#111]">
+          {/* Main content */}
+          <main className="flex-1 overflow-y-auto bg-[#f8f8f8] p-4 sm:p-6">
             {children}
           </main>
         </div>

@@ -26,14 +26,14 @@ export const TierUpgradeCta: React.FC<TierUpgradeCtaProps> = ({
   }
 
   return (
-    <Card className={`border-2 border-[#d71927] bg-gradient-to-r from-blue-50 to-purple-50 ${className}`}>
+    <Card className={`border-2 border-[#c9a84c] bg-gradient-to-r from-blue-50 to-purple-50 ${className}`}>
       <CardBody className="py-6">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <Sparkles className="w-6 h-6 text-[#d71927]" />
+            <Sparkles className="w-6 h-6 text-[#c9a84c]" />
             <div>
               <p className="font-semibold text-gray-900">
-                Ready to upgrade to <span className="text-[#d71927]">{nextTierName}</span>?
+                Ready to upgrade to <span className="text-[#c9a84c]">{nextTierName}</span>?
               </p>
               <p className="text-sm text-gray-600 mt-0.5">
                 Complete your profile to unlock exclusive benefits

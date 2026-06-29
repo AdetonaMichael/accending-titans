@@ -5,17 +5,19 @@ import Link from 'next/link';
 import {
   AlertCircle,
   ArrowRight,
+  Award,
   CheckCircle,
   ChevronLeft,
   ChevronRight,
   Clock,
   CreditCard,
+  FileText,
   ReceiptText,
+  Send,
   TrendingUp,
   Wallet,
 } from 'lucide-react';
 
-import { Card } from '@/components/shared/Card';
 import { Badge } from '@/components/shared/Badge';
 import { DashboardSkeleton } from '@/components/shared/SkeletonLoader';
 import { AdCarousel } from '@/components/dashboard/AdCarousel';
@@ -23,8 +25,8 @@ import { walletService } from '@/services/wallet.service';
 import { transactionService } from '@/services/transaction.service';
 import { customerService, DedicatedAccount } from '@/services/customer.service';
 import { useAuth } from '@/hooks/useAuth';
-import { formatCurrency, formatRelativeTime, formatDate } from '@/utils/format.utils';
-import { TRANSACTION_STATUSES, TRANSACTION_TYPES } from '@/utils/constants';
+import { formatCurrency, formatDate } from '@/utils/format.utils';
+import { TRANSACTION_STATUSES } from '@/utils/constants';
 
 type WalletData = {
   balance: number;
@@ -51,52 +53,34 @@ const quickActions = [
     href: '/dashboard/catalogue',
     label: 'My Business Catalogue',
     description: 'Showcase your products and services',
-    icon: CreditCard,
-    image:
-      'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80',
+    icon: FileText,
   },
   {
     href: '/dashboard/messages',
     label: 'Direct Messages',
     description: 'Connect with community members',
-    icon: ReceiptText,
-    image:
-      'https://images.unsplash.com/photo-1516321318423-f06f70db51ca?auto=format&fit=crop&w=1200&q=80',
+    icon: Send,
   },
   {
     href: '/dashboard/referral',
     label: 'Referral Program',
     description: 'Earn rewards by sharing',
     icon: TrendingUp,
-    image:
-      'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80',
   },
   {
     href: '/dashboard/opportunities',
     label: 'Opportunities',
     description: 'Find jobs and partnerships',
-    icon: Wallet,
-    image:
-      'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80',
+    icon: Award,
   },
 ];
 
-const getTransactionIcon = (type: string, status: string) => {
-  const normalizedStatus = status?.toLowerCase?.() || '';
-
-  if (normalizedStatus === 'success') {
-    return <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />;
-  }
-
-  if (normalizedStatus === 'pending') {
-    return <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-amber-500" />;
-  }
-
-  if (normalizedStatus === 'failed') {
-    return <AlertCircle className="h-4 w-4 sm:h-5 sm:w-5 text-red-600" />;
-  }
-
-  return <CreditCard className="h-4 w-4 sm:h-5 sm:w-5 text-[#d71927]" />;
+const getTransactionStatusIcon = (status: string) => {
+  const s = status?.toLowerCase?.() || '';
+  if (s === 'success') return <CheckCircle className="h-4 w-4 text-green-600" />;
+  if (s === 'pending') return <Clock className="h-4 w-4 text-amber-500" />;
+  if (s === 'failed') return <AlertCircle className="h-4 w-4 text-red-500" />;
+  return <CreditCard className="h-4 w-4 text-[#C9A84C]" />;
 };
 
 export default function DashboardPage() {
@@ -109,7 +93,6 @@ export default function DashboardPage() {
   const [accountLoading, setAccountLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-
   const [pagination, setPagination] = useState({
     currentPage: 1,
     lastPage: 1,
@@ -117,11 +100,9 @@ export default function DashboardPage() {
     perPage: 10,
   });
 
-  // Fetch customer dedicated account info
   useEffect(() => {
     const fetchAccountInfo = async () => {
       if (!user?.email) return;
-
       try {
         setAccountLoading(true);
         const response = await customerService.getCurrentUserAccount(user.email);
@@ -130,39 +111,27 @@ export default function DashboardPage() {
         }
       } catch (err) {
         console.error('Error fetching dedicated account info:', err);
-        // Don't set error state for this - it's optional information
       } finally {
         setAccountLoading(false);
       }
     };
-
     fetchAccountInfo();
   }, [user?.email]);
 
-  // Fetch wallet and transactions
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         setError(null);
-
         const [walletRes, transactionsRes] = await Promise.all([
           walletService.getBalance(),
           user?.id
-            ? transactionService.getTransactions(String(user.id), {
-                page: currentPage,
-                per_page: 10,
-              })
+            ? transactionService.getTransactions(String(user.id), { page: currentPage, per_page: 10 })
             : Promise.resolve(null),
         ]);
-
-        if (walletRes?.data) {
-          setWallet(walletRes.data as WalletData);
-        }
-
+        if (walletRes?.data) setWallet(walletRes.data as WalletData);
         if (transactionsRes?.data?.transactions) {
           setTransactions(transactionsRes.data.transactions);
-
           if (transactionsRes.data.pagination) {
             setPagination({
               currentPage: transactionsRes.data.pagination.current_page || currentPage,
@@ -171,8 +140,6 @@ export default function DashboardPage() {
               perPage: transactionsRes.data.pagination.per_page || 10,
             });
           }
-        } else if (Array.isArray(transactionsRes?.data?.transactions)) {
-          setTransactions(transactionsRes.data.transactions);
         }
       } catch (err) {
         console.error('Error fetching dashboard data:', err);
@@ -182,274 +149,219 @@ export default function DashboardPage() {
         setLoading(false);
       }
     };
-
     fetchData();
   }, [user?.id, currentPage]);
 
   const monthlyTransactionsCount = useMemo(() => {
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
-
-    return transactions.filter((transaction) => {
-      const dateStr = transaction.created_at || transaction.transaction_date;
-      if (!dateStr) return false;
-
-      const createdAt = new Date(dateStr);
-
-      return (
-        createdAt.getMonth() === currentMonth &&
-        createdAt.getFullYear() === currentYear
-      );
+    const m = new Date().getMonth();
+    const y = new Date().getFullYear();
+    return transactions.filter((t) => {
+      const d = new Date(t.created_at || t.transaction_date || '');
+      return d.getMonth() === m && d.getFullYear() === y;
     }).length;
   }, [transactions]);
 
-  const successfulTransactionsCount = useMemo(() => {
-    return transactions.filter(
-      (transaction) => transaction.status?.toLowerCase() === 'success'
-    ).length;
-  }, [transactions]);
+  const successfulTransactionsCount = useMemo(() =>
+    transactions.filter((t) => t.status?.toLowerCase() === 'success').length,
+    [transactions]
+  );
 
-  const getTransactionTimestamp = (transaction: TransactionData): string => {
-    return transaction.created_at || transaction.transaction_date || 'Unknown';
-  };
+  const getTransactionTimestamp = (t: TransactionData) =>
+    t.created_at || t.transaction_date || 'Unknown';
 
-  const getTransactionTypeLabel = (transaction: TransactionData): string => {
-    return transaction.transaction_type || transaction.type || 'Transaction';
-  };
+  const getTransactionTypeLabel = (t: TransactionData) =>
+    t.transaction_type || t.type || 'Transaction';
 
-  const getStatusBadgeVariant = (status: string) => {
-    const statusInfo = TRANSACTION_STATUSES[status as keyof typeof TRANSACTION_STATUSES];
-    return statusInfo?.color ?? 'secondary';
-  };
+  const getStatusBadgeVariant = (status: string) =>
+    TRANSACTION_STATUSES[status as keyof typeof TRANSACTION_STATUSES]?.color ?? 'secondary';
 
-  const getStatusLabel = (status: string) => {
-    const statusInfo = TRANSACTION_STATUSES[status as keyof typeof TRANSACTION_STATUSES];
-    return statusInfo?.label ?? status;
-  };
+  const getStatusLabel = (status: string) =>
+    TRANSACTION_STATUSES[status as keyof typeof TRANSACTION_STATUSES]?.label ?? status;
 
-  const getServiceName = (transaction: TransactionData): string => {
-    const type = transaction.transaction_type || transaction.type;
-
+  const getServiceName = (t: TransactionData): string => {
+    const type = t.transaction_type || t.type;
     return (
-      (transaction.metadata as any)?.product_name ||
-      (transaction.metadata as any)?.service_type ||
+      (t.metadata as any)?.product_name ||
+      (t.metadata as any)?.service_type ||
       (() => {
-        if (type === 'Wallet Funding' || type === 'wallet_topup') {
-          return 'Wallet Funding';
-        }
-
-        if (type === 'Airtime Conversion' || type === 'airtime_conversion') {
-          return 'Airtime Conversion';
-        }
-
-        return transaction.provider || '—';
+        if (type === 'Wallet Funding' || type === 'wallet_topup') return 'Wallet Funding';
+        if (type === 'Airtime Conversion' || type === 'airtime_conversion') return 'Airtime Conversion';
+        return t.provider || '—';
       })()
     );
   };
 
-  if (loading) {
-    return <DashboardSkeleton />;
-  }
+  if (loading) return <DashboardSkeleton />;
 
   return (
-    <div className="space-y-5 sm:space-y-6 md:space-y-8">
-      <section className="relative overflow-hidden bg-[#140404]  text-white ">
-        <div className="absolute right-0 top-0 h-48 w-48 sm:h-60 sm:w-60 md:h-72 md:w-72 rounded-full bg-[#C9A84C]/20 blur-3xl" />
-        <div className="absolute bottom-0 left-0 h-48 w-48 sm:h-60 sm:w-60 md:h-72 md:w-72 rounded-full bg-[#C9A84C]/10 blur-3xl" />
+    <div className="space-y-5 sm:space-y-6">
 
-        <div className="relative grid gap-6 sm:gap-7 md:gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
+      {/* ── Hero: Balance + Account ── */}
+      <div className="overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-sm">
+        <div className="h-[3px] bg-gradient-to-r from-[#C9A84C]/30 via-[#C9A84C] to-[#C9A84C]/30" />
+        <div className="p-5 sm:p-6 lg:grid lg:grid-cols-[1fr_auto] lg:gap-8 lg:items-start">
+          {/* Welcome copy — desktop only */}
           <div className="hidden lg:block">
-            <p className="caption font-semibold text-[#C9A84C]">Welcome to Your Community Hub</p>
-
-            <h1 className="mt-2 h2">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#C9A84C]">
+              Welcome to your community hub
+            </p>
+            <h1 className="mt-2 text-2xl font-black tracking-tight text-gray-900">
               Hi {user?.first_name || 'there'}, let's grow together.
             </h1>
-
-            <p className="mt-3 max-w-2xl body-sm text-white/65">
+            <p className="mt-2 max-w-lg text-sm text-gray-500 leading-relaxed">
               Connect with entrepreneurs, showcase your business, find opportunities,
               and build meaningful professional relationships on Accending titans.
             </p>
-
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div className="mt-5 flex flex-wrap gap-3">
               <Link
                 href="/dashboard/catalogue"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#C9A84C] px-5 py-3 button-md text-gray-900 font-semibold shadow-lg shadow-[#C9A84C]/25 hover:bg-[#B8962E]"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#C9A84C] px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-[#C9A84C]/20 transition hover:bg-[#B8962E]"
               >
-                My Catalogue
-                <ArrowRight size={16} />
+                My Catalogue <ArrowRight size={14} />
               </Link>
-
               <Link
-                href="/dashboard"
-                className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-5 py-3 button-md text-white hover:bg-white/15"
+                href="/dashboard/opportunities"
+                className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
               >
                 Browse Opportunities
               </Link>
             </div>
           </div>
 
-          <div className="rounded-2xl sm:rounded-3xl border border-white/10 bg-white/10 p-4 sm:p-5 backdrop-blur">
-            <div className="grid grid-cols-2 gap-3 sm:gap-4">
-              {/* Top Left - Balance */}
-              <div className="col-span-2">
-                <p className="caption font-semibold text-white/55">Available Balance</p>
-                <h2 className="mt-1.5 text-2xl sm:text-3xl font-black">
-                  {wallet ? formatCurrency(wallet.balance, wallet.currency) : '₦0.00'}
-                </h2>
-              </div>
+          {/* Balance card */}
+          <div className="rounded-xl border border-gray-100 bg-[#f8f8f8] p-5 lg:min-w-[260px]">
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400">
+              Available Balance
+            </p>
+            <p className="mt-1.5 text-3xl font-black text-gray-900">
+              {wallet ? formatCurrency(wallet.balance, wallet.currency) : '₦0.00'}
+            </p>
 
-              {/* Account Details - if exists */}
-              {dedicatedAccount && (
-                <div className="col-span-2 border-t border-white/10 pt-3 space-y-2.5">
-                  <p className="text-[11px] font-semibold text-white/35 uppercase tracking-wider">Account</p>
-                  
-                  {/* Account Number */}
-                  <div className="flex items-center gap-1.5">
-                    <p className="font-mono text-sm font-bold text-white">
-                      {dedicatedAccount.account_number}
-                    </p>
+            {dedicatedAccount && (
+              <div className="mt-4 space-y-3 border-t border-gray-200 pt-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-[#C9A84C]/80">
+                  Bank Account
+                </p>
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-sm font-bold text-gray-900">
+                    {dedicatedAccount.account_number}
+                  </span>
+                  <button
+                    onClick={() => navigator.clipboard.writeText(dedicatedAccount.account_number)}
+                    className="rounded-md bg-white border border-gray-200 px-2 py-1 text-[11px] font-semibold text-gray-500 transition hover:border-[#C9A84C]/40 hover:text-[#C9A84C]"
+                    title="Copy account number"
+                  >
+                    Copy
+                  </button>
+                </div>
+                {dedicatedAccount.account_name && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-gray-700">
+                      {dedicatedAccount.account_name}
+                    </span>
                     <button
-                      onClick={() => {
-                        navigator.clipboard.writeText(dedicatedAccount.account_number);
-                      }}
-                      className="inline-flex items-center justify-center rounded-md bg-white/15 p-1 text-white/70 hover:bg-white/25 transition-colors flex-shrink-0"
-                      title="Copy account number"
+                      onClick={() => navigator.clipboard.writeText(dedicatedAccount.account_name)}
+                      className="rounded-md bg-white border border-gray-200 px-2 py-1 text-[11px] font-semibold text-gray-500 transition hover:border-[#C9A84C]/40 hover:text-[#C9A84C]"
                     >
-                      <svg className="h-2.5 w-2.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2z" />
-                        <path d="M2 6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2.5a.5.5 0 0 0-1 0V16a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h2.5a.5.5 0 0 0 0-1H2z" />
-                      </svg>
+                      Copy
                     </button>
                   </div>
+                )}
+                <p className="text-xs font-semibold text-gray-400">{dedicatedAccount.bank_name}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
 
-                  {/* Account Name */}
-                  {dedicatedAccount.account_name && (
-                    <div className="flex items-center gap-1.5">
-                      <p className="text-sm font-semibold text-white/80">
-                        {dedicatedAccount.account_name}
-                      </p>
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(dedicatedAccount.account_name);
-                        }}
-                        className="inline-flex items-center justify-center rounded-md bg-white/15 p-1 text-white/70 hover:bg-white/25 transition-colors flex-shrink-0"
-                        title="Copy account name"
-                      >
-                        <svg className="h-2.5 w-2.5" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2z" />
-                          <path d="M2 6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2.5a.5.5 0 0 0-1 0V16a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h2.5a.5.5 0 0 0 0-1H2z" />
-                        </svg>
-                      </button>
-                    </div>
-                  )}
-
-                  {/* Bank Name */}
-                  <p className="text-xs text-white/50 font-semibold">{dedicatedAccount.bank_name}</p>
+      {/* ── Stats ── */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        {[
+          {
+            label: 'Monthly Transactions',
+            value: monthlyTransactionsCount,
+            sub: 'This month',
+            icon: TrendingUp,
+            iconBg: 'bg-[#FDFAF3]',
+            iconColor: 'text-[#C9A84C]',
+          },
+          {
+            label: 'Successful Payments',
+            value: successfulTransactionsCount,
+            sub: 'Completed',
+            icon: CheckCircle,
+            iconBg: 'bg-green-50',
+            iconColor: 'text-green-600',
+          },
+          {
+            label: 'Total Records',
+            value: pagination.total || transactions.length,
+            sub: 'All time',
+            icon: ReceiptText,
+            iconBg: 'bg-gray-50',
+            iconColor: 'text-gray-400',
+          },
+        ].map((stat) => {
+          const Icon = stat.icon;
+          return (
+            <div
+              key={stat.label}
+              className="rounded-2xl border border-gray-200/80 bg-white p-5 shadow-sm"
+            >
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-xs font-semibold text-gray-400">{stat.label}</p>
+                  <p className="mt-2 text-3xl font-black text-gray-900">{stat.value}</p>
+                  <p className="mt-1 text-xs text-gray-400">{stat.sub}</p>
                 </div>
-              )}
+                <div className={`rounded-xl ${stat.iconBg} p-2.5`}>
+                  <Icon size={18} className={stat.iconColor} />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </section>
+          );
+        })}
+      </div>
 
-      <section className="flex gap-4 sm:gap-5 overflow-x-auto md:grid md:grid-cols-3 pb-2 -mx-6 px-6 md:mx-0 md:px-0">
-        <Card className="min-w-[calc(100%-2rem)] md:min-w-fit rounded-2xl sm:rounded-3xl border border-[#d71927]/10 bg-white p-4 sm:p-5 md:p-6 shadow-sm">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="caption font-semibold text-gray-500">Monthly Transactions</p>
-              <p className="mt-2 sm:mt-3 h2 text-gray-950">
-                {monthlyTransactionsCount}
-              </p>
-              <p className="mt-2 body-sm text-gray-500">Transactions this month</p>
-            </div>
-
-            <div className="rounded-xl sm:rounded-2xl bg-[#fff1f2] p-2 sm:p-2.5 md:p-3">
-              <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-[#d71927]" />
-            </div>
-          </div>
-        </Card>
-
-        <Card className="min-w-[calc(100%-2rem)] md:min-w-fit rounded-2xl sm:rounded-3xl border border-[#d71927]/10 bg-white p-4 sm:p-5 md:p-6 shadow-sm">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="caption font-semibold text-gray-500">Successful Payments</p>
-              <p className="mt-2 sm:mt-3 h2 text-gray-950">
-                {successfulTransactionsCount}
-              </p>
-              <p className="mt-2 body-sm text-gray-500">Completed transactions</p>
-            </div>
-
-            <div className="rounded-xl sm:rounded-2xl bg-green-50 p-2 sm:p-2.5 md:p-3">
-              <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
-            </div>
-          </div>
-        </Card>
-
-        <Card className="min-w-[calc(100%-2rem)] md:min-w-fit rounded-2xl sm:rounded-3xl border border-[#d71927]/10 bg-white p-4 sm:p-5 md:p-6 shadow-sm">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="caption font-semibold text-gray-500">Total Records</p>
-              <p className="mt-2 sm:mt-3 h2 text-gray-950">
-                {pagination.total || transactions.length}
-              </p>
-              <p className="mt-2 body-sm text-gray-500">Transaction records</p>
-            </div>
-
-            <div className="rounded-xl sm:rounded-2xl bg-[#fff1f2] p-2 sm:p-2.5 md:p-3">
-              <ReceiptText className="h-4 w-4 sm:h-5 sm:w-5 text-[#d71927]" />
-            </div>
-          </div>
-        </Card>
-      </section>
-
-      {/* Advertisements Carousel */}
+      {/* ── Ads ── */}
       <section>
-        <AdCarousel platform="web" limit={10} autoPlay={true} autoPlayInterval={6000} />
+        <AdCarousel platform="web" limit={10} autoPlay autoPlayInterval={6000} />
       </section>
 
+      {/* ── Quick Actions ── */}
       <section>
-        <div className="mb-4 sm:mb-5 flex items-center justify-between">
-          <div>
-            <h2 className="h3 text-gray-950">Quick Actions</h2>
-            <p className="mt-1 body-sm text-gray-500">
-              Complete your most common Accending titans transactions faster.
-            </p>
-          </div>
+        <div className="mb-4">
+          <h2 className="text-lg font-black text-gray-900">Quick Actions</h2>
+          <p className="mt-0.5 text-sm text-gray-400">
+            Access your most common activities in one tap.
+          </p>
         </div>
 
-        <div className="flex gap-4 sm:gap-5 overflow-x-auto sm:grid sm:grid-cols-2 xl:grid-cols-4 pb-2 -mx-6 px-6 sm:mx-0 sm:px-0">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {quickActions.map((action) => {
             const Icon = action.icon;
-
             return (
               <Link
                 key={action.href}
                 href={action.href}
-                className="group min-w-[calc(100vw-2rem)] sm:min-w-fit overflow-hidden rounded-2xl sm:rounded-3xl border border-[#d71927]/10 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-[#d71927]/10"
+                className="group flex flex-col rounded-2xl border border-gray-200/80 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-[#C9A84C]/30 hover:shadow-md"
               >
-                <div className="relative h-28 sm:h-32 md:h-36 overflow-hidden">
-                  <img
-                    src={action.image}
-                    alt={action.label}
-                    className="h-full w-full object-cover brightness-95 contrast-110 saturate-110 transition duration-500 group-hover:scale-110"
+                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl border border-[#C9A84C]/20 bg-[#FDFAF3] transition group-hover:bg-[#C9A84C] group-hover:border-[#C9A84C]">
+                  <Icon
+                    size={17}
+                    className="text-[#C9A84C] transition group-hover:text-white"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/20 to-transparent" />
-
-                  <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 flex h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 items-center justify-center rounded-xl sm:rounded-2xl bg-[#d71927] text-white shadow-lg">
-                    <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
-                  </div>
                 </div>
-
-                <div className="p-4 sm:p-5">
-                  <h3 className="h5 font-bold text-gray-950">{action.label}</h3>
-                  <p className="mt-2 body-sm text-gray-500">
-                    {action.description}
-                  </p>
-
-                  <div className="mt-4 sm:mt-5 flex items-center justify-between">
-                    <span className="button-sm text-[#d71927]">Continue</span>
-                    <ArrowRight className="h-4 w-4 text-[#d71927] transition group-hover:translate-x-1" />
-                  </div>
+                <h3 className="text-sm font-black text-gray-900">{action.label}</h3>
+                <p className="mt-1 text-xs text-gray-400 leading-relaxed flex-1">
+                  {action.description}
+                </p>
+                <div className="mt-4 flex items-center gap-1">
+                  <span className="text-xs font-semibold text-[#C9A84C]">Open</span>
+                  <ArrowRight
+                    size={12}
+                    className="text-[#C9A84C] transition group-hover:translate-x-0.5"
+                  />
                 </div>
               </Link>
             );
@@ -457,108 +369,88 @@ export default function DashboardPage() {
         </div>
       </section>
 
+      {/* ── Transactions ── */}
       <section>
-        <Card className="overflow-hidden rounded-2xl sm:rounded-3xl border border-gray-200/20 bg-white shadow-sm">
-          <div className="flex flex-col justify-between gap-3 sm:gap-4 border-b border-gray-100 p-4 sm:p-5 md:p-6 sm:flex-row sm:items-center">
+        <div className="overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-sm">
+          {/* Header */}
+          <div className="flex flex-col justify-between gap-3 border-b border-gray-100 p-5 sm:flex-row sm:items-center sm:p-6">
             <div>
-              <h2 className="text-xl sm:text-2xl font-black text-gray-950">Recent Transactions</h2>
-              <p className="mt-1 text-xs sm:text-sm text-gray-500">
-                Track your latest Accending titans activities and payment records.
+              <h2 className="text-lg font-black text-gray-900">Recent Transactions</h2>
+              <p className="mt-0.5 text-sm text-gray-400">
+                Your latest Accending titans activities and payment records.
               </p>
             </div>
-
             <Link
               href="/dashboard/opportunities"
-              className="inline-flex items-center gap-2 rounded-xl border border-[#C9A84C]/30 px-4 py-2 text-sm font-black text-[#C9A84C] hover:bg-[#C9A84C]/10"
+              className="inline-flex items-center gap-2 rounded-xl border border-[#C9A84C]/25 bg-[#FDFAF3] px-4 py-2 text-sm font-semibold text-[#C9A84C] transition hover:bg-[#C9A84C]/10 whitespace-nowrap"
             >
               Explore Opportunities
-              <ArrowRight size={15} />
+              <ArrowRight size={13} />
             </Link>
           </div>
 
           {error ? (
-            <div className="p-6 sm:p-8 text-center">
-              <AlertCircle className="mx-auto mb-3 h-7 w-7 sm:h-8 sm:w-8 text-red-500" />
-              <p className="font-semibold text-gray-900">{error}</p>
+            <div className="p-10 text-center">
+              <AlertCircle className="mx-auto mb-3 h-8 w-8 text-red-400" />
+              <p className="font-semibold text-gray-700">{error}</p>
             </div>
           ) : transactions.length === 0 ? (
-            <div className="p-8 sm:p-10 text-center">
-              <ReceiptText className="mx-auto mb-4 h-9 w-9 sm:h-10 sm:w-10 text-gray-300" />
-              <h3 className="font-black text-gray-950">No transactions yet</h3>
-              <p className="mt-2 text-sm text-gray-500">
+            <div className="p-12 text-center">
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-gray-100 bg-gray-50">
+                <ReceiptText className="h-5 w-5 text-gray-300" />
+              </div>
+              <h3 className="font-black text-gray-900">No transactions yet</h3>
+              <p className="mt-1.5 text-sm text-gray-400">
                 Your transaction history will appear here once you start using Accending titans.
               </p>
             </div>
           ) : (
             <>
+              {/* Desktop Table */}
               <div className="hidden overflow-x-auto lg:block">
-                <table className="w-full min-w-full">
+                <table className="w-full">
                   <thead>
-                    <tr className="border-b border-black/5 bg-[#f8f8f8]">
-                      {[
-                        'Date',
-                        'Transaction Type',
-                        'Service',
-                        'Reference',
-                        'Amount',
-                        'Status',
-                      ].map((head) => (
+                    <tr className="border-b border-gray-100 bg-gray-50/70">
+                      {['Date', 'Type', 'Service', 'Reference', 'Amount', 'Status'].map((h) => (
                         <th
-                          key={head}
-                          className={`px-6 py-4 text-xs font-black uppercase tracking-wide text-black/40 ${
-                            head === 'Amount'
-                              ? 'text-right'
-                              : head === 'Status'
-                                ? 'text-center'
-                                : 'text-left'
+                          key={h}
+                          className={`px-6 py-3.5 text-[11px] font-semibold uppercase tracking-wider text-gray-400 ${
+                            h === 'Amount' ? 'text-right' : h === 'Status' ? 'text-center' : 'text-left'
                           }`}
                         >
-                          {head}
+                          {h}
                         </th>
                       ))}
                     </tr>
                   </thead>
-
-                  <tbody>
+                  <tbody className="divide-y divide-gray-50">
                     {transactions.map((transaction) => {
-                      const typeLabel = getTransactionTypeLabel(transaction);
-                      const serviceName = getServiceName(transaction);
                       const timestamp = getTransactionTimestamp(transaction);
-                      const statusVariant = getStatusBadgeVariant(transaction.status);
-                      const statusLabel = getStatusLabel(transaction.status);
-
                       return (
                         <tr
                           key={transaction.id}
-                          className="border-b border-black/5 transition-colors hover:bg-[#fff8f8]"
+                          className="transition-colors hover:bg-[#FDFAF3]/60"
                         >
-                          <td className="px-6 py-4 text-sm font-semibold text-[#111]">
-                            {formatDate(
-                              timestamp && timestamp !== 'Unknown' ? timestamp : new Date().toISOString()
-                            )}
+                          <td className="px-6 py-4 text-sm text-gray-600">
+                            {formatDate(timestamp !== 'Unknown' ? timestamp : new Date().toISOString())}
                           </td>
-
                           <td className="px-6 py-4">
-                            <div className="inline-flex rounded-full bg-[#f0f0f0] px-3 py-1 text-sm font-black capitalize text-[#333]">
-                              {typeLabel}
-                            </div>
+                            <span className="inline-flex rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold capitalize text-gray-600">
+                              {getTransactionTypeLabel(transaction)}
+                            </span>
                           </td>
-
-                          <td className="px-6 py-4 text-sm font-semibold capitalize text-[#111]">
-                            {serviceName}
+                          <td className="px-6 py-4 text-sm capitalize text-gray-700">
+                            {getServiceName(transaction)}
                           </td>
-
-                          <td className="px-6 py-4 text-sm font-medium text-black/50">
+                          <td className="px-6 py-4 font-mono text-xs text-gray-400">
                             {transaction.reference || `TXN-${transaction.id}`}
                           </td>
-
-                          <td className="px-6 py-4 text-right text-sm font-black text-[#111]">
+                          <td className="px-6 py-4 text-right text-sm font-black text-gray-900">
                             {formatCurrency(Number(transaction.amount))}
                           </td>
-
                           <td className="px-6 py-4 text-center">
-                            <Badge variant={statusVariant as any}>
-                              {statusLabel}
+                            <Badge variant={getStatusBadgeVariant(transaction.status) as any}>
+                              {getStatusLabel(transaction.status)}
                             </Badge>
                           </td>
                         </tr>
@@ -568,97 +460,80 @@ export default function DashboardPage() {
                 </table>
               </div>
 
-              <div className="space-y-4 p-4 lg:hidden">
+              {/* Mobile Cards */}
+              <div className="space-y-3 p-4 lg:hidden">
                 {transactions.map((transaction) => {
-                  const typeLabel = getTransactionTypeLabel(transaction);
-                  const serviceName = getServiceName(transaction);
                   const timestamp = getTransactionTimestamp(transaction);
-                  const statusVariant = getStatusBadgeVariant(transaction.status);
-                  const statusLabel = getStatusLabel(transaction.status);
-
                   return (
                     <div
                       key={transaction.id}
-                      className="rounded-[22px] border border-black/5 bg-[#f8f8f8] p-4"
+                      className="rounded-xl border border-gray-100 bg-gray-50/60 p-4"
                     >
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <p className="text-base font-black capitalize text-[#111]">
-                            {typeLabel}
-                          </p>
-                          <p className="mt-1 text-sm font-medium text-black/50">
-                            {serviceName || 'Service transaction'}
-                          </p>
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white">
+                            {getTransactionStatusIcon(transaction.status)}
+                          </div>
+                          <div>
+                            <p className="text-sm font-black capitalize text-gray-900">
+                              {getTransactionTypeLabel(transaction)}
+                            </p>
+                            <p className="text-xs text-gray-400">
+                              {getServiceName(transaction)}
+                            </p>
+                          </div>
                         </div>
-
-                        <Badge variant={statusVariant as any}>
-                          {statusLabel}
+                        <Badge variant={getStatusBadgeVariant(transaction.status) as any}>
+                          {getStatusLabel(transaction.status)}
                         </Badge>
                       </div>
 
-                      <div className="mt-4 grid grid-cols-2 gap-4">
+                      <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
                         <div>
-                          <p className="text-xs font-black uppercase tracking-wide text-black/35">
-                            Date
-                          </p>
-                          <p className="mt-1 text-sm font-semibold text-[#111]">
-                            {formatDate(
-                              timestamp && timestamp !== 'Unknown' ? timestamp : new Date().toISOString()
-                            )}
+                          <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Date</p>
+                          <p className="mt-0.5 text-xs font-semibold text-gray-700">
+                            {formatDate(timestamp !== 'Unknown' ? timestamp : new Date().toISOString())}
                           </p>
                         </div>
-
-                        <div>
-                          <p className="text-xs font-black uppercase tracking-wide text-black/35">
-                            Amount
-                          </p>
-                          <p className="mt-1 text-sm font-black text-[#111]">
+                        <div className="text-right">
+                          <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Amount</p>
+                          <p className="mt-0.5 text-sm font-black text-gray-900">
                             {formatCurrency(Number(transaction.amount))}
                           </p>
                         </div>
-
-                        <div className="col-span-2">
-                          <p className="text-xs font-black uppercase tracking-wide text-black/35">
-                            Reference
-                          </p>
-                          <p className="mt-1 break-all text-sm font-medium text-black/50">
-                            {transaction.reference || `TXN-${transaction.id}`}
-                          </p>
-                        </div>
                       </div>
+
+                      <p className="mt-2 font-mono text-[10px] text-gray-300">
+                        {transaction.reference || `TXN-${transaction.id}`}
+                      </p>
                     </div>
                   );
                 })}
               </div>
 
+              {/* Pagination */}
               {pagination.lastPage > 1 && (
-                <div className="flex flex-col gap-4 rounded-[24px] border border-black/5 bg-white px-6 py-5 shadow-[0_8px_30px_rgba(16,3,3,0.05)]">
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="text-sm font-medium text-black/50">
+                <div className="border-t border-gray-100 px-6 py-4">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <p className="text-xs text-gray-400">
                       Showing{' '}
-                      <span className="font-black text-[#111]">
-                        {pagination.total === 0
-                          ? 0
-                          : (pagination.currentPage - 1) * pagination.perPage + 1}
+                      <span className="font-semibold text-gray-700">
+                        {(pagination.currentPage - 1) * pagination.perPage + 1}
                       </span>{' '}
-                      to{' '}
-                      <span className="font-black text-[#111]">
-                        {Math.min(
-                          pagination.currentPage * pagination.perPage,
-                          pagination.total
-                        )}
+                      –{' '}
+                      <span className="font-semibold text-gray-700">
+                        {Math.min(pagination.currentPage * pagination.perPage, pagination.total)}
                       </span>{' '}
                       of{' '}
-                      <span className="font-black text-[#111]">{pagination.total}</span>{' '}
-                      transactions
-                    </div>
+                      <span className="font-semibold text-gray-700">{pagination.total}</span>
+                    </p>
 
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex items-center gap-1.5">
                       <button
                         type="button"
                         disabled={pagination.currentPage <= 1}
                         onClick={() => setCurrentPage(1)}
-                        className="h-10 rounded-lg border border-black/10 bg-white px-3 text-sm font-black text-[#111] disabled:cursor-not-allowed disabled:opacity-40 hover:bg-[#fff1f2]"
+                        className="h-8 rounded-lg border border-gray-200 bg-white px-3 text-xs font-semibold text-gray-600 disabled:opacity-40 hover:border-[#C9A84C]/40 hover:text-[#C9A84C]"
                       >
                         First
                       </button>
@@ -666,66 +541,48 @@ export default function DashboardPage() {
                       <button
                         type="button"
                         disabled={pagination.currentPage <= 1}
-                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                        className="h-10 rounded-lg border border-black/10 bg-white px-3 disabled:cursor-not-allowed disabled:opacity-40 hover:bg-[#fff1f2]"
+                        onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-white disabled:opacity-40 hover:border-[#C9A84C]/40 hover:text-[#C9A84C]"
                       >
-                        <ChevronLeft size={16} className="text-[#111]" />
+                        <ChevronLeft size={14} />
                       </button>
 
-                      <div className="flex items-center gap-1">
-                        {Array.from(
-                          { length: Math.min(pagination.lastPage, 5) },
-                          (_, i) => {
-                            let pageNum;
-
-                            if (pagination.lastPage <= 5) {
-                              pageNum = i + 1;
-                            } else if (pagination.currentPage <= 3) {
-                              pageNum = i + 1;
-                            } else if (
-                              pagination.currentPage >=
-                              pagination.lastPage - 2
-                            ) {
-                              pageNum = pagination.lastPage - 4 + i;
-                            } else {
-                              pageNum = pagination.currentPage - 2 + i;
-                            }
-
-                            return (
-                              <button
-                                key={pageNum}
-                                onClick={() => setCurrentPage(pageNum)}
-                                className={`inline-flex h-10 w-10 items-center justify-center rounded-lg text-sm font-black transition-colors ${
-                                  pageNum === pagination.currentPage
-                                    ? 'bg-[#d71927] text-white shadow-lg shadow-[#d71927]/20'
-                                    : 'border border-black/10 bg-white text-[#111] hover:bg-[#fff1f2]'
-                                }`}
-                              >
-                                {pageNum}
-                              </button>
-                            );
-                          }
-                        )}
-                      </div>
+                      {Array.from({ length: Math.min(pagination.lastPage, 5) }, (_, i) => {
+                        let p: number;
+                        if (pagination.lastPage <= 5) p = i + 1;
+                        else if (pagination.currentPage <= 3) p = i + 1;
+                        else if (pagination.currentPage >= pagination.lastPage - 2)
+                          p = pagination.lastPage - 4 + i;
+                        else p = pagination.currentPage - 2 + i;
+                        return (
+                          <button
+                            key={p}
+                            onClick={() => setCurrentPage(p)}
+                            className={`flex h-8 w-8 items-center justify-center rounded-lg text-xs font-semibold transition-colors ${
+                              p === pagination.currentPage
+                                ? 'bg-[#C9A84C] text-white shadow-sm shadow-[#C9A84C]/20'
+                                : 'border border-gray-200 bg-white text-gray-600 hover:border-[#C9A84C]/40 hover:text-[#C9A84C]'
+                            }`}
+                          >
+                            {p}
+                          </button>
+                        );
+                      })}
 
                       <button
                         type="button"
                         disabled={pagination.currentPage >= pagination.lastPage}
-                        onClick={() =>
-                          setCurrentPage((prev) =>
-                            Math.min(prev + 1, pagination.lastPage)
-                          )
-                        }
-                        className="h-10 rounded-lg border border-black/10 bg-white px-3 disabled:cursor-not-allowed disabled:opacity-40 hover:bg-[#fff1f2]"
+                        onClick={() => setCurrentPage((p) => Math.min(p + 1, pagination.lastPage))}
+                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-white disabled:opacity-40 hover:border-[#C9A84C]/40 hover:text-[#C9A84C]"
                       >
-                        <ChevronRight size={16} className="text-[#111]" />
+                        <ChevronRight size={14} />
                       </button>
 
                       <button
                         type="button"
                         disabled={pagination.currentPage >= pagination.lastPage}
                         onClick={() => setCurrentPage(pagination.lastPage)}
-                        className="h-10 rounded-lg border border-black/10 bg-white px-3 text-sm font-black text-[#111] disabled:cursor-not-allowed disabled:opacity-40 hover:bg-[#fff1f2]"
+                        className="h-8 rounded-lg border border-gray-200 bg-white px-3 text-xs font-semibold text-gray-600 disabled:opacity-40 hover:border-[#C9A84C]/40 hover:text-[#C9A84C]"
                       >
                         Last
                       </button>
@@ -733,10 +590,9 @@ export default function DashboardPage() {
                   </div>
                 </div>
               )}
-
             </>
           )}
-        </Card>
+        </div>
       </section>
     </div>
   );

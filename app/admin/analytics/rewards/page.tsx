@@ -103,7 +103,7 @@ export default function AdminAnalyticsDashboardPage() {
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-gray-600 text-sm">Reward Coverage</p>
-                    <h3 className="text-3xl font-bold text-[#d71927] mt-2">
+                    <h3 className="text-3xl font-bold text-[#c9a84c] mt-2">
                       {impactMetrics.reward_coverage_percentage.toFixed(1)}%
                     </h3>
                   </div>

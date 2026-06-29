@@ -108,7 +108,7 @@ export function FilterPanel({
           }`}
         >
           {/* Header */}
-          <div className="flex-shrink-0 border-b border-black/5 bg-gradient-to-r from-[#d71927]/5 to-transparent px-6 py-6">
+          <div className="flex-shrink-0 border-b border-black/5 bg-gradient-to-r from-[#c9a84c]/5 to-transparent px-6 py-6">
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <h2 className="text-xl font-black tracking-tight text-[#111]">
@@ -150,7 +150,7 @@ export function FilterPanel({
                 onClick={handleApply}
                 isLoading={isLoading}
                 disabled={isLoading}
-                className="flex-1 h-11 rounded-xl bg-[#d71927] px-6 font-black text-white shadow-lg shadow-[#d71927]/20 hover:bg-[#b91521] disabled:opacity-50"
+                className="flex-1 h-11 rounded-xl bg-[#c9a84c] px-6 font-black text-white shadow-lg shadow-[#c9a84c]/20 hover:bg-[#b91521] disabled:opacity-50"
               >
                 <Check className="h-4 w-4 mr-2" />
                 Apply Filters
@@ -169,7 +169,7 @@ export function FilterPanel({
               <Button
                 onClick={handleReset}
                 variant="outline"
-                className="w-full h-10 rounded-xl border-black/10 px-4 font-semibold text-[#d71927] hover:bg-[#fff1f2]"
+                className="w-full h-10 rounded-xl border-black/10 px-4 font-semibold text-[#c9a84c] hover:bg-[#fff1f2]"
               >
                 <RotateCcw className="h-4 w-4 mr-2" />
                 Reset Filters
@@ -187,7 +187,7 @@ export function FilterPanel({
           }`}
         >
           {/* Header */}
-          <div className="flex-shrink-0 border-b border-black/5 bg-gradient-to-r from-[#d71927]/5 to-transparent px-4 py-4 sm:px-6 sm:py-5">
+          <div className="flex-shrink-0 border-b border-black/5 bg-gradient-to-r from-[#c9a84c]/5 to-transparent px-4 py-4 sm:px-6 sm:py-5">
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <h2 className="text-lg font-black tracking-tight text-[#111] sm:text-xl">
@@ -229,7 +229,7 @@ export function FilterPanel({
                 onClick={handleApply}
                 isLoading={isLoading}
                 disabled={isLoading}
-                className="flex-1 h-10 sm:h-11 rounded-lg sm:rounded-xl bg-[#d71927] px-4 sm:px-6 text-sm sm:text-base font-black text-white shadow-lg shadow-[#d71927]/20 hover:bg-[#b91521] disabled:opacity-50"
+                className="flex-1 h-10 sm:h-11 rounded-lg sm:rounded-xl bg-[#c9a84c] px-4 sm:px-6 text-sm sm:text-base font-black text-white shadow-lg shadow-[#c9a84c]/20 hover:bg-[#b91521] disabled:opacity-50"
               >
                 <Check className="h-3 h-4 sm:h-4 mr-2" />
                 Apply
@@ -248,7 +248,7 @@ export function FilterPanel({
               <Button
                 onClick={handleReset}
                 variant="outline"
-                className="w-full h-9 sm:h-10 rounded-lg sm:rounded-xl border-black/10 px-3 sm:px-4 text-xs sm:text-sm font-semibold text-[#d71927] hover:bg-[#fff1f2]"
+                className="w-full h-9 sm:h-10 rounded-lg sm:rounded-xl border-black/10 px-3 sm:px-4 text-xs sm:text-sm font-semibold text-[#c9a84c] hover:bg-[#fff1f2]"
               >
                 <RotateCcw className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                 Reset Filters
@@ -278,14 +278,14 @@ function FilterField({ field, value, onChange }: FilterFieldProps) {
         <div>
           <label className="block text-sm font-black text-[#111] mb-2">
             {field.label}
-            {field.required && <span className="text-[#d71927]">*</span>}
+            {field.required && <span className="text-[#c9a84c]">*</span>}
           </label>
           <input
             type={field.type}
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder={field.placeholder}
-            className="w-full rounded-lg border-2 border-black/10 bg-white px-3 py-2 text-sm text-[#111] outline-none transition placeholder:text-black/35 focus:border-[#d71927] focus:ring-4 focus:ring-[#d71927]/10"
+            className="w-full rounded-lg border-2 border-black/10 bg-white px-3 py-2 text-sm text-[#111] outline-none transition placeholder:text-black/35 focus:border-[#c9a84c] focus:ring-4 focus:ring-[#c9a84c]/10"
           />
           {field.helpText && (
             <p className="mt-1 text-xs text-black/50">{field.helpText}</p>
@@ -298,12 +298,12 @@ function FilterField({ field, value, onChange }: FilterFieldProps) {
         <div>
           <label className="block text-sm font-black text-[#111] mb-2">
             {field.label}
-            {field.required && <span className="text-[#d71927]">*</span>}
+            {field.required && <span className="text-[#c9a84c]">*</span>}
           </label>
           <select
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full rounded-lg border-2 border-black/10 bg-white px-3 py-2 text-sm text-[#111] outline-none transition focus:border-[#d71927] focus:ring-4 focus:ring-[#d71927]/10"
+            className="w-full rounded-lg border-2 border-black/10 bg-white px-3 py-2 text-sm text-[#111] outline-none transition focus:border-[#c9a84c] focus:ring-4 focus:ring-[#c9a84c]/10"
           >
             <option value="">{field.placeholder || 'Select...'}</option>
             {field.options?.map((opt) => (
@@ -323,13 +323,13 @@ function FilterField({ field, value, onChange }: FilterFieldProps) {
         <div>
           <label className="block text-sm font-black text-[#111] mb-2">
             {field.label}
-            {field.required && <span className="text-[#d71927]">*</span>}
+            {field.required && <span className="text-[#c9a84c]">*</span>}
           </label>
           <input
             type="date"
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full rounded-lg border-2 border-black/10 bg-white px-3 py-2 text-sm text-[#111] outline-none transition focus:border-[#d71927] focus:ring-4 focus:ring-[#d71927]/10"
+            className="w-full rounded-lg border-2 border-black/10 bg-white px-3 py-2 text-sm text-[#111] outline-none transition focus:border-[#c9a84c] focus:ring-4 focus:ring-[#c9a84c]/10"
           />
           {field.helpText && (
             <p className="mt-1 text-xs text-black/50">{field.helpText}</p>
@@ -344,7 +344,7 @@ function FilterField({ field, value, onChange }: FilterFieldProps) {
             type="checkbox"
             checked={!!value}
             onChange={(e) => onChange(e.target.checked)}
-            className="h-5 w-5 rounded border-2 border-black/10 accent-[#d71927] transition focus:ring-4 focus:ring-[#d71927]/10"
+            className="h-5 w-5 rounded border-2 border-black/10 accent-[#c9a84c] transition focus:ring-4 focus:ring-[#c9a84c]/10"
           />
           <div className="flex-1">
             <p className="font-semibold text-[#111]">{field.label}</p>

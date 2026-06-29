@@ -1,8 +1,18 @@
 'use client';
 
 import React from 'react';
-import { X, CheckCircle, Zap, Gift, Info, AlertCircle, Bell, Check, Trash2 } from 'lucide-react';
-import { Notification, NotificationType } from '@/types/notification.types';
+import {
+  AlertCircle,
+  Bell,
+  Check,
+  CheckCircle,
+  Gift,
+  Info,
+  Trash2,
+  X,
+  Zap,
+} from 'lucide-react';
+import type { Notification, NotificationType } from '@/types/notification.types';
 import { formatRelativeTime } from '@/utils/format.utils';
 
 interface NotificationDetailModalProps {
@@ -13,46 +23,43 @@ interface NotificationDetailModalProps {
   onDelete?: (id: number) => void;
 }
 
-const getNotificationIcon = (type: NotificationType) => {
-  const iconProps = 'h-8 w-8';
-
-  const typeIcons: Record<NotificationType, React.ReactNode> = {
-    transaction: <CheckCircle className={`${iconProps} text-blue-500`} />,
-    system: <Zap className={`${iconProps} text-yellow-500`} />,
-    promotion: <Gift className={`${iconProps} text-purple-500`} />,
-    update: <Info className={`${iconProps} text-cyan-500`} />,
-    alert: <AlertCircle className={`${iconProps} text-red-500`} />,
-  };
-
-  return typeIcons[type] || <Bell className={`${iconProps} text-gray-500`} />;
+const TYPE_CONFIG: Record<NotificationType, { icon: React.ElementType; label: string; badgeBg: string; badgeText: string }> = {
+  transaction: {
+    icon: CheckCircle,
+    label: 'Transaction',
+    badgeBg: 'bg-blue-50 border-blue-100',
+    badgeText: 'text-blue-700',
+  },
+  system: {
+    icon: Zap,
+    label: 'System',
+    badgeBg: 'bg-amber-50 border-amber-100',
+    badgeText: 'text-amber-700',
+  },
+  promotion: {
+    icon: Gift,
+    label: 'Promotion',
+    badgeBg: 'bg-purple-50 border-purple-100',
+    badgeText: 'text-purple-700',
+  },
+  update: {
+    icon: Info,
+    label: 'Update',
+    badgeBg: 'bg-cyan-50 border-cyan-100',
+    badgeText: 'text-cyan-700',
+  },
+  alert: {
+    icon: AlertCircle,
+    label: 'Alert',
+    badgeBg: 'bg-red-50 border-red-100',
+    badgeText: 'text-red-700',
+  },
 };
 
-const getTypeBadgeStyles = (type: NotificationType) => {
-  const styles: Record<NotificationType, string> = {
-    transaction: 'bg-blue-100 text-blue-700',
-    system: 'bg-yellow-100 text-yellow-700',
-    promotion: 'bg-purple-100 text-purple-700',
-    update: 'bg-cyan-100 text-cyan-700',
-    alert: 'bg-red-100 text-red-700',
-  };
-  return styles[type] || styles.system;
-};
-
-const getPriorityDot = (priority: string) => {
-  const colors: Record<string, string> = {
-    high: 'bg-red-500',
-    normal: 'bg-slate-400',
-    low: 'bg-gray-300',
-  };
-  return colors[priority] || colors.normal;
-};
-
-const getPriorityLabel = (priority: string) => {
-  return {
-    high: 'High Priority',
-    normal: 'Normal Priority',
-    low: 'Low Priority',
-  }[priority] || priority;
+const PRIORITY_CONFIG: Record<string, { dot: string; label: string }> = {
+  high: { dot: 'bg-red-400', label: 'High priority' },
+  normal: { dot: 'bg-gray-300', label: 'Normal priority' },
+  low: { dot: 'bg-gray-200', label: 'Low priority' },
 };
 
 export const NotificationDetailModal: React.FC<NotificationDetailModalProps> = ({
@@ -67,22 +74,29 @@ export const NotificationDetailModal: React.FC<NotificationDetailModalProps> = (
   if (!isOpen || !notification) return null;
 
   const isUnread = !notification.read_at;
+  const typeConfig = TYPE_CONFIG[notification.type] ?? {
+    icon: Bell,
+    label: notification.type,
+    badgeBg: 'bg-gray-50 border-gray-100',
+    badgeText: 'text-gray-600',
+  };
+  const priorityConfig =
+    PRIORITY_CONFIG[notification.priority] ?? PRIORITY_CONFIG.normal;
+  const TypeIcon = typeConfig.icon;
 
   const handleMarkAsRead = async () => {
-    if (isUnread && onMarkAsRead) {
-      await onMarkAsRead(notification.id);
-    }
+    if (isUnread && onMarkAsRead) await onMarkAsRead(notification.id);
   };
 
   const handleDelete = async () => {
-    if (onDelete && window.confirm('Are you sure you want to delete this notification?')) {
-      setIsDeleting(true);
-      try {
-        await onDelete(notification.id);
-        onClose();
-      } finally {
-        setIsDeleting(false);
-      }
+    if (!onDelete) return;
+    if (!window.confirm('Delete this notification?')) return;
+    setIsDeleting(true);
+    try {
+      await onDelete(notification.id);
+      onClose();
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -90,111 +104,123 @@ export const NotificationDetailModal: React.FC<NotificationDetailModalProps> = (
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 backdrop-blur-sm bg-black/30 z-40 transition-opacity"
+        className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      {/* Modal */}
+      {/* Panel — slides in from right on md+, bottom on mobile */}
       <div className="fixed inset-0 z-50 flex items-end md:items-start md:justify-end">
         <div
-          className="w-full md:w-full md:max-w-md h-full md:h-screen bg-white shadow-lg animate-in slide-in-from-bottom md:slide-in-from-right flex flex-col"
+          className="flex h-[90vh] w-full flex-col overflow-hidden rounded-t-2xl border border-gray-200/80 bg-white shadow-xl md:h-screen md:max-w-md md:rounded-none md:rounded-l-2xl"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="sticky top-0 bg-white border-b border-gray-200 px-4 py-3 md:p-4 flex items-center justify-between shrink-0">
-            <h2 className="text-base md:text-lg font-semibold text-gray-900">Notification Details</h2>
+          <div className="flex flex-shrink-0 items-center justify-between border-b border-gray-100 px-5 py-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#C9A84C]/20 bg-[#FDFAF3]">
+                <Bell size={14} className="text-[#C9A84C]" />
+              </div>
+              <h2 className="text-sm font-black text-gray-900">Notification details</h2>
+            </div>
             <button
               onClick={onClose}
-              className="p-1 text-gray-400 hover:text-gray-600 transition-colors -mr-2"
+              className="rounded-lg p-1.5 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
+              aria-label="Close"
             >
-              <X className="h-5 w-5" />
+              <X size={16} />
             </button>
           </div>
 
-          {/* Content */}
-          <div className="flex-1 overflow-y-auto px-4 py-6 md:p-6 space-y-6">
-            {/* Icon and Title */}
-            <div className="flex gap-3 md:gap-4">
-              <div className="flex-shrink-0 mt-0.5 md:mt-1">
-                {getNotificationIcon(notification.type)}
+          {/* Gold accent bar */}
+          <div className="h-[2px] flex-shrink-0 bg-gradient-to-r from-[#C9A84C]/30 via-[#C9A84C] to-[#C9A84C]/30" />
+
+          {/* Body */}
+          <div className="flex-1 space-y-5 overflow-y-auto p-5 sm:p-6">
+            {/* Icon + title */}
+            <div className="flex items-start gap-4">
+              <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-gray-100 bg-gray-50">
+                <TypeIcon size={20} className="text-gray-500" />
               </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="text-lg md:text-xl font-semibold text-gray-900 break-words">
+              <div className="min-w-0 flex-1">
+                <h3 className="text-base font-black leading-snug text-gray-900">
                   {notification.title}
                 </h3>
                 {isUnread && (
-                  <p className="text-xs font-medium text-blue-600 mt-1">Unread</p>
+                  <span className="mt-1.5 inline-flex items-center gap-1 rounded-full border border-[#C9A84C]/20 bg-[#FDFAF3] px-2 py-0.5 text-[10px] font-semibold text-[#C9A84C]">
+                    Unread
+                  </span>
                 )}
               </div>
             </div>
 
-            {/* Body */}
-            <div>
-              <p className="text-sm md:text-base text-gray-700 leading-relaxed whitespace-pre-wrap break-words">
-                {notification.body}
-              </p>
-            </div>
+            {/* Body text */}
+            <p className="text-sm leading-relaxed text-gray-600 whitespace-pre-wrap">
+              {notification.body}
+            </p>
 
-            {/* Metadata */}
-            <div className="space-y-3 bg-gray-50 rounded-lg p-3 md:p-4">
-              <div>
-                <p className="text-xs text-gray-600 font-medium uppercase tracking-wider">
+            {/* Meta */}
+            <div className="space-y-3 rounded-xl border border-gray-100 bg-gray-50/70 p-4">
+              {/* Type */}
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
                   Type
-                </p>
-                <div
-                  className={`inline-flex items-center gap-2 px-2 md:px-3 py-1 rounded text-xs md:text-sm font-medium mt-1 ${getTypeBadgeStyles(
-                    notification.type
-                  )}`}
+                </span>
+                <span
+                  className={`rounded-full border px-2.5 py-0.5 text-xs font-semibold capitalize ${typeConfig.badgeBg} ${typeConfig.badgeText}`}
                 >
-                  {notification.type}
-                </div>
+                  {typeConfig.label}
+                </span>
               </div>
 
-              <div>
-                <p className="text-xs text-gray-600 font-medium uppercase tracking-wider">
+              {/* Priority */}
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
                   Priority
-                </p>
-                <div className="flex items-center gap-2 mt-1">
+                </span>
+                <div className="flex items-center gap-2">
                   <div
-                    className={`w-2 h-2 rounded-full ${getPriorityDot(
-                      notification.priority
-                    )}`}
+                    className={`h-2 w-2 rounded-full ${priorityConfig.dot}`}
                   />
-                  <span className="text-xs md:text-sm text-gray-700">
-                    {getPriorityLabel(notification.priority)}
+                  <span className="text-xs font-semibold text-gray-600">
+                    {priorityConfig.label}
                   </span>
                 </div>
               </div>
 
-              <div>
-                <p className="text-xs text-gray-600 font-medium uppercase tracking-wider">
+              {/* Received */}
+              <div className="flex items-start justify-between gap-4">
+                <span className="flex-shrink-0 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
                   Received
-                </p>
-                <p className="text-xs md:text-sm text-gray-700 mt-1 break-words">
-                  {new Date(notification.created_at).toLocaleString()} ({formatRelativeTime(notification.created_at)})
-                </p>
+                </span>
+                <span className="text-right text-xs text-gray-600">
+                  {new Date(notification.created_at).toLocaleString()}{' '}
+                  <span className="text-gray-400">
+                    ({formatRelativeTime(notification.created_at)})
+                  </span>
+                </span>
               </div>
 
+              {/* Read at */}
               {notification.read_at && (
-                <div>
-                  <p className="text-xs text-gray-600 font-medium uppercase tracking-wider">
+                <div className="flex items-start justify-between gap-4">
+                  <span className="flex-shrink-0 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
                     Read
-                  </p>
-                  <p className="text-xs md:text-sm text-gray-700 mt-1 break-words">
+                  </span>
+                  <span className="text-right text-xs text-gray-600">
                     {new Date(notification.read_at).toLocaleString()}
-                  </p>
+                  </span>
                 </div>
               )}
             </div>
 
-            {/* Additional Data */}
+            {/* Additional data */}
             {notification.data && Object.keys(notification.data).length > 0 && (
-              <div className="space-y-2">
-                <p className="text-xs text-gray-600 font-medium uppercase tracking-wider">
-                  Additional Information
+              <div>
+                <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                  Additional data
                 </p>
-                <div className="bg-gray-50 rounded-lg p-2 md:p-3 text-xs md:text-sm text-gray-700 overflow-x-auto">
-                  <pre className="text-xs">
+                <div className="overflow-x-auto rounded-xl border border-gray-100 bg-gray-50 p-3">
+                  <pre className="text-xs text-gray-500">
                     {JSON.stringify(notification.data, null, 2)}
                   </pre>
                 </div>
@@ -203,27 +229,29 @@ export const NotificationDetailModal: React.FC<NotificationDetailModalProps> = (
           </div>
 
           {/* Actions */}
-          <div className="sticky bottom-0 bg-white border-t border-gray-200 px-4 py-3 md:p-4 space-y-2 shrink-0">
+          <div className="flex-shrink-0 space-y-2 border-t border-gray-100 p-5">
             {isUnread && (
               <button
                 onClick={handleMarkAsRead}
-                className="w-full px-3 md:px-4 py-2 md:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm md:text-base flex items-center justify-center gap-2"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#C9A84C] py-2.5 text-sm font-semibold text-white shadow-sm shadow-[#C9A84C]/20 transition hover:bg-[#B8962E]"
               >
-                <Check className="h-4 w-4" />
-                Mark as Read
+                <Check size={15} />
+                Mark as read
               </button>
             )}
+
             <button
               onClick={handleDelete}
               disabled={isDeleting}
-              className="w-full px-3 md:px-4 py-2 md:py-2 bg-red-50 text-red-700 border border-red-200 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50 font-medium text-sm md:text-base flex items-center justify-center gap-2"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-red-100 bg-red-50 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-100 disabled:opacity-50"
             >
-              <Trash2 className="h-4 w-4" />
-              Delete
+              <Trash2 size={15} />
+              {isDeleting ? 'Deleting…' : 'Delete notification'}
             </button>
+
             <button
               onClick={onClose}
-              className="w-full px-3 md:px-4 py-2 md:py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium text-sm md:text-base"
+              className="flex w-full items-center justify-center rounded-xl border border-gray-200 bg-white py-2.5 text-sm font-semibold text-gray-500 transition hover:bg-gray-50"
             >
               Close
             </button>

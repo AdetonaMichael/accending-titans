@@ -168,7 +168,7 @@ export function AccountDeletion() {
             <textarea
               placeholder="Tell us why you're deleting your account (this helps us improve)"
               rows={3}
-              className="w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm text-[#111] outline-none transition placeholder:text-black/35 focus:border-[#d71927] focus:ring-4 focus:ring-[#d71927]/10"
+              className="w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm text-[#111] outline-none transition placeholder:text-black/35 focus:border-[#c9a84c] focus:ring-4 focus:ring-[#c9a84c]/10"
               {...register('reason')}
             />
           </div>

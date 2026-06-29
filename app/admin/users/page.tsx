@@ -724,7 +724,7 @@ export default function AdminUsersPage() {
               note: 'Combined wallet balance',
               Icon: Users2,
               bgColor: 'bg-[#fef2f2]',
-              iconColor: 'text-[#d71927]',
+              iconColor: 'text-[#c9a84c]',
             },
           ].map(({ title, value, note, Icon, bgColor, iconColor }) => (
             <Card
@@ -754,7 +754,7 @@ export default function AdminUsersPage() {
           onClick={openFilters}
           className={`h-11 rounded-xl px-4 font-semibold transition ${
             hasActiveFilters
-              ? 'bg-[#d71927] text-white shadow-lg shadow-[#d71927]/20 hover:bg-[#b91521]'
+              ? 'bg-[#c9a84c] text-white shadow-lg shadow-[#c9a84c]/20 hover:bg-[#b91521]'
               : 'border border-black/10 text-[#111] hover:bg-[#f8f8f8]'
           }`}
         >
@@ -1083,7 +1083,7 @@ export default function AdminUsersPage() {
             {/* Profile Photo */}
             {userDetails.profile_photo_url && (
               <div className="flex justify-center">
-                <div className="relative h-24 w-24 overflow-hidden rounded-full border-4 border-[#d71927] shadow-lg">
+                <div className="relative h-24 w-24 overflow-hidden rounded-full border-4 border-[#c9a84c] shadow-lg">
                   <img
                     src={userDetails.profile_photo_url}
                     alt={`${userDetails.first_name} ${userDetails.last_name}`}

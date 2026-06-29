@@ -49,8 +49,8 @@ export const TransferSummary = ({
                     className="w-16 h-16 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-16 h-16 rounded-full bg-[#d71927]/10 flex items-center justify-center">
-                    <User className="w-8 h-8 text-[#d71927]" />
+                  <div className="w-16 h-16 rounded-full bg-[#c9a84c]/10 flex items-center justify-center">
+                    <User className="w-8 h-8 text-[#c9a84c]" />
                   </div>
                 )}
                 <div className="flex-1">
@@ -66,7 +66,7 @@ export const TransferSummary = ({
             ) : (
               <>
                 <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center">
-                  <Building2 className="w-8 h-8 text-[#d71927]" />
+                  <Building2 className="w-8 h-8 text-[#c9a84c]" />
                 </div>
                 <div className="flex-1">
                   <p className="text-xs font-bold uppercase tracking-[0.16em] text-gray-500">Recipient Bank</p>
@@ -97,7 +97,7 @@ export const TransferSummary = ({
         <div className="space-y-3">
           <div className="flex justify-between items-center">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-gray-500">Transfer Amount</p>
-            <p className="text-2xl font-extrabold text-[#d71927]">{formatAmount(validAmount)}</p>
+            <p className="text-2xl font-extrabold text-[#c9a84c]">{formatAmount(validAmount)}</p>
           </div>
 
           {description && (
@@ -118,7 +118,7 @@ export const TransferSummary = ({
             </div>
             <div className="flex items-center justify-between bg-white border border-gray-200 rounded-lg p-3">
               <p className="text-xs font-bold uppercase tracking-[0.16em] text-gray-500">Balance After</p>
-              <p className="font-bold text-[#d71927] text-lg">{formatAmount(balanceAfter)}</p>
+              <p className="font-bold text-[#c9a84c] text-lg">{formatAmount(balanceAfter)}</p>
             </div>
           </div>
         </div>

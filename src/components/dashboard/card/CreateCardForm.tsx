@@ -66,7 +66,7 @@ export const CreateCardForm: React.FC<CreateCardFormProps> = ({
         className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 disabled:opacity-50"
       >
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#d71927]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#c9a84c]">
             <Plus className="h-5 w-5 text-white" />
           </div>
           <h3 className="text-base font-semibold text-gray-900">Create New Card</h3>
@@ -161,7 +161,7 @@ export const CreateCardForm: React.FC<CreateCardFormProps> = ({
             <button
               type="submit"
               disabled={isLoading || isSubmitting}
-              className="w-full rounded-lg bg-[#d71927] px-4 py-3 text-sm font-semibold text-white hover:#d71927 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+              className="w-full rounded-lg bg-[#c9a84c] px-4 py-3 text-sm font-semibold text-white hover:#c9a84c disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
             >
               {isSubmitting ? (
                 <>

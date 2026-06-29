@@ -184,7 +184,7 @@ export const Tier2Form: React.FC<Tier2FormProps> = ({
           value={formData.identity?.type || 'nin'}
           onChange={handleInputChange}
           disabled={isSubmitting}
-          className={`w-full rounded-lg border px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#d71927] ${
+          className={`w-full rounded-lg border px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#c9a84c] ${
             fieldErrors.type ? 'border-red-300 bg-red-50' : 'border-gray-200 bg-white'
           }`}
         >
@@ -219,7 +219,7 @@ export const Tier2Form: React.FC<Tier2FormProps> = ({
           value={formData.identity?.country || 'NG'}
           onChange={handleInputChange}
           disabled={isSubmitting}
-          className={`w-full rounded-lg border px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#d71927] ${
+          className={`w-full rounded-lg border px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#c9a84c] ${
             fieldErrors.country ? 'border-red-300 bg-red-50' : 'border-gray-200 bg-white'
           }`}
         >

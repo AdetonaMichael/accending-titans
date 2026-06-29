@@ -218,9 +218,9 @@ export default function AdminNotificationsPage() {
                   {Object.entries(notifStats.by_type).map(([type, count]) => (
                     <div
                       key={type}
-                      className="min-w-[180px] snap-center md:min-w-0 rounded-lg border-2 border-[#d71927] bg-gradient-to-br from-[#d71927]/5 to-transparent p-4 text-center transition-all hover:shadow-lg hover:border-[#d71927]"
+                      className="min-w-[180px] snap-center md:min-w-0 rounded-lg border-2 border-[#c9a84c] bg-gradient-to-br from-[#c9a84c]/5 to-transparent p-4 text-center transition-all hover:shadow-lg hover:border-[#c9a84c]"
                     >
-                      <p className="text-sm font-semibold text-[#d71927] capitalize">
+                      <p className="text-sm font-semibold text-[#c9a84c] capitalize">
                         {type}
                       </p>
                       <p className="mt-3 text-3xl font-bold text-gray-900">
@@ -244,7 +244,7 @@ export default function AdminNotificationsPage() {
               <CardBody>
                 <div className="space-y-3">
                   {Object.entries(notifStats.by_priority).map(([priority, count]) => (
-                    <div key={priority} className="flex items-center justify-between rounded-lg border-l-4 border-l-[#d71927] bg-[#d71927]/5 px-3 py-2">
+                    <div key={priority} className="flex items-center justify-between rounded-lg border-l-4 border-l-[#c9a84c] bg-[#c9a84c]/5 px-3 py-2">
                       <div className="flex items-center gap-3">
                         <Badge
                           variant={
@@ -288,7 +288,7 @@ export default function AdminNotificationsPage() {
                     setSendMode('single');
                     setShowSendModal(true);
                   }}
-                  className="min-w-max snap-center md:min-w-0 flex items-center gap-2 rounded-lg bg-[#d71927] px-4 py-3 font-medium text-white transition-all hover:bg-[#b01620] hover:shadow-lg focus:ring-2 focus:ring-[#d71927]/50 md:justify-center"
+                  className="min-w-max snap-center md:min-w-0 flex items-center gap-2 rounded-lg bg-[#c9a84c] px-4 py-3 font-medium text-white transition-all hover:bg-[#b01620] hover:shadow-lg focus:ring-2 focus:ring-[#c9a84c]/50 md:justify-center"
                 >
                   <Send className="h-4 w-4" />
                   Send to User
@@ -298,14 +298,14 @@ export default function AdminNotificationsPage() {
                     setSendMode('bulk');
                     setShowSendModal(true);
                   }}
-                  className="min-w-max snap-center md:min-w-0 flex items-center gap-2 rounded-lg bg-[#d71927] px-4 py-3 font-medium text-white transition-all hover:bg-[#b01620] hover:shadow-lg focus:ring-2 focus:ring-[#d71927]/50 md:justify-center"
+                  className="min-w-max snap-center md:min-w-0 flex items-center gap-2 rounded-lg bg-[#c9a84c] px-4 py-3 font-medium text-white transition-all hover:bg-[#b01620] hover:shadow-lg focus:ring-2 focus:ring-[#c9a84c]/50 md:justify-center"
                 >
                   <Send className="h-4 w-4" />
                   Send to Multiple
                 </button>
                 <button
                   disabled
-                  className="min-w-max snap-center md:min-w-0 flex items-center gap-2 rounded-lg border-2 border-[#d71927] px-4 py-3 font-medium text-[#d71927] opacity-50 transition-all md:justify-center"
+                  className="min-w-max snap-center md:min-w-0 flex items-center gap-2 rounded-lg border-2 border-[#c9a84c] px-4 py-3 font-medium text-[#c9a84c] opacity-50 transition-all md:justify-center"
                 >
                   <Edit2 className="h-4 w-4" />
                   Broadcast Campaign
@@ -343,7 +343,7 @@ export default function AdminNotificationsPage() {
                 onClick={() => setSendMode('single')}
                 className={`flex-1 rounded-t-lg px-4 py-3 font-medium transition-all ${
                   sendMode === 'single'
-                    ? 'border-b-2 border-[#d71927] bg-[#d71927]/5 text-[#d71927]'
+                    ? 'border-b-2 border-[#c9a84c] bg-[#c9a84c]/5 text-[#c9a84c]'
                     : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
@@ -353,7 +353,7 @@ export default function AdminNotificationsPage() {
                 onClick={() => setSendMode('bulk')}
                 className={`flex-1 rounded-t-lg px-4 py-3 font-medium transition-all ${
                   sendMode === 'bulk'
-                    ? 'border-b-2 border-[#d71927] bg-[#d71927]/5 text-[#d71927]'
+                    ? 'border-b-2 border-[#c9a84c] bg-[#c9a84c]/5 text-[#c9a84c]'
                     : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
@@ -370,7 +370,7 @@ export default function AdminNotificationsPage() {
                   <button
                     type="button"
                     onClick={() => setShowUserDropdown(!showUserDropdown)}
-                    className="w-full flex items-center justify-between rounded-lg border-2 border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 hover:border-[#d71927] focus:border-[#d71927] focus:ring-2 focus:ring-[#d71927]/20 transition"
+                    className="w-full flex items-center justify-between rounded-lg border-2 border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 hover:border-[#c9a84c] focus:border-[#c9a84c] focus:ring-2 focus:ring-[#c9a84c]/20 transition"
                   >
                     <span>
                       {selectedSingleUser
@@ -388,7 +388,7 @@ export default function AdminNotificationsPage() {
                           placeholder="Search users..."
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
-                          className="w-full rounded-lg border-2 border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-[#d71927] focus:ring-2 focus:ring-[#d71927]/20 outline-none transition"
+                          className="w-full rounded-lg border-2 border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-[#c9a84c] focus:ring-2 focus:ring-[#c9a84c]/20 outline-none transition"
                           autoFocus
                         />
                       </div>
@@ -418,7 +418,7 @@ export default function AdminNotificationsPage() {
                                   setShowUserDropdown(false);
                                   setSearchQuery('');
                                 }}
-                                className="w-full px-3 py-2 text-left text-sm text-gray-900 hover:bg-[#d71927]/5 flex items-center justify-between border-b border-gray-100 last:border-b-0 transition"
+                                className="w-full px-3 py-2 text-left text-sm text-gray-900 hover:bg-[#c9a84c]/5 flex items-center justify-between border-b border-gray-100 last:border-b-0 transition"
                               >
                                 <div>
                                   <p className="font-medium">
@@ -427,7 +427,7 @@ export default function AdminNotificationsPage() {
                                   <p className="text-xs text-gray-500">{u.email}</p>
                                 </div>
                                 {selectedSingleUser?.id === u.id && (
-                                  <div className="h-2 w-2 rounded-full bg-[#d71927]" />
+                                  <div className="h-2 w-2 rounded-full bg-[#c9a84c]" />
                                 )}
                               </button>
                             ))
@@ -446,7 +446,7 @@ export default function AdminNotificationsPage() {
                   <button
                     type="button"
                     onClick={() => setShowUserDropdown(!showUserDropdown)}
-                    className="w-full flex items-center justify-between rounded-lg border-2 border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 hover:border-[#d71927] focus:border-[#d71927] focus:ring-2 focus:ring-[#d71927]/20 transition"
+                    className="w-full flex items-center justify-between rounded-lg border-2 border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 hover:border-[#c9a84c] focus:border-[#c9a84c] focus:ring-2 focus:ring-[#c9a84c]/20 transition"
                   >
                     <span>
                       {selectedBulkUsers.length > 0
@@ -464,7 +464,7 @@ export default function AdminNotificationsPage() {
                           placeholder="Search users..."
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
-                          className="w-full rounded-lg border-2 border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-[#d71927] focus:ring-2 focus:ring-[#d71927]/20 outline-none transition"
+                          className="w-full rounded-lg border-2 border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-[#c9a84c] focus:ring-2 focus:ring-[#c9a84c]/20 outline-none transition"
                           autoFocus
                         />
                       </div>
@@ -488,7 +488,7 @@ export default function AdminNotificationsPage() {
                             .map((u) => (
                               <label
                                 key={u.id}
-                                className="flex items-center gap-3 px-3 py-2 text-sm text-gray-900 hover:bg-[#d71927]/5 border-b border-gray-100 last:border-b-0 cursor-pointer transition"
+                                className="flex items-center gap-3 px-3 py-2 text-sm text-gray-900 hover:bg-[#c9a84c]/5 border-b border-gray-100 last:border-b-0 cursor-pointer transition"
                               >
                                 <input
                                   type="checkbox"
@@ -565,7 +565,7 @@ export default function AdminNotificationsPage() {
                   setFormData({ ...formData, body: e.target.value })
                 }
                 placeholder="Notification message"
-                className="w-full rounded-lg border-2 border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-[#d71927] focus:ring-2 focus:ring-[#d71927]/20 transition"
+                className="w-full rounded-lg border-2 border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-[#c9a84c] focus:ring-2 focus:ring-[#c9a84c]/20 transition"
                 rows={3}
               />
             </div>
@@ -580,7 +580,7 @@ export default function AdminNotificationsPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, type: e.target.value })
                   }
-                  className="w-full rounded-lg border-2 border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-[#d71927] focus:ring-2 focus:ring-[#d71927]/20 transition"
+                  className="w-full rounded-lg border-2 border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-[#c9a84c] focus:ring-2 focus:ring-[#c9a84c]/20 transition"
                 >
                   <option value="system">System</option>
                   <option value="transaction">Transaction</option>
@@ -599,7 +599,7 @@ export default function AdminNotificationsPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, priority: e.target.value })
                   }
-                  className="w-full rounded-lg border-2 border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-[#d71927] focus:ring-2 focus:ring-[#d71927]/20 transition"
+                  className="w-full rounded-lg border-2 border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-[#c9a84c] focus:ring-2 focus:ring-[#c9a84c]/20 transition"
                 >
                   <option value="low">Low</option>
                   <option value="normal">Normal</option>
@@ -611,12 +611,12 @@ export default function AdminNotificationsPage() {
             <div className="flex gap-3 pt-4">
               <button
                 onClick={handleSend}
-                className="flex-1 rounded-lg bg-[#d71927] px-4 py-2 font-medium text-white transition-all hover:bg-[#b01620] focus:ring-2 focus:ring-[#d71927]/50"
+                className="flex-1 rounded-lg bg-[#c9a84c] px-4 py-2 font-medium text-white transition-all hover:bg-[#b01620] focus:ring-2 focus:ring-[#c9a84c]/50"
               >
                 Send Notification
               </button>
               <button
-                className="flex-1 rounded-lg border-2 border-[#d71927] px-4 py-2 font-medium text-[#d71927] transition-all hover:bg-[#d71927]/5 focus:ring-2 focus:ring-[#d71927]/50"
+                className="flex-1 rounded-lg border-2 border-[#c9a84c] px-4 py-2 font-medium text-[#c9a84c] transition-all hover:bg-[#c9a84c]/5 focus:ring-2 focus:ring-[#c9a84c]/50"
                 onClick={() => {
                   setShowSendModal(false);
                   setSendMode('single');

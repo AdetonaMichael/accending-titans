@@ -132,7 +132,7 @@ export const VtuStatisticsDashboard: React.FC<VtuStatisticsDashboardProps> = ({
           <CardBody className="space-y-3">
             <div className="flex items-start justify-between">
               <p className="text-sm font-medium text-gray-600">Total Amount</p>
-              <DollarSign className="h-4 w-4 text-[#d71927]" />
+              <DollarSign className="h-4 w-4 text-[#c9a84c]" />
             </div>
             <p className="text-2xl font-bold text-gray-900">
               {formatCurrency(summary.total_amount)}

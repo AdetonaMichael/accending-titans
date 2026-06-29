@@ -32,13 +32,13 @@ export const TransferTypeSelector = ({ onSelect, disabled = false }: TransferTyp
         <Card
           className={`cursor-pointer transition-all ${
             selected === 'Accending titans'
-              ? 'border-[#d71927] bg-white/5'
+              ? 'border-[#c9a84c] bg-white/5'
               : 'hover:border-white/20'
           }`}
           onClick={() => !disabled && handleSelect('Accending titans')}
         >
           <div className="flex flex-col items-center gap-3 py-6">
-            <Send className={`w-8 h-8 ${selected === 'Accending titans' ? 'text-[#d71927]' : 'text-white/60'}`} />
+            <Send className={`w-8 h-8 ${selected === 'Accending titans' ? 'text-[#c9a84c]' : 'text-white/60'}`} />
             <h4 className="font-semibold text-white">Accending titans User</h4>
             <p className="text-xs text-white/60 text-center">Transfer to another Accending titans user</p>
           </div>
@@ -48,13 +48,13 @@ export const TransferTypeSelector = ({ onSelect, disabled = false }: TransferTyp
         <Card
           className={`cursor-pointer transition-all ${
             selected === 'bank'
-              ? 'border-[#d71927] bg-white/5'
+              ? 'border-[#c9a84c] bg-white/5'
               : 'hover:border-white/20'
           }`}
           onClick={() => !disabled && handleSelect('bank')}
         >
           <div className="flex flex-col items-center gap-3 py-6">
-            <Building2 className={`w-8 h-8 ${selected === 'bank' ? 'text-[#d71927]' : 'text-white/60'}`} />
+            <Building2 className={`w-8 h-8 ${selected === 'bank' ? 'text-[#c9a84c]' : 'text-white/60'}`} />
             <h4 className="font-semibold text-white">Bank Account</h4>
             <p className="text-xs text-white/60 text-center">Transfer to any bank account</p>
           </div>

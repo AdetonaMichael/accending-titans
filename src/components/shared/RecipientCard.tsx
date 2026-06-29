@@ -28,8 +28,8 @@ export const RecipientCard = ({ recipient, amount, onRemove }: RecipientCardProp
             className="w-12 h-12 rounded-full object-cover"
           />
         ) : (
-          <div className="w-12 h-12 rounded-full bg-[#d71927]/20 flex items-center justify-center">
-            <User className="w-6 h-6 text-[#d71927]" />
+          <div className="w-12 h-12 rounded-full bg-[#c9a84c]/20 flex items-center justify-center">
+            <User className="w-6 h-6 text-[#c9a84c]" />
           </div>
         )}
 
@@ -53,7 +53,7 @@ export const RecipientCard = ({ recipient, amount, onRemove }: RecipientCardProp
       {onRemove && (
         <button
           onClick={onRemove}
-          className="mt-3 w-full py-2 text-sm text-[#d71927] hover:bg-[#d71927]/10 rounded-lg transition-colors"
+          className="mt-3 w-full py-2 text-sm text-[#c9a84c] hover:bg-[#c9a84c]/10 rounded-lg transition-colors"
         >
           Change Recipient
         </button>

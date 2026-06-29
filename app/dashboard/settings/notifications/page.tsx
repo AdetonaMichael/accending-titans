@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { Settings, Bell, Mail, Zap, Check } from 'lucide-react';
+import { Bell, Check, Mail, Zap } from 'lucide-react';
 import { NotificationPreferences } from '@/components/dashboard/NotificationPreferences';
 import { useNotifications } from '@/hooks/useNotifications';
 
@@ -12,78 +12,92 @@ export default function NotificationSettingsPage() {
     fetchPreferences();
   }, [fetchPreferences]);
 
+  const stats: Array<{
+    label: string;
+    value: string;
+    active: boolean;
+    icon: React.ElementType;
+  }> = preferences
+    ? [
+        {
+          label: 'Overall Status',
+          value: preferences.enabled ? 'Active' : 'Paused',
+          active: preferences.enabled,
+          icon: Check,
+        },
+        {
+          label: 'Push Notifications',
+          value: preferences.push_notifications ? 'On' : 'Off',
+          active: preferences.push_notifications,
+          icon: Zap,
+        },
+        {
+          label: 'Email Notifications',
+          value: preferences.email_notifications ? 'On' : 'Off',
+          active: preferences.email_notifications,
+          icon: Mail,
+        },
+      ]
+    : [];
+
   return (
-    <div className="space-y-8">
-      {/* Page Header */}
-      <div className="bg-[#140404]  rounded-2xl p-8 border border-slate-700/50 shadow-lg">
-        <div className="flex items-start justify-between">
+    <div className="space-y-6">
+
+      {/* ── Page Header ── */}
+      <div className="overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-sm">
+        <div className="h-[3px] bg-gradient-to-r from-[#C9A84C]/30 via-[#C9A84C] to-[#C9A84C]/30" />
+        <div className="p-6 sm:p-8">
           <div className="flex items-start gap-4">
-            <div className="p-3 bg-gradient-to-br from-red-600 to-red-700 rounded-xl shadow-lg">
-              <Settings className="h-6 w-6 text-white" />
+            <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-[#C9A84C]/25 bg-[#FDFAF3]">
+              <Bell size={18} className="text-[#C9A84C]" />
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-white">Notification Settings</h1>
-              <p className="text-slate-400 mt-2">Customize how and when you receive notifications</p>
+              <h1 className="text-xl font-black tracking-tight text-gray-900">
+                Notification Settings
+              </h1>
+              <p className="mt-1 text-sm text-gray-400">
+                Customize how and when you receive notifications.
+              </p>
             </div>
           </div>
+
+          {/* Status summary cards */}
+          {preferences && (
+            <div className="mt-6 grid grid-cols-1 gap-3 border-t border-gray-100 pt-6 sm:grid-cols-3">
+              {stats.map((stat) => {
+                const Icon = stat.icon;
+                return (
+                  <div
+                    key={stat.label}
+                    className="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50/70 px-4 py-3.5"
+                  >
+                    <div>
+                      <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                        {stat.label}
+                      </p>
+                      <p className="mt-1 text-base font-black text-gray-900">{stat.value}</p>
+                    </div>
+                    <div
+                      className={`flex h-9 w-9 items-center justify-center rounded-xl ${
+                        stat.active
+                          ? 'border border-[#C9A84C]/25 bg-[#FDFAF3]'
+                          : 'border border-gray-200 bg-white'
+                      }`}
+                    >
+                      <Icon
+                        size={16}
+                        className={stat.active ? 'text-[#C9A84C]' : 'text-gray-300'}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
-
-        {/* Status Cards */}
-        {preferences && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 pt-8 border-t border-slate-700/50">
-            {/* Overall Status */}
-            <div className="bg-[#140404] backdrop-blur-sm rounded-xl p-4 border border-slate-700/50 hover:border-slate-600/50 transition-all">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-slate-400 text-sm font-medium">Overall Status</p>
-                  <p className="text-2xl font-bold text-white mt-1">
-                    {preferences.enabled ? 'Active' : 'Paused'}
-                  </p>
-                </div>
-                <div className={`p-3 rounded-lg ${preferences.enabled ? 'bg-green-500/20' : 'bg-gray-500/20'}`}>
-                  {preferences.enabled ? (
-                    <Check className="h-6 w-6 text-green-400" />
-                  ) : (
-                    <Bell className="h-6 w-6 text-gray-400" />
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Push Status */}
-            <div className="bg-[#140404] backdrop-blur-sm rounded-xl p-4 border border-slate-700/50 hover:border-slate-600/50 transition-all">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-slate-400 text-sm font-medium">Push Notifications</p>
-                  <p className="text-2xl font-bold text-white mt-1">
-                    {preferences.push_notifications ? 'On' : 'Off'}
-                  </p>
-                </div>
-                <div className={`p-3 rounded-lg ${preferences.push_notifications ? 'bg-green-500/20' : 'bg-gray-500/20'}`}>
-                  <Zap className={`h-6 w-6 ${preferences.push_notifications ? 'text-green-400' : 'text-gray-400'}`} />
-                </div>
-              </div>
-            </div>
-
-            {/* Email Status */}
-            <div className="bg-[#140404] backdrop-blur-sm rounded-xl p-4 border border-slate-700/50 hover:border-slate-600/50 transition-all">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-slate-400 text-sm font-medium">Email Notifications</p>
-                  <p className="text-2xl font-bold text-white mt-1">
-                    {preferences.email_notifications ? 'On' : 'Off'}
-                  </p>
-                </div>
-                <div className={`p-3 rounded-lg ${preferences.email_notifications ? 'bg-green-500/20' : 'bg-gray-500/20'}`}>
-                  <Mail className={`h-6 w-6 ${preferences.email_notifications ? 'text-green-400' : 'text-gray-400'}`} />
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
-      {/* Preferences Form */}
+      {/* ── Preferences Form ── */}
       <NotificationPreferences />
     </div>
   );

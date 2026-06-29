@@ -51,7 +51,7 @@ export function FxHistoryList() {
     return (
       <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6 lg:p-8">
         <div className="flex items-center justify-center gap-3 py-12">
-          <Loader size={24} className="animate-spin text-[#d71927]" />
+          <Loader size={24} className="animate-spin text-[#c9a84c]" />
           <p className="text-gray-600">Loading transaction history...</p>
         </div>
       </div>
@@ -109,7 +109,7 @@ export function FxHistoryList() {
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-4 pt-4 border-t border-gray-200">
               <div>
                 <p className="text-xs text-gray-600 mb-1">Exchange Rate</p>
-                <p className="font-semibold text-[#d71927] flex items-center gap-1">
+                <p className="font-semibold text-[#c9a84c] flex items-center gap-1">
                   <TrendingUp size={16} />
                   {transaction.rate ? transaction.rate.toFixed(6) : 'N/A'}
                 </p>
@@ -142,7 +142,7 @@ export function FxHistoryList() {
       {/* Load More Button */}
       {historyLoading && (
         <div className="flex justify-center py-4">
-          <Loader size={24} className="animate-spin text-[#d71927]" />
+          <Loader size={24} className="animate-spin text-[#c9a84c]" />
         </div>
       )}
     </div>

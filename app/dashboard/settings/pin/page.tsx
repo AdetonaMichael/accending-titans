@@ -298,7 +298,7 @@ export default function PINSettingsPage() {
               <Button
                 onClick={handleOpenModal}
                 disabled={isSettingPin || isLocked}
-                className="h-13 rounded-2xl bg-[#d71927] px-8 text-base font-bold text-white shadow-[0_14px_30px_rgba(98,7,7,0.24)] hover:bg-[#d71923] disabled:cursor-not-allowed disabled:opacity-60"
+                className="h-13 rounded-2xl bg-[#c9a84c] px-8 text-base font-bold text-white shadow-[0_14px_30px_rgba(98,7,7,0.24)] hover:bg-[#d71923] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <Lock size={18} className="mr-2" />
                 {isLocked

@@ -54,7 +54,7 @@ export const RecentRecipientsList = ({
             />
           ) : (
             <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0">
-              <User className="w-5 h-5 text-[#d71927]" />
+              <User className="w-5 h-5 text-[#c9a84c]" />
             </div>
           )}
 

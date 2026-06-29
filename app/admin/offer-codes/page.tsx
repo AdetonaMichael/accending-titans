@@ -312,7 +312,7 @@ export default function AdminOfferCodesPage() {
           onClick={openFilters}
           className={`h-11 rounded-xl px-4 font-semibold transition ${
             hasActiveFilters
-              ? 'bg-[#d71927] text-white shadow-lg shadow-[#d71927]/20 hover:bg-[#b91521]'
+              ? 'bg-[#c9a84c] text-white shadow-lg shadow-[#c9a84c]/20 hover:bg-[#b91521]'
               : 'border border-black/10 text-[#111] hover:bg-[#f8f8f8]'
           }`}
         >
@@ -472,7 +472,7 @@ export default function AdminOfferCodesPage() {
                 <select
                   value={formData.type}
                   onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                  className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-[#d71927] focus:ring-[#d71927]"
+                  className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-[#c9a84c] focus:ring-[#c9a84c]"
                 >
                   <option value="fixed">Fixed Amount</option>
                   <option value="percentage">Percentage</option>
@@ -535,7 +535,7 @@ export default function AdminOfferCodesPage() {
                 id="active"
                 checked={formData.active}
                 onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
-                className="h-4 w-4 rounded border-gray-300 text-[#d71927]"
+                className="h-4 w-4 rounded border-gray-300 text-[#c9a84c]"
               />
               <label htmlFor="active" className="text-sm font-medium text-gray-700">
                 Active

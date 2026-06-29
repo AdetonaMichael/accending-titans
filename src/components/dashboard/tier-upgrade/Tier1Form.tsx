@@ -231,7 +231,7 @@ export const Tier1Form: React.FC<Tier1FormProps> = ({
             value={formData.phone?.phone_country_code || '+234'}
             onChange={(e) => handleInputChange(e, 'phone')}
             disabled={isSubmitting}
-            className="flex-shrink-0 w-24 rounded-lg border border-gray-200 bg-white px-3 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#d71927]"
+            className="flex-shrink-0 w-24 rounded-lg border border-gray-200 bg-white px-3 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#c9a84c]"
           >
             {COUNTRIES.map((country) => (
               <option key={country.code} value={country.dialCode}>
@@ -319,7 +319,7 @@ export const Tier1Form: React.FC<Tier1FormProps> = ({
               value={formData.address?.country || 'NG'}
               onChange={(e) => handleInputChange(e, 'address')}
               disabled={isSubmitting}
-              className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#d71927]"
+              className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#c9a84c]"
             >
               {COUNTRIES.map((country) => (
                 <option key={country.code} value={country.code}>

@@ -121,7 +121,7 @@ function OfflineContent() {
           <button
             onClick={handleRetry}
             disabled={retrying}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-[#d71927] text-white rounded-lg font-semibold hover:bg-[#b91521] transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-red-200"
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-[#c9a84c] text-white rounded-lg font-semibold hover:bg-[#b91521] transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-red-200"
           >
             {retrying ? (
               <>
@@ -148,7 +148,7 @@ function OfflineContent() {
         {/* Help Text */}
         <p className="text-center text-xs text-gray-500 mt-6">
           If the problem persists, please{' '}
-          <a href="mailto:support@Accending titans.com" className="text-[#d71927] font-semibold hover:underline">
+          <a href="mailto:support@Accending titans.com" className="text-[#c9a84c] font-semibold hover:underline">
             contact support
           </a>
         </p>

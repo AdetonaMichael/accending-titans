@@ -441,15 +441,15 @@ export const TierUpgradeFormV2: React.FC<TierUpgradeFormProps> = ({
       <div className="space-y-6">
         {/* Error Summary */}
         {tier0Errors.length > 0 && (
-          <div className="p-4 bg-[#fff5f5] border-2 border-[#d71927] rounded-2xl">
+          <div className="p-4 bg-[#fff5f5] border-2 border-[#c9a84c] rounded-2xl">
             <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-[#d71927] flex-shrink-0 mt-0.5" />
+              <AlertCircle className="w-5 h-5 text-[#c9a84c] flex-shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-semibold text-[#d71927] text-sm">Please fix the following errors:</h4>
+                <h4 className="font-semibold text-[#c9a84c] text-sm">Please fix the following errors:</h4>
                 <ul className="mt-2 space-y-1">
                   {Object.entries(errors.tier0).map(([field, error]) => 
                     error ? (
-                      <li key={field} className="text-sm text-[#d71927]">
+                      <li key={field} className="text-sm text-[#c9a84c]">
                         • {error}
                       </li>
                     ) : null
@@ -504,10 +504,10 @@ export const TierUpgradeFormV2: React.FC<TierUpgradeFormProps> = ({
           onClick={handleSubmitTier0}
           disabled={isSubmitting || tier0Errors.length > 0}
           isLoading={isSubmitting}
-          className={`w-full h-11 rounded-xl bg-[#d71927] px-6 font-black text-white shadow-lg transition-all ${
+          className={`w-full h-11 rounded-xl bg-[#c9a84c] px-6 font-black text-white shadow-lg transition-all ${
             isSubmitting 
               ? 'opacity-75 cursor-wait'
-              : 'shadow-[#d71927]/20 hover:bg-[#b91521]'
+              : 'shadow-[#c9a84c]/20 hover:bg-[#b91521]'
           } ${tier0Errors.length > 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
           {isSubmitting ? (
@@ -534,15 +534,15 @@ export const TierUpgradeFormV2: React.FC<TierUpgradeFormProps> = ({
       <div className="space-y-6">
         {/* Error Summary */}
         {tier1Errors.length > 0 && (
-          <div className="p-4 bg-[#fff5f5] border-2 border-[#d71927] rounded-2xl">
+          <div className="p-4 bg-[#fff5f5] border-2 border-[#c9a84c] rounded-2xl">
             <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-[#d71927] flex-shrink-0 mt-0.5" />
+              <AlertCircle className="w-5 h-5 text-[#c9a84c] flex-shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-semibold text-[#d71927] text-sm">Please fix the following errors:</h4>
+                <h4 className="font-semibold text-[#c9a84c] text-sm">Please fix the following errors:</h4>
                 <ul className="mt-2 space-y-1">
                   {Object.entries(errors.tier1).map(([field, error]) => 
                     error ? (
-                      <li key={field} className="text-sm text-[#d71927]">
+                      <li key={field} className="text-sm text-[#c9a84c]">
                         • {error}
                       </li>
                     ) : null
@@ -566,7 +566,7 @@ export const TierUpgradeFormV2: React.FC<TierUpgradeFormProps> = ({
       <div>
         <h4 className="font-semibold text-[#111] mb-4">Phone Number</h4>
         <div className="w-full">
-          <div className="flex items-center w-full rounded-2xl border-2 border-black/10 bg-white hover:border-black/20 focus-within:border-[#d71927] focus-within:ring-4 focus-within:ring-[#d71927]/10 transition-all" style={{ zIndex: phoneDropdownOpen ? 40 : 'auto' }}>
+          <div className="flex items-center w-full rounded-2xl border-2 border-black/10 bg-white hover:border-black/20 focus-within:border-[#c9a84c] focus-within:ring-4 focus-within:ring-[#c9a84c]/10 transition-all" style={{ zIndex: phoneDropdownOpen ? 40 : 'auto' }}>
             {/* Country Selector */}
             <div className="relative" ref={phoneDropdownRef}>
               <button
@@ -598,7 +598,7 @@ export const TierUpgradeFormV2: React.FC<TierUpgradeFormProps> = ({
                         placeholder="Search country..."
                         value={phoneSearchQuery}
                         onChange={(e) => setPhoneSearchQuery(e.target.value)}
-                        className="w-full pl-9 pr-3 py-2 border-2 border-black/10 rounded-lg text-sm focus:outline-none focus:border-[#d71927] focus:ring-4 focus:ring-[#d71927]/10 transition-all"
+                        className="w-full pl-9 pr-3 py-2 border-2 border-black/10 rounded-lg text-sm focus:outline-none focus:border-[#c9a84c] focus:ring-4 focus:ring-[#c9a84c]/10 transition-all"
                       />
                       {phoneSearchQuery && (
                         <button
@@ -626,7 +626,7 @@ export const TierUpgradeFormV2: React.FC<TierUpgradeFormProps> = ({
                           type="button"
                           className={`w-full px-4 py-3 text-left text-sm transition-all flex items-center gap-3 border-l-4 hover:bg-black/2 focus:outline-none ${
                             country.code === selectedPhoneCountry?.code 
-                              ? 'bg-red-50 border-l-[#d71927]' 
+                              ? 'bg-red-50 border-l-[#c9a84c]' 
                               : 'border-l-transparent hover:border-l-black/20'
                           }`}
                         >
@@ -636,7 +636,7 @@ export const TierUpgradeFormV2: React.FC<TierUpgradeFormProps> = ({
                             <div className="text-xs text-black/50">{country.dialCode}</div>
                           </div>
                           {country.code === selectedPhoneCountry?.code && (
-                            <div className="w-2 h-2 rounded-full bg-[#d71927] flex-shrink-0" />
+                            <div className="w-2 h-2 rounded-full bg-[#c9a84c] flex-shrink-0" />
                           )}
                         </button>
                       ))
@@ -658,11 +658,11 @@ export const TierUpgradeFormV2: React.FC<TierUpgradeFormProps> = ({
               value={formState.tier1.phone?.phone_number || ''}
               onChange={(e) => updateTierField(1, 'phone.phone_number', e.target.value)}
               className={`flex-1 px-4 py-3 text-[#111] text-sm font-medium outline-none transition placeholder:text-black/35 bg-transparent
-                ${errors.tier1['phone.phone_number'] ? 'text-[#d71927] placeholder:text-[#d71927]/40' : ''}`}
+                ${errors.tier1['phone.phone_number'] ? 'text-[#c9a84c] placeholder:text-[#c9a84c]/40' : ''}`}
             />
           </div>
           {errors.tier1['phone.phone_number'] && (
-            <p className="mt-2 text-sm font-semibold text-[#d71927]">{errors.tier1['phone.phone_number']}</p>
+            <p className="mt-2 text-sm font-semibold text-[#c9a84c]">{errors.tier1['phone.phone_number']}</p>
           )}
         </div>
       </div>
@@ -768,9 +768,9 @@ export const TierUpgradeFormV2: React.FC<TierUpgradeFormProps> = ({
       {/* Profile Photo */}
       <div>
         <label className="block font-semibold text-[#111] mb-3">
-          Profile Photo <span className="text-[#d71927]">*</span>
+          Profile Photo <span className="text-[#c9a84c]">*</span>
         </label>
-        <div className="border-2 border-dashed border-gray-300 rounded-2xl p-6 text-center cursor-pointer hover:border-[#d71927] transition-colors">
+        <div className="border-2 border-dashed border-gray-300 rounded-2xl p-6 text-center cursor-pointer hover:border-[#c9a84c] transition-colors">
           <input
             type="file"
             accept="image/*"
@@ -802,7 +802,7 @@ export const TierUpgradeFormV2: React.FC<TierUpgradeFormProps> = ({
           <p className="mt-3 text-sm font-medium text-green-600">Photo uploaded successfully.</p>
         )}
         {photoUploadError && (
-          <p className="mt-3 text-sm font-medium text-[#d71927]">{photoUploadError}</p>
+          <p className="mt-3 text-sm font-medium text-[#c9a84c]">{photoUploadError}</p>
         )}
       </div>
 
@@ -812,8 +812,8 @@ export const TierUpgradeFormV2: React.FC<TierUpgradeFormProps> = ({
         isLoading={isSubmitting}
         className={`w-full h-11 rounded-xl px-6 font-black text-white shadow-lg transition-all ${
           isSubmitting 
-            ? 'bg-[#d71927] opacity-75 cursor-wait'
-            : 'bg-[#d71927] hover:bg-[#b91521] shadow-[#d71927]/20'
+            ? 'bg-[#c9a84c] opacity-75 cursor-wait'
+            : 'bg-[#c9a84c] hover:bg-[#b91521] shadow-[#c9a84c]/20'
         } ${(tier1Errors.length > 0 || !bvnVerified) ? 'opacity-50 cursor-not-allowed' : ''}`}
       >
         {isSubmitting ? (
@@ -842,15 +842,15 @@ export const TierUpgradeFormV2: React.FC<TierUpgradeFormProps> = ({
       <div className="space-y-6">
         {/* Error Summary */}
         {tier2Errors.length > 0 && (
-          <div className="p-4 bg-[#fff5f5] border-2 border-[#d71927] rounded-2xl">
+          <div className="p-4 bg-[#fff5f5] border-2 border-[#c9a84c] rounded-2xl">
             <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-[#d71927] flex-shrink-0 mt-0.5" />
+              <AlertCircle className="w-5 h-5 text-[#c9a84c] flex-shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-semibold text-[#d71927] text-sm">Please fix the following errors:</h4>
+                <h4 className="font-semibold text-[#c9a84c] text-sm">Please fix the following errors:</h4>
                 <ul className="mt-2 space-y-1">
                   {Object.entries(errors.tier2).map(([field, error]) => 
                     error ? (
-                      <li key={field} className="text-sm text-[#d71927]">
+                      <li key={field} className="text-sm text-[#c9a84c]">
                         • {error}
                       </li>
                     ) : null
@@ -895,12 +895,12 @@ export const TierUpgradeFormV2: React.FC<TierUpgradeFormProps> = ({
         {/* Document Image */}
         <div>
           <label className="block font-semibold text-[#111] mb-3">
-            Document Image <span className="text-[#d71927]">*</span>
+            Document Image <span className="text-[#c9a84c]">*</span>
           </label>
           <div className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-colors ${
             errors.tier2['identity.image']
-              ? 'border-[#d71927] bg-[#fff5f5]'
-              : 'border-gray-300 hover:border-[#d71927]'
+              ? 'border-[#c9a84c] bg-[#fff5f5]'
+              : 'border-gray-300 hover:border-[#c9a84c]'
           }`}>
             <input
               type="file"
@@ -924,7 +924,7 @@ export const TierUpgradeFormV2: React.FC<TierUpgradeFormProps> = ({
             </label>
           </div>
           {errors.tier2['identity.image'] && (
-            <p className="mt-2 text-sm font-semibold text-[#d71927]">{errors.tier2['identity.image']}</p>
+            <p className="mt-2 text-sm font-semibold text-[#c9a84c]">{errors.tier2['identity.image']}</p>
           )}
         </div>
 
@@ -934,8 +934,8 @@ export const TierUpgradeFormV2: React.FC<TierUpgradeFormProps> = ({
           isLoading={isSubmitting}
           className={`w-full h-11 rounded-xl px-6 font-black text-white shadow-lg transition-all ${
             isSubmitting 
-              ? 'bg-[#d71927] opacity-75 cursor-wait'
-              : 'bg-[#d71927] hover:bg-[#b91521] shadow-[#d71927]/20'
+              ? 'bg-[#c9a84c] opacity-75 cursor-wait'
+              : 'bg-[#c9a84c] hover:bg-[#b91521] shadow-[#c9a84c]/20'
           } ${tier2Errors.length > 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
           {isSubmitting ? (
@@ -977,7 +977,7 @@ export const TierUpgradeFormV2: React.FC<TierUpgradeFormProps> = ({
               };
               setActiveTier(tierMap[submitState.tier] || 0);
             }}
-            className="w-full h-11 rounded-xl bg-[#d71927] px-6 font-black text-white shadow-lg shadow-[#d71927]/20 hover:bg-[#b91521]"
+            className="w-full h-11 rounded-xl bg-[#c9a84c] px-6 font-black text-white shadow-lg shadow-[#c9a84c]/20 hover:bg-[#b91521]"
           >
             Proceed to Next Tier
           </Button>
@@ -1004,7 +1004,7 @@ export const TierUpgradeFormV2: React.FC<TierUpgradeFormProps> = ({
           {getTierNumber(currentTier) === 1 && (
             <button
               onClick={() => setActiveTier(1)}
-              className="p-6 rounded-2xl border-2 border-[#d71927] bg-[#fff1f2] hover:bg-[#ffe6e8] transition text-left"
+              className="p-6 rounded-2xl border-2 border-[#c9a84c] bg-[#fff1f2] hover:bg-[#ffe6e8] transition text-left"
             >
               <h3 className="font-black text-[#111] text-lg">Tier 1: Bronze</h3>
               <p className="text-sm text-black/50 mt-1">Add personal information</p>

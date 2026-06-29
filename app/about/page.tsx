@@ -218,7 +218,7 @@ export default function AboutPage() {
       {/* <section className="bg-gray-50/50 px-5 py-20 lg:px-8 border-t border-gray-100">
         <div className="mx-auto max-w-6xl">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-            Our <span className="text-[#d71927]">Leadership</span>
+            Our <span className="text-[#c9a84c]">Leadership</span>
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -248,9 +248,9 @@ export default function AboutPage() {
                 key={idx}
                 className="rounded-lg border border-gray-200 bg-white p-6 text-center hover:shadow-sm transition"
               >
-                <div className="w-14 h-14 bg-gradient-to-br from-[#d71927] to-[#a0101a] rounded-full mx-auto mb-4" />
+                <div className="w-14 h-14 bg-gradient-to-br from-[#c9a84c] to-[#a0101a] rounded-full mx-auto mb-4" />
                 <h3 className="font-semibold text-sm mb-1 text-gray-900">{member.name}</h3>
-                <p className="text-xs text-[#d71927] font-semibold mb-3">{member.title}</p>
+                <p className="text-xs text-[#c9a84c] font-semibold mb-3">{member.title}</p>
                 <p className="text-xs text-gray-600 leading-relaxed">{member.bio}</p>
               </div>
             ))}
@@ -262,7 +262,7 @@ export default function AboutPage() {
       {/* <section className="px-5 py-20 lg:px-8 bg-white">
         <div className="mx-auto max-w-6xl">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-            Our <span className="text-[#d71927]">Journey</span>
+            Our <span className="text-[#c9a84c]">Journey</span>
           </h2>
 
           <div className="space-y-8">
@@ -300,11 +300,11 @@ export default function AboutPage() {
             ].map((event, idx) => (
               <div key={idx} className="flex gap-6">
                 <div className="flex flex-col items-center">
-                  <div className="w-4 h-4 bg-[#d71927] rounded-full" />
+                  <div className="w-4 h-4 bg-[#c9a84c] rounded-full" />
                   {idx !== 5 && <div className="w-1 h-20 bg-gray-300 mt-2" />}
                 </div>
                 <div className="pb-8">
-                  <p className="text-xs font-semibold text-[#d71927] mb-2">{event.year}</p>
+                  <p className="text-xs font-semibold text-[#c9a84c] mb-2">{event.year}</p>
                   <h3 className="text-lg font-semibold mb-2 text-gray-900">{event.title}</h3>
                   <p className="text-sm text-gray-600">{event.desc}</p>
                 </div>
@@ -363,7 +363,7 @@ export default function AboutPage() {
       {/* Careers */}
       {/* <section className="px-5 py-20 lg:px-8 bg-white">
         <div className="mx-auto max-w-6xl">
-          <div className="rounded-lg border border-[#d71927]/20 bg-gradient-to-r from-[#d71927] to-[#a0101a] p-8 lg:p-12">
+          <div className="rounded-lg border border-[#c9a84c]/20 bg-gradient-to-r from-[#c9a84c] to-[#a0101a] p-8 lg:p-12">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
               <div>
                 <h2 className="text-2xl font-bold mb-4 text-white">Join Our Team</h2>

@@ -33,7 +33,7 @@ export default function AdminFxPage() {
         <div className="border-b border-gray-100 bg-gray-50 px-6 py-5 sm:px-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#d71927] text-sm font-extrabold text-white">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#c9a84c] text-sm font-extrabold text-white">
                 <Globe size={18} />
               </div>
               <div>
@@ -61,7 +61,7 @@ export default function AdminFxPage() {
                   className={clsx(
                     'flex items-center gap-2 px-0 py-2 font-semibold transition-colors border-b-2 -mb-4',
                     isActive
-                      ? 'border-[#d71927] text-[#d71927]'
+                      ? 'border-[#c9a84c] text-[#c9a84c]'
                       : 'border-transparent text-gray-600 hover:text-gray-900'
                   )}
                 >
@@ -82,17 +82,17 @@ export default function AdminFxPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4">
                   <h3 className="text-sm font-semibold text-gray-700 mb-2">Supported Currencies</h3>
-                  <p className="text-2xl font-black text-[#d71927]">NGN • USD</p>
+                  <p className="text-2xl font-black text-[#c9a84c]">NGN • USD</p>
                 </div>
 
                 <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4">
                   <h3 className="text-sm font-semibold text-gray-700 mb-2">Quote Validity</h3>
-                  <p className="text-2xl font-black text-[#d71927]">30 Minutes</p>
+                  <p className="text-2xl font-black text-[#c9a84c]">30 Minutes</p>
                 </div>
 
                 <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4">
                   <h3 className="text-sm font-semibold text-gray-700 mb-2">Processing Time</h3>
-                  <p className="text-2xl font-black text-[#d71927]">Instant</p>
+                  <p className="text-2xl font-black text-[#c9a84c]">Instant</p>
                 </div>
               </div>
 
@@ -104,25 +104,25 @@ export default function AdminFxPage() {
                 <h3 className="font-semibold text-gray-900">How it works</h3>
                 <ol className="space-y-3 text-sm text-gray-700">
                   <li className="flex gap-3">
-                    <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-[#d71927] text-xs font-bold text-white">
+                    <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-[#c9a84c] text-xs font-bold text-white">
                       1
                     </span>
                     <span>Enter the amount you want to exchange and select your currencies</span>
                   </li>
                   <li className="flex gap-3">
-                    <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-[#d71927] text-xs font-bold text-white">
+                    <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-[#c9a84c] text-xs font-bold text-white">
                       2
                     </span>
                     <span>Get a quote with the current exchange rate (valid for 30 minutes)</span>
                   </li>
                   <li className="flex gap-3">
-                    <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-[#d71927] text-xs font-bold text-white">
+                    <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-[#c9a84c] text-xs font-bold text-white">
                       3
                     </span>
                     <span>Review the fees and confirm the exchange</span>
                   </li>
                   <li className="flex gap-3">
-                    <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-[#d71927] text-xs font-bold text-white">
+                    <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-[#c9a84c] text-xs font-bold text-white">
                       4
                     </span>
                     <span>Your funds are exchanged instantly and deposited to your account</span>

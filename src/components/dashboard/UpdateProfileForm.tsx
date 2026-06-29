@@ -260,7 +260,7 @@ export const UpdateProfileForm: React.FC<UpdateProfileFormProps> = ({
             onClick={() => setActiveSection(tab.id as any)}
             className={`px-4 py-3 font-semibold text-sm transition-colors whitespace-nowrap ${
               activeSection === tab.id
-                ? 'text-[#d71927] border-b-2 border-[#d71927]'
+                ? 'text-[#c9a84c] border-b-2 border-[#c9a84c]'
                 : 'text-gray-600 hover:text-gray-900'
             }`}
           >
@@ -442,7 +442,7 @@ export const UpdateProfileForm: React.FC<UpdateProfileFormProps> = ({
 
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-2">Document Image</label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-[#d71927] transition-colors">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-[#c9a84c] transition-colors">
                 <input
                   type="file"
                   accept="image/*"
@@ -476,7 +476,7 @@ export const UpdateProfileForm: React.FC<UpdateProfileFormProps> = ({
             type="submit"
             disabled={loading}
             isLoading={loading}
-            className="flex-1 h-11 rounded-xl bg-[#d71927] px-6 font-black text-white shadow-lg shadow-[#d71927]/20 hover:bg-[#b91521] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="flex-1 h-11 rounded-xl bg-[#c9a84c] px-6 font-black text-white shadow-lg shadow-[#c9a84c]/20 hover:bg-[#b91521] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {loading ? (
               <>

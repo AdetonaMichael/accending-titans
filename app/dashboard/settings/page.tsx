@@ -53,7 +53,7 @@ const TIER_INFO: Record<
   TIER_TWO: {
     name: 'Tier 2',
     description: 'Higher limits and advanced access',
-    color: 'text-[#d71927]',
+    color: 'text-[#c9a84c]',
   },
 };
 
@@ -130,7 +130,7 @@ export default function SettingsPage() {
         <aside className="space-y-6">
           <Card className="rounded-[32px] border border-[#E6E9F5] bg-white p-6 shadow-[0_18px_60px_rgba(15,23,42,0.06)] xl:sticky xl:top-8">
             <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#FFF5F5] text-[#d71927]">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#FFF5F5] text-[#c9a84c]">
                 <User size={26} />
               </div>
 
@@ -182,7 +182,7 @@ export default function SettingsPage() {
 
             {tierStatus?.next_tier && tierStatus.current_tier.level !== 2 && (
               <div className="mt-4 rounded-[24px] border border-[#F0DADA] bg-[#FFF7F7] p-5">
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#d71927]">
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#c9a84c]">
                   Next Upgrade
                 </p>
                 <p className="mt-2 text-lg font-extrabold text-[#111827]">
@@ -210,7 +210,7 @@ export default function SettingsPage() {
                       classNames(
                         'rounded-2xl px-4 py-4 text-left transition-all duration-200 focus:outline-none',
                         selected
-                          ? 'bg-[#d71927] text-white shadow-[0_14px_30px_rgba(98,7,7,0.24)]'
+                          ? 'bg-[#c9a84c] text-white shadow-[0_14px_30px_rgba(98,7,7,0.24)]'
                           : 'bg-[#FCFCFF] text-[#111827] hover:bg-[#FFF5F5]'
                       )
                     }
@@ -225,7 +225,7 @@ export default function SettingsPage() {
                         >
                           <Icon
                             size={18}
-                            className={selected ? 'text-white' : 'text-[#d71927]'}
+                            className={selected ? 'text-white' : 'text-[#c9a84c]'}
                           />
                         </div>
 
@@ -251,7 +251,7 @@ export default function SettingsPage() {
               <Tab.Panel>
                 <Card className="rounded-[32px] border border-[#E6E9F5] bg-white p-6 shadow-[0_18px_60px_rgba(15,23,42,0.06)] sm:p-8">
                   <div className="mb-8">
-                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FFF5F5] text-[#d71927]">
+                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FFF5F5] text-[#c9a84c]">
                       <Zap size={24} />
                     </div>
 
@@ -308,7 +308,7 @@ export default function SettingsPage() {
               <Tab.Panel>
                 <Card className="rounded-[32px] border border-[#E6E9F5] bg-white p-6 shadow-[0_18px_60px_rgba(15,23,42,0.06)] sm:p-8">
                   <div className="mb-8">
-                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FFF5F5] text-[#d71927]">
+                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FFF5F5] text-[#c9a84c]">
                       <User size={24} />
                     </div>
 
@@ -342,7 +342,7 @@ export default function SettingsPage() {
               <Tab.Panel>
                 <Card className="rounded-[32px] border border-[#E6E9F5] bg-white p-6 shadow-[0_18px_60px_rgba(15,23,42,0.06)] sm:p-8">
                   <div className="mb-8">
-                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FFF5F5] text-[#d71927]">
+                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FFF5F5] text-[#c9a84c]">
                       <ShieldCheck size={24} />
                     </div>
 
@@ -357,7 +357,7 @@ export default function SettingsPage() {
 
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="rounded-[28px] border border-[#EEF2F7] bg-[#FCFCFF] p-5">
-                      <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-[#FFF5F5] text-[#d71927]">
+                      <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-[#FFF5F5] text-[#c9a84c]">
                         <KeyRound size={22} />
                       </div>
 
@@ -371,7 +371,7 @@ export default function SettingsPage() {
 
                       <Button
                         onClick={() => router.push('/dashboard/settings/pin')}
-                        className="mt-5 h-12 rounded-2xl bg-[#d71927] px-5 font-bold text-white hover:bg-[#d71923]"
+                        className="mt-5 h-12 rounded-2xl bg-[#c9a84c] px-5 font-bold text-white hover:bg-[#d71923]"
                       >
                         Manage PIN
                         <ChevronRight size={18} className="ml-2" />
@@ -379,7 +379,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="rounded-[28px] border border-[#EEF2F7] bg-[#FCFCFF] p-5">
-                      <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-[#FFF5F5] text-[#d71927]">
+                      <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-[#FFF5F5] text-[#c9a84c]">
                         <Lock size={22} />
                       </div>
 
@@ -392,7 +392,7 @@ export default function SettingsPage() {
                       </p>
 
                       <div className="mt-5 rounded-2xl border border-[#F0DADA] bg-[#FFF7F7] p-4">
-                        <p className="flex items-center gap-2 text-sm font-bold text-[#d71927]">
+                        <p className="flex items-center gap-2 text-sm font-bold text-[#c9a84c]">
                           <CheckCircle2 size={16} />
                           Security controls active
                         </p>

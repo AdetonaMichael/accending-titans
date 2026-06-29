@@ -91,7 +91,7 @@ export function FxExchangeForm() {
                 setSourceCurrency(e.target.value as Currency);
                 clearQuote();
               }}
-              className="flex-shrink-0 rounded-lg border border-gray-200 bg-white px-4 py-3 text-gray-900 font-semibold focus:outline-none focus:border-[#d71927] focus:ring-1 focus:ring-[#d71927]"
+              className="flex-shrink-0 rounded-lg border border-gray-200 bg-white px-4 py-3 text-gray-900 font-semibold focus:outline-none focus:border-[#c9a84c] focus:ring-1 focus:ring-[#c9a84c]"
             >
               <option value="NGN">NGN</option>
               <option value="USD">USD</option>
@@ -105,7 +105,7 @@ export function FxExchangeForm() {
                 clearQuote();
               }}
               placeholder="0.00"
-              className="flex-1 rounded-lg border border-gray-200 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#d71927] focus:ring-1 focus:ring-[#d71927]"
+              className="flex-1 rounded-lg border border-gray-200 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#c9a84c] focus:ring-1 focus:ring-[#c9a84c]"
             />
           </div>
         </div>
@@ -114,7 +114,7 @@ export function FxExchangeForm() {
         <div className="flex justify-center mb-6">
           <button
             onClick={handleSwapCurrencies}
-            className="p-3 rounded-full border border-gray-200 bg-white text-[#d71927] hover:bg-gray-50 transition"
+            className="p-3 rounded-full border border-gray-200 bg-white text-[#c9a84c] hover:bg-gray-50 transition"
           >
             <ArrowRightLeft size={20} />
           </button>
@@ -130,7 +130,7 @@ export function FxExchangeForm() {
                 setTargetCurrency(e.target.value as Currency);
                 clearQuote();
               }}
-              className="flex-shrink-0 rounded-lg border border-gray-200 bg-white px-4 py-3 text-gray-900 font-semibold focus:outline-none focus:border-[#d71927] focus:ring-1 focus:ring-[#d71927]"
+              className="flex-shrink-0 rounded-lg border border-gray-200 bg-white px-4 py-3 text-gray-900 font-semibold focus:outline-none focus:border-[#c9a84c] focus:ring-1 focus:ring-[#c9a84c]"
             >
               <option value="NGN">NGN</option>
               <option value="USD">USD</option>
@@ -158,7 +158,7 @@ export function FxExchangeForm() {
           <div className="mb-8 space-y-4 rounded-lg bg-gray-50 p-4">
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600">Exchange Rate</span>
-              <span className="text-lg font-black text-[#d71927]">
+              <span className="text-lg font-black text-[#c9a84c]">
                 {quote.exchange_rate ? quote.exchange_rate.toFixed(6) : 'N/A'}
               </span>
             </div>
@@ -170,7 +170,7 @@ export function FxExchangeForm() {
                   <Clock size={16} />
                   Quote expires in
                 </span>
-                <span className={`font-semibold ${quoteExpiresIn < 60 ? 'text-red-600' : 'text-[#d71927]'}`}>
+                <span className={`font-semibold ${quoteExpiresIn < 60 ? 'text-red-600' : 'text-[#c9a84c]'}`}>
                   {Math.floor(quoteExpiresIn / 60)}:{String(quoteExpiresIn % 60).padStart(2, '0')}
                 </span>
               </div>
@@ -184,7 +184,7 @@ export function FxExchangeForm() {
             <button
               onClick={handleGenerateQuote}
               disabled={quoteLoading || !amount || parseFloat(amount) <= 0}
-              className="w-full rounded-lg bg-[#d71927] px-6 py-3 font-semibold text-white transition hover:bg-[#b91420] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full rounded-lg bg-[#c9a84c] px-6 py-3 font-semibold text-white transition hover:bg-[#b91420] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {quoteLoading ? 'Generating Quote...' : 'Get Quote'}
             </button>
@@ -192,7 +192,7 @@ export function FxExchangeForm() {
             <>
               <button
                 onClick={() => setShowConfirmation(true)}
-                className="w-full rounded-lg bg-[#d71927] px-6 py-3 font-semibold text-white transition hover:bg-[#b91420]"
+                className="w-full rounded-lg bg-[#c9a84c] px-6 py-3 font-semibold text-white transition hover:bg-[#b91420]"
               >
                 Confirm Exchange
               </button>
@@ -229,7 +229,7 @@ export function FxExchangeForm() {
               </div>
               <div className="flex justify-between">
                 <span className="text-sm text-gray-600">Rate</span>
-                <span className="font-semibold text-[#d71927]">{quote.exchange_rate ? quote.exchange_rate.toFixed(6) : 'N/A'}</span>
+                <span className="font-semibold text-[#c9a84c]">{quote.exchange_rate ? quote.exchange_rate.toFixed(6) : 'N/A'}</span>
               </div>
             </div>
 
@@ -253,7 +253,7 @@ export function FxExchangeForm() {
               <button
                 onClick={handleExecuteExchange}
                 disabled={exchangeLoading}
-                className="flex-1 rounded-lg bg-[#d71927] px-4 py-3 font-semibold text-white transition hover:bg-[#b91420] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 rounded-lg bg-[#c9a84c] px-4 py-3 font-semibold text-white transition hover:bg-[#b91420] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {exchangeLoading ? 'Processing...' : 'Confirm'}
               </button>
@@ -274,7 +274,7 @@ export function FxExchangeForm() {
 
             <div className="space-y-2 text-sm text-gray-600">
               <p>Transaction Reference:</p>
-              <p className="font-mono text-[#d71927] font-semibold break-all">{transaction.transaction_reference}</p>
+              <p className="font-mono text-[#c9a84c] font-semibold break-all">{transaction.transaction_reference}</p>
             </div>
 
             <p className="text-sm text-gray-600">

@@ -230,7 +230,7 @@ export default function ReferralPage() {
     <div className="space-y-8">
       {/* Hero Section - Referral Links */}
       <section className="relative overflow-hidden rounded-[32px] border border-black/5 bg-[#100303] px-6 py-8 shadow-[0_20px_70px_rgba(16,3,3,0.16)] sm:px-8 sm:py-10">
-        <div className="absolute right-0 top-0 h-64 w-64 rounded-full bg-[#d71927]/25 blur-3xl" />
+        <div className="absolute right-0 top-0 h-64 w-64 rounded-full bg-[#c9a84c]/25 blur-3xl" />
         <div className="absolute bottom-0 left-1/3 h-44 w-44 rounded-full bg-orange-500/10 blur-3xl" />
 
         <div className="relative z-10 space-y-8">
@@ -280,7 +280,7 @@ export default function ReferralPage() {
                         <Button
                           type="button"
                           onClick={() => copyToClipboard(normalizeReferralLink(link.link, link.code), link.code)}
-                          className="h-10 rounded-xl bg-[#d71927] px-4 font-black text-white shadow-lg shadow-[#d71927]/20 hover:bg-[#b91521]"
+                          className="h-10 rounded-xl bg-[#c9a84c] px-4 font-black text-white shadow-lg shadow-[#c9a84c]/20 hover:bg-[#b91521]"
                         >
                           <Copy size={14} />
                           {copiedCode === link.code ? 'Copied!' : 'Copy'}
@@ -359,7 +359,7 @@ export default function ReferralPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-2">
                         <h3 className="font-black text-[#111] text-lg">{link.program}</h3>
-                        <span className="inline-block rounded-full bg-[#d71927]/10 px-3 py-1 text-xs font-black text-[#d71927]">
+                        <span className="inline-block rounded-full bg-[#c9a84c]/10 px-3 py-1 text-xs font-black text-[#c9a84c]">
                           {referralCount} {referralCount === 1 ? 'referral' : 'referrals'}
                         </span>
                       </div>
@@ -367,8 +367,8 @@ export default function ReferralPage() {
                       <p className="text-xs text-black/40 mt-2">Created: {formatDate(link.created_at)}</p>
                     </div>
                     <div className="flex-shrink-0">
-                      <div className="rounded-2xl bg-[#d71927]/10 p-4">
-                        <Users className="h-6 w-6 text-[#d71927]" />
+                      <div className="rounded-2xl bg-[#c9a84c]/10 p-4">
+                        <Users className="h-6 w-6 text-[#c9a84c]" />
                       </div>
                     </div>
                   </div>
@@ -422,8 +422,8 @@ export default function ReferralPage() {
                   <p className="text-xs font-black uppercase tracking-wide text-black/40">Total Referrals</p>
                   <p className="mt-3 text-3xl font-black text-[#111]">{stats.total_referrals}</p>
                 </div>
-                <div className="rounded-2xl bg-[#d71927]/10 p-3">
-                  <Users className="h-5 w-5 text-[#d71927]" />
+                <div className="rounded-2xl bg-[#c9a84c]/10 p-3">
+                  <Users className="h-5 w-5 text-[#c9a84c]" />
                 </div>
               </div>
             </Card>
@@ -444,10 +444,10 @@ export default function ReferralPage() {
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-xs font-black uppercase tracking-wide text-black/40">Total Earnings</p>
-                  <p className="mt-3 text-3xl font-black text-[#d71927]">{formatCurrency(stats.total_earnings)}</p>
+                  <p className="mt-3 text-3xl font-black text-[#c9a84c]">{formatCurrency(stats.total_earnings)}</p>
                 </div>
-                <div className="rounded-2xl bg-[#d71927]/10 p-3">
-                  <TrendingUp className="h-5 w-5 text-[#d71927]" />
+                <div className="rounded-2xl bg-[#c9a84c]/10 p-3">
+                  <TrendingUp className="h-5 w-5 text-[#c9a84c]" />
                 </div>
               </div>
             </Card>
@@ -494,7 +494,7 @@ export default function ReferralPage() {
                   </p>
                   <div className="mt-4 flex items-center justify-between">
                     <p className="text-sm font-bold text-black/40">Earn ₦200 per referral</p>
-                    <ArrowRight className="h-4 w-4 text-[#d71927]" />
+                    <ArrowRight className="h-4 w-4 text-[#c9a84c]" />
                   </div>
                 </div>
               ))}
@@ -552,7 +552,7 @@ export default function ReferralPage() {
                     </div>
                     <div className="h-2 w-full overflow-hidden rounded-full bg-black/10">
                       <div
-                        className="h-full rounded-full bg-[#d71927]"
+                        className="h-full rounded-full bg-[#c9a84c]"
                         style={{ width: `${milestone.progress_percentage}%` }}
                       />
                     </div>
@@ -637,7 +637,7 @@ export default function ReferralPage() {
           <Card className="rounded-[28px] border border-black/5 bg-white p-6 shadow-[0_10px_35px_rgba(16,3,3,0.05)]">
             <h2 className="text-2xl font-black tracking-tight text-[#111]">Withdraw Earnings</h2>
             <p className="mt-1 text-sm font-medium text-black/50">
-              Available Balance: <span className="font-black text-[#d71927]">{formatCurrency(stats.available_balance)}</span>
+              Available Balance: <span className="font-black text-[#c9a84c]">{formatCurrency(stats.available_balance)}</span>
             </p>
 
             <div className="mt-6 space-y-4">
@@ -648,7 +648,7 @@ export default function ReferralPage() {
                   value={withdrawalAmount}
                   onChange={(e) => setWithdrawalAmount(e.target.value)}
                   placeholder="Enter amount (minimum ₦100)"
-                  className="mt-2 w-full rounded-2xl border border-black/10 bg-[#f8f8f8] px-4 py-3 text-[#111] placeholder-black/40 focus:border-[#d71927] focus:outline-none focus:ring-2 focus:ring-[#d71927]/20"
+                  className="mt-2 w-full rounded-2xl border border-black/10 bg-[#f8f8f8] px-4 py-3 text-[#111] placeholder-black/40 focus:border-[#c9a84c] focus:outline-none focus:ring-2 focus:ring-[#c9a84c]/20"
                   min="100"
                   max={stats.available_balance}
                 />
@@ -658,7 +658,7 @@ export default function ReferralPage() {
               <Button
                 onClick={handleWithdrawal}
                 disabled={isWithdrawing || !withdrawalAmount}
-                className="h-11 w-full rounded-xl bg-[#d71927] font-black text-white hover:bg-[#b91521] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="h-11 w-full rounded-xl bg-[#c9a84c] font-black text-white hover:bg-[#b91521] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isWithdrawing ? (
                   <span className="flex items-center gap-2">
@@ -703,7 +703,7 @@ export default function ReferralPage() {
               },
             ].map((item) => (
               <div key={item.step} className="rounded-[24px] border border-black/5 bg-[#f8f8f8] p-5 text-center">
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#d71927] text-lg font-black text-white shadow-lg shadow-[#d71927]/20">
+                <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#c9a84c] text-lg font-black text-white shadow-lg shadow-[#c9a84c]/20">
                   {item.step}
                 </div>
                 <h3 className="mt-4 font-black text-[#111]">{item.title}</h3>
