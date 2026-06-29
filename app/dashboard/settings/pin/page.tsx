@@ -290,7 +290,7 @@ export default function PINSettingsPage() {
 
                 <p className="mt-3 max-w-xl text-sm leading-7 text-[#667085]">
                   {hasPIN
-                    ? 'Update your transaction PIN periodically to keep your Accending titans wallet protected.'
+                    ? 'Update your transaction PIN periodically to keep your Acceding Titans wallet protected.'
                     : 'Create a 4-digit transaction PIN to secure transfers, wallet activity, bills, cards, and other financial actions.'}
                 </p>
               </div>
@@ -350,7 +350,7 @@ export default function PINSettingsPage() {
                 Security Notice
               </p>
               <p className="mt-2 text-sm leading-6 text-[#667085]">
-                Accending titans will never ask for your transaction PIN outside secure
+                Acceding Titans will never ask for your transaction PIN outside secure
                 transaction authorization screens.
               </p>
             </div>

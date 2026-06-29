@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { LandingTopbar } from '@/components/LandingTopbar';
 
 export const metadata: Metadata = {
-  title: 'VTU Services | Airtime, Data, TV & Bills - Accending titans',
-  description: 'Fast and reliable VTU services on Accending titans. Buy airtime, data bundles, TV subscriptions, and pay bills with ease. Instant delivery and best rates.',
+  title: 'VTU Services | Airtime, Data, TV & Bills - Acceding Titans',
+  description: 'Fast and reliable VTU services on Acceding Titans. Buy airtime, data bundles, TV subscriptions, and pay bills with ease. Instant delivery and best rates.',
   keywords: 'VTU, airtime, data bundles, TV subscription, bills payment, MTN, Airtel, Glo, 9mobile, DStv, GOtv',
 };
 
@@ -75,7 +75,7 @@ export default function VtuPage() {
             Digital Payments Made <span className="text-[#C9A84C]">Easy</span>
           </h1>
           <p className="text-lg text-gray-600 leading-relaxed max-w-2xl mb-8">
-            Top up airtime, buy data bundles, subscribe to TV, and pay bills - all in one place. With Accending titans, your payments are quick, secure, and affordable.
+            Top up airtime, buy data bundles, subscribe to TV, and pay bills - all in one place. With Acceding Titans, your payments are quick, secure, and affordable.
           </p>
 
           <Link

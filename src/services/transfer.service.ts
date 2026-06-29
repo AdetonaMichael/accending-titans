@@ -1,6 +1,6 @@
 /**
  * Transfer Service
- * Handles all transfer-related API calls: Accending titans transfers, bank transfers, and recipient management
+ * Handles all transfer-related API calls: Acceding Titans transfers, bank transfers, and recipient management
  */
 
 import { apiClient } from './api-client';
@@ -38,7 +38,7 @@ class TransferService {
   }
 
   /**
-   * Verify recipient exists (Accending titans user)
+   * Verify recipient exists (Acceding Titans user)
    */
   async verifyRecipient(payload: VerifyRecipientRequest): Promise<RecipientUser | null> {
     try {
@@ -55,12 +55,12 @@ class TransferService {
   }
 
   /**
-   * Get recent Accending titans transfer recipients (quick selection)
+   * Get recent Acceding Titans transfer recipients (quick selection)
    * limit: max 5 for quick list, can be higher for full list
    */
   async getRecentAscendingTitansRecipients(limit: number = 5): Promise<Recipient[] | null> {
     try {
-      const response = (await apiClient.get('/wallet/transfer/recipients/Accending titans', {
+      const response = (await apiClient.get('/wallet/transfer/recipients/Acceding Titans', {
         params: { limit, sort: 'recent' },
       })) as any;
       return response?.data?.recipients || null;
@@ -72,7 +72,7 @@ class TransferService {
 
   /**
    * Get all transfer recipients with pagination
-   * bank_type: 'Accending titans', 'external_bank', or 'all'
+   * bank_type: 'Acceding Titans', 'external_bank', or 'all'
    * sort: 'recent', 'alphabetical', or 'frequency'
    */
   async getAllRecipients(
@@ -93,7 +93,7 @@ class TransferService {
   }
 
   /**
-   * Initiate Accending titans-to-Accending titans transfer
+   * Initiate Acceding Titans-to-Acceding Titans transfer
    * IMPORTANT: Phone number must be normalized to 10 digits before calling
    */
   async initiateAscendingTitansTransfer(
@@ -104,7 +104,7 @@ class TransferService {
       // Response is already the full response body with success, reference, amount, etc.
       return response || null;
     } catch (error) {
-      console.error('Error initiating Accending titans transfer:', error);
+      console.error('Error initiating Acceding Titans transfer:', error);
       throw error; // Re-throw for component error handling
     }
   }

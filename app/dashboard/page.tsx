@@ -210,7 +210,7 @@ export default function DashboardPage() {
             </h1>
             <p className="mt-2 max-w-lg text-sm text-gray-500 leading-relaxed">
               Connect with entrepreneurs, showcase your business, find opportunities,
-              and build meaningful professional relationships on Accending titans.
+              and build meaningful professional relationships on Acceding Titans.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <Link
@@ -377,7 +377,7 @@ export default function DashboardPage() {
             <div>
               <h2 className="text-lg font-black text-gray-900">Recent Transactions</h2>
               <p className="mt-0.5 text-sm text-gray-400">
-                Your latest Accending titans activities and payment records.
+                Your latest Acceding Titans activities and payment records.
               </p>
             </div>
             <Link
@@ -401,7 +401,7 @@ export default function DashboardPage() {
               </div>
               <h3 className="font-black text-gray-900">No transactions yet</h3>
               <p className="mt-1.5 text-sm text-gray-400">
-                Your transaction history will appear here once you start using Accending titans.
+                Your transaction history will appear here once you start using Acceding Titans.
               </p>
             </div>
           ) : (

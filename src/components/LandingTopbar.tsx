@@ -28,8 +28,8 @@ export function LandingTopbar() {
     <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-black/35 backdrop-blur-xl">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 lg:px-8">
         <Link href="/" className="flex items-center gap-3">
-          <Image src="/icon.png" alt="Accending titans Logo" width={48} height={48} />
-          <span className="text-2xl font-black tracking-tight text-white">Accending titans</span>
+          <Image src="/icon.png" alt="Acceding Titans Logo" width={48} height={48} />
+          <span className="text-2xl font-black tracking-tight text-white">Acceding Titans</span>
         </Link>
 
         <div className="hidden items-center gap-8 text-sm font-semibold text-white/85 lg:flex">

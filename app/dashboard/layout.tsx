@@ -89,7 +89,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
           {(sidebarOpen || mobile) && (
             <div>
               <p className="text-sm font-black tracking-tight text-gray-900 leading-tight">
-                Accending titans
+                Acceding Titans
               </p>
               <p className="text-[11px] font-semibold text-gray-400 leading-tight">
                 Payment Wallet
@@ -138,7 +138,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
               Signed in as
             </p>
             <p className="mt-0.5 truncate text-sm font-black text-gray-900">
-              {user?.first_name || 'Accending titans User'}
+              {user?.first_name || 'Acceding Titans User'}
             </p>
           </div>
         )}
@@ -217,7 +217,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
                 </div>
                 <div>
                   <p className="text-sm font-black tracking-tight text-gray-900 leading-tight">
-                    Accending titans
+                    Acceding Titans
                   </p>
                   <p className="text-[11px] font-semibold text-gray-400 leading-tight">
                     Payment Wallet
@@ -268,7 +268,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
                   Signed in as
                 </p>
                 <p className="mt-0.5 truncate text-sm font-black text-gray-900">
-                  {user?.first_name || 'Accending titans User'}
+                  {user?.first_name || 'Acceding Titans User'}
                 </p>
               </div>
               <button

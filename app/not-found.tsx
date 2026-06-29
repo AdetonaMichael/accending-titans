@@ -82,7 +82,7 @@ function NotFoundContent() {
         <p className="text-center text-xs text-slate-400 mt-8">
           Need help?{' '}
           <a 
-            href="mailto:support@Accending titans.com" 
+            href="mailto:support@Acceding Titans.com" 
             className="text-red-400 font-semibold hover:text-red-300 transition-colors"
           >
             Contact Support

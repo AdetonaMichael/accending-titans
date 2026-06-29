@@ -266,7 +266,7 @@ export default function LandingPage() {
               {/* Main headline */}
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-white mb-4 sm:mb-5 min-h-[80px] sm:min-h-[100px] md:min-h-[130px]">
                 {heroSlides[activeHeroSlide].headline}
-                <span className="block text-[#C9A84C] mt-2">with Accending Titans</span>
+                <span className="block text-[#C9A84C] mt-2">with Acceding Titans</span>
               </h1>
 
               {/* Subheading */}

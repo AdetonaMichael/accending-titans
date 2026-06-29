@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import PromotionalEmailBuilder from '@/components/admin/PromotionalEmailBuilder';
 
 export const metadata: Metadata = {
-  title: 'Create Campaign - Accending titans Admin',
+  title: 'Create Campaign - Acceding Titans Admin',
   description: 'Create a new promotional email campaign',
 };
 

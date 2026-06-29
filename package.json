@@ -2,7 +2,7 @@
   "name": "ascending-titans",
   "version": "1.0.0",
   "private": true,
-  "description": "Accending titans - Professional Marketplace & Networking Platform",
+  "description": "Acceding Titans - Professional Marketplace & Networking Platform",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

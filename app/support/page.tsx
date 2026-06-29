@@ -56,7 +56,7 @@ export default function SupportPage() {
               {
                 icon: Mail,
                 title: 'Email',
-                desc: 'Accending titans.operations@gmail.com',
+                desc: 'Acceding Titans.operations@gmail.com',
                 time: 'Response within 2 hours',
               },
               {
@@ -200,7 +200,7 @@ export default function SupportPage() {
                   Quick Answers Available
                 </h2>
                 <p className="text-gray-600 mb-6 leading-relaxed">
-                  Check our comprehensive FAQ section for instant answers to frequently asked questions about Accending titans and how to get the most out of our platform.
+                  Check our comprehensive FAQ section for instant answers to frequently asked questions about Acceding Titans and how to get the most out of our platform.
                 </p>
                 <Link
                   href="/faq"

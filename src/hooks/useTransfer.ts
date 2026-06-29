@@ -1,6 +1,6 @@
 /**
  * useTransfer Hook
- * Handles Accending titans-to-Accending titans transfer logic, validation, and state management
+ * Handles Acceding Titans-to-Acceding Titans transfer logic, validation, and state management
  */
 
 import { useCallback, useState } from 'react';
