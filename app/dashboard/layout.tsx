@@ -1,11 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
-  Activity,
   Award,
   FileText,
   Gift,
@@ -16,6 +15,8 @@ import {
   Settings,
   Users,
   X,
+  Bell,
+  ChevronDown,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -24,6 +25,7 @@ import { useAuthStore } from '@/store/auth.store';
 import { useUIStore } from '@/store/ui.store';
 import { Topbar } from '@/components/shared/Topbar';
 import { AuthProtected } from '@/components/AuthProtected';
+import { NotificationBell } from '@/components/dashboard/NotificationBell';
 
 const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const pathname = usePathname();
@@ -35,6 +37,8 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showAvatarMenu, setShowAvatarMenu] = useState(false);
+  const avatarMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!user) {
@@ -60,16 +64,27 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
     setLoading(false);
   }, [user, router, pathname]);
 
+  // Close avatar menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (avatarMenuRef.current && !avatarMenuRef.current.contains(event.target as Node)) {
+        setShowAvatarMenu(false);
+      }
+    };
+
+    if (showAvatarMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showAvatarMenu]);
+
   const navItems = [
     { href: '/dashboard', label: 'Dashboard', icon: Home },
-    { href: '/dashboard/profile', label: 'My Profile', icon: Users },
     { href: '/dashboard/catalogue', label: 'Business Catalogue', icon: FileText },
-    { href: '/dashboard/notifications', label: 'Notifications', icon: Activity },
     { href: '/dashboard/messages', label: 'Messages', icon: Send },
     { href: '/dashboard/rewards', label: 'Birthday Rewards', icon: Gift },
     { href: '/dashboard/referral', label: 'Referral Program', icon: Users },
     { href: '/dashboard/opportunities', label: 'Opportunities', icon: Award },
-    { href: '/dashboard/settings', label: 'Settings', icon: Settings },
   ];
 
   const isActive = (href: string) => pathname === href;
@@ -188,9 +203,61 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
             </div>
 
             <div className="flex items-center gap-3">
-              {/* Avatar */}
-              <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[#C9A84C]/25 bg-[#FDFAF3] text-xs font-black text-[#B8962E]">
-                {initials}
+              {/* Notification Bell */}
+              <NotificationBell className="mr-2" />
+
+              {/* Avatar with dropdown */}
+              <div className="relative" ref={avatarMenuRef}>
+                <button
+                  onClick={() => setShowAvatarMenu(!showAvatarMenu)}
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-[#C9A84C]/25 bg-[#FDFAF3] text-xs font-black text-[#B8962E] hover:bg-[#F0E5D3] transition-colors cursor-pointer"
+                  title="Profile menu"
+                >
+                  {initials}
+                </button>
+
+                {/* Avatar dropdown menu */}
+                {showAvatarMenu && (
+                  <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                    {/* Profile Link */}
+                    <Link
+                      href="/dashboard/profile"
+                      onClick={() => setShowAvatarMenu(false)}
+                      className="block px-4 py-2.5 text-sm text-gray-900 hover:bg-gray-50 rounded-t-lg transition-colors border-b border-gray-100"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Users size={16} />
+                        <span>My Profile</span>
+                      </div>
+                    </Link>
+
+                    {/* Settings Link */}
+                    <Link
+                      href="/dashboard/settings"
+                      onClick={() => setShowAvatarMenu(false)}
+                      className="block px-4 py-2.5 text-sm text-gray-900 hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Settings size={16} />
+                        <span>Settings</span>
+                      </div>
+                    </Link>
+
+                    {/* Logout Button */}
+                    <button
+                      onClick={() => {
+                        logout();
+                        setShowAvatarMenu(false);
+                      }}
+                      className="w-full px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 rounded-b-lg transition-colors border-t border-gray-100 text-left"
+                    >
+                      <div className="flex items-center gap-2">
+                        <LogOut size={16} />
+                        <span>Logout</span>
+                      </div>
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </header>

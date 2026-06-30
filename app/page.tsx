@@ -139,24 +139,23 @@ const howItWorks = [
 
 const testimonials = [
   {
-    name: 'Chioma Okafor',
-    role: 'Fashion Designer',
-    text: 'This platform transformed my business. I went from 0 to 50+ clients in 3 months through the community connections.',
+    name: 'Chioma Nwankwo',
+    role: 'Fashion Entrepreneur, Lagos',
+    text: 'Since joining this platform, getting new customers has become much easier. The community exposure has helped my fashion brand grow beyond Lagos.',
     image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80',
     rating: 5,
   },
   {
-    name: 'Adebayo Oluwaseun',
-    role: 'Tech Consultant',
-    text: 'The birthday reward system is genius. It keeps the community engaged and my business top-of-mind for members.',
+    name: 'Oluwaseun Adeyemi',
+    role: 'Business Consultant, Abuja',
+    text: 'The platform has made it easy to showcase my services and connect with quality clients. The support team is responsive, and everything works seamlessly.',
     image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
     rating: 5,
   },
   {
-    name: 'Grace Emeka',
-    role: 'Event Planner',
-    text: 'A reliable platform with excellent support. My catalogue has become my primary business tool.',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&q=80',
+    name: 'Maryam Bello',
+    role: 'Event Planner, Kano',
+    text: "I love how simple it is to promote my business. My digital catalogue is always available for clients, and I've received several referrals through the community.",
     rating: 5,
   },
 ];
@@ -628,11 +627,14 @@ export default function LandingPage() {
                 <p className="text-sm text-gray-700 mb-4 italic leading-relaxed">"{testimonial.text}"</p>
 
                 <div className="flex items-center gap-3">
-                  <img
-                    src={testimonial.image}
-                    alt={testimonial.name}
-                    className="w-10 h-10 rounded-full object-cover flex-shrink-0"
-                  />
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#C9A84C]/15 text-sm font-bold text-[#C9A84C]">
+                    {testimonial.name
+                      .split(/\s+/)
+                      .map((part) => part[0])
+                      .slice(0, 2)
+                      .join('')
+                      .toUpperCase()}
+                  </div>
                   <div>
                     <h4 className="text-sm font-bold text-gray-900">{testimonial.name}</h4>
                     <p className="text-xs text-gray-600">{testimonial.role}</p>
