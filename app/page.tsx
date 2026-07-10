@@ -567,10 +567,12 @@ export default function LandingPage() {
                 <div className="relative h-full w-full overflow-hidden rounded-[1.75rem] sm:rounded-[2rem] bg-black border border-gray-900">
                   <div className="absolute left-1/2 top-0 z-30 h-5 sm:h-6 w-24 sm:w-32 -translate-x-1/2 rounded-b-3xl bg-black" />
                   <div className="relative h-full w-full overflow-hidden bg-gray-950">
-                    <img
-                      src="https://images.unsplash.com/photo-1512941691920-25bda36dc643?auto=format&fit=crop&w=600&h=1200&q=90"
-                      alt="Community Hub App"
-                      className="h-full w-full object-cover"
+                    <Image
+                      src="/titan_mock.png"
+                      alt="Acceding Titans App Dashboard"
+                      fill
+                      className="object-cover"
+                      priority
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
                     <div className="absolute inset-0 rounded-[1.75rem] sm:rounded-[2rem] bg-gradient-to-br from-white/15 via-transparent to-transparent pointer-events-none" />
