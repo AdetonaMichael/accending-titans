@@ -175,12 +175,12 @@ function RegisterPageContent() {
   });
 
   // Populate referral code from URL query parameter
+  const refCode = searchParams.get('ref');
   useEffect(() => {
-    const refCode = searchParams.get('ref');
     if (refCode) {
       setValue('referral_code', refCode);
     }
-  }, [searchParams, setValue]);
+  }, [refCode, setValue]);
 
   const stepFields: Record<number, (keyof RegisterSchema)[]> = {
     1: ['first_name', 'last_name', 'email'],
@@ -249,6 +249,29 @@ function RegisterPageContent() {
                   Step {currentStep} of {STEPS.length} — {STEPS[currentStep - 1].description}
                 </p>
               </div>
+
+              {/* Referral Banner */}
+              {refCode && (
+                <div className="mb-6 rounded-2xl border border-[#C9A84C]/20 bg-gradient-to-r from-[#C9A84C]/5 to-[#D4B85C]/5 p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#C9A84C]/15 text-[#C9A84C]">
+                      <Gift size={16} />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-bold text-gray-900">
+                        You were referred by a friend! 🎉
+                      </p>
+                      <p className="mt-0.5 text-xs text-gray-600">
+                        Referral code{' '}
+                        <code className="rounded-md bg-[#C9A84C]/10 px-1.5 py-0.5 font-mono text-xs font-bold text-[#C9A84C]">
+                          {refCode}
+                        </code>{' '}
+                        has been applied. Complete your registration to get started.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <StepIndicator current={currentStep} />
 

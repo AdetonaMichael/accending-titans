@@ -38,3 +38,35 @@ export * from './usd-account.types';
 
 // Airtime-to-Cash types
 export * from './airtime-to-cash.types';
+
+// Referral types
+export * from './referral.types';
+
+// Roles & Permissions types (explicit imports to avoid conflicts with api.types)
+export type {
+  PermissionSlug,
+  RoleSlug,
+  StoreRoleRequest,
+  UpdateRoleRequest,
+  StorePermissionRequest,
+  UpdatePermissionRequest,
+  AssignRoleRequest,
+  AssignPermissionRequest,
+  RevokePermissionRequest,
+  AdminUserDetail,
+  AdminUserListItem,
+  AdminDashboardStats,
+  LoginHistoryEntry,
+  AdminUpdateUserRequest,
+  RolesListResponse,
+  PermissionsListResponse,
+  RoleCreateResponse,
+  PermissionCreateResponse,
+  AssignRoleResponse,
+  AssignPermissionResponse,
+  AdminUserUpdateResponse,
+  AdminStatsResponse,
+  ToggleActiveResponse,
+  RestoreUserResponse,
+  LoginHistoryResponse,
+} from './role.types';

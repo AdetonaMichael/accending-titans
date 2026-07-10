@@ -1,718 +1,719 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import {
-  ArrowRight,
-  CheckCircle2,
   Copy,
   Share2,
-  Loader,
-  AlertCircle,
-  TrendingUp,
   Users,
+  TrendingUp,
   Wallet,
+  CheckCircle2,
+  Gift,
+  MessageCircle,
+  Twitter,
+  Facebook,
+  Loader2,
+  ChevronRight,
+  Award,
+  Sparkles,
+  UserPlus,
+  BellRing,
+  Zap,
+  CalendarDays,
+  ChevronLeft,
 } from 'lucide-react';
-
-import { Button } from '@/components/shared/Button';
-import { Card } from '@/components/shared/Card';
-import { Spinner } from '@/components/shared/Spinner';
-import { useAlert } from '@/hooks/useAlert';
+import { referralService } from '@/services/referral.service';
 import { useAuth } from '@/hooks/useAuth';
-import { referralService, ReferralLink, ReferralStats, ReferralMilestone, ReferralProgram } from '@/services/referral.service';
+import { Toast } from '@/utils/toast.utils';
+import type {
+  ReferralLink,
+  ReferralStats,
+  ReferredUserDetail,
+  ReferredUsersPagination,
+} from '@/types/referral.types';
 
-function formatCurrency(amount?: number | null) {
-  if (amount === undefined || amount === null) return '₦0';
+// ─── Helpers ───────────────────────────────────────────────
+
+const formatCurrency = (amount?: number | null): string => {
+  if (amount === undefined || amount === null) return '₦0.00';
   return new Intl.NumberFormat('en-NG', {
     style: 'currency',
     currency: 'NGN',
-    maximumFractionDigits: 0,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }).format(amount);
+};
+
+const getReferralLink = (code: string): string => {
+  return `https://ascending-titans.vercel.app/auth/register?ref=${code}`;
+};
+
+const shareUrls = {
+  whatsapp: (link: string, code: string) =>
+    `https://wa.me/?text=${encodeURIComponent(
+      `Join me on Acceding Titans! 🎉 Use my referral code: ${code} - ${link}`
+    )}`,
+  twitter: (link: string, code: string) =>
+    `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      `Join me on Acceding Titans and earn rewards! Use my code: ${code}`
+    )}&url=${encodeURIComponent(link)}`,
+  facebook: (link: string) =>
+    `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`,
+};
+
+// ─── Stat Card ─────────────────────────────────────────────
+
+interface StatCardProps {
+  label: string;
+  value: string | number;
+  icon: React.ElementType;
+  accent?: 'gold' | 'green' | 'blue' | 'purple';
+  subtitle?: string;
 }
 
-function formatDate(date: string) {
-  return new Date(date).toLocaleDateString('en-NG', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
+const accentMap: Record<string, string> = {
+  gold: 'bg-[#C9A84C]/10 text-[#C9A84C]',
+  green: 'bg-emerald-500/10 text-emerald-600',
+  blue: 'bg-blue-500/10 text-blue-600',
+  purple: 'bg-purple-500/10 text-purple-600',
+};
+
+function StatCard({ label, value, icon: Icon, accent = 'gold', subtitle }: StatCardProps) {
+  return (
+    <div className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-5 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5">
+      <div className="absolute -right-6 -top-6 h-16 w-16 rounded-full bg-gray-50/50 transition-all duration-300 group-hover:scale-150" />
+      <div className="relative flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+            {label}
+          </p>
+          <p className="mt-2 text-2xl font-black tracking-tight text-gray-900">
+            {value}
+          </p>
+          {subtitle && (
+            <p className="mt-1 text-xs font-medium text-gray-400">{subtitle}</p>
+          )}
+        </div>
+        <div
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${accentMap[accent]}`}
+        >
+          <Icon size={20} />
+        </div>
+      </div>
+    </div>
+  );
 }
 
-function normalizeReferralLink(link: string, code: string) {
-  // Transform the referral link to the correct format
-  // From: http://Acceding Titans-nginx/register?ref=CODE
-  // To:  https://Ascending-titans.vercel.app/auth/register?ref=CODE
-  return ` https://Ascending-titans.vercel.app/auth/register?ref=${code}`;
-}
-
-function getStatusBadgeStyle(status: string) {
-  switch (status) {
-    case 'paid':
-      return 'bg-green-500/10 text-green-600';
-    case 'eligible':
-      return 'bg-amber-500/10 text-amber-600';
-    case 'pending':
-    default:
-      return 'bg-gray-500/10 text-gray-600';
-  }
-}
+// ─── Main Page ────────────────────────────────────────────
 
 export default function ReferralPage() {
-  // State management
-  const [referralLinks, setReferralLinks] = useState<ReferralLink[]>([]);
-  const [userReferralLinks, setUserReferralLinks] = useState<ReferralLink[]>([]);
+  const { user } = useAuth();
+
+  // Data states
+  const [links, setLinks] = useState<ReferralLink[]>([]);
   const [stats, setStats] = useState<ReferralStats | null>(null);
-  const [milestones, setMilestones] = useState<ReferralMilestone[]>([]);
-  const [programs, setPrograms] = useState<ReferralProgram[]>([]);
 
   // Loading states
   const [loadingLinks, setLoadingLinks] = useState(true);
-  const [loadingUserReferrals, setLoadingUserReferrals] = useState(true);
   const [loadingStats, setLoadingStats] = useState(true);
-  const [loadingMilestones, setLoadingMilestones] = useState(true);
-  const [loadingPrograms, setLoadingPrograms] = useState(true);
 
   // Error states
   const [errorLinks, setErrorLinks] = useState<string | null>(null);
-  const [errorUserReferrals, setErrorUserReferrals] = useState<string | null>(null);
   const [errorStats, setErrorStats] = useState<string | null>(null);
-  const [errorMilestones, setErrorMilestones] = useState<string | null>(null);
-  const [errorPrograms, setErrorPrograms] = useState<string | null>(null);
 
   // UI states
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
-  const [withdrawalAmount, setWithdrawalAmount] = useState('');
+  const [withdrawAmount, setWithdrawAmount] = useState('');
   const [isWithdrawing, setIsWithdrawing] = useState(false);
+  const [showWithdraw, setShowWithdraw] = useState(false);
+  const [isCreatingLink, setIsCreatingLink] = useState(false);
 
-  const { user } = useAuth();
-  const { success: showSuccess, error: showError } = useAlert();
+  // ─── Data Fetching ─────────────────────────────────────
 
-  // Fetch all data on mount
-  useEffect(() => {
-    if (user?.id) {
-      fetchAllData();
-    }
-  }, [user?.id]);
-
-  const fetchAllData = async () => {
-    Promise.all([
-      fetchReferralLinks(),
-      fetchUserReferralData(),
-      fetchStats(),
-      fetchMilestones(),
-      fetchPrograms(),
-    ]);
-  };
-
-  const fetchReferralLinks = async () => {
+  const fetchLinks = useCallback(async () => {
     try {
       setLoadingLinks(true);
       setErrorLinks(null);
-      const links = await referralService.getMyReferralLinks();
-      setReferralLinks(links);
-    } catch (error: any) {
-      setErrorLinks(error.message || 'Failed to load referral links');
+
+      // Step 1: Try to fetch existing referral links
+      let data = await referralService.getMyReferralLinks();
+
+      // Step 2: If no links exist, attempt to create one (for users registered pre-v2.0)
+      if (!data || data.length === 0) {
+        if (user?.id) {
+          setIsCreatingLink(true);
+          try {
+            // Use the create endpoint which either creates or returns existing link
+            const newLink = await referralService.createReferralLink(1, user.id);
+            if (newLink) {
+              data = [{
+                code: newLink.code,
+                link: newLink.link,
+                program: 'Sign-up Bonus',
+                created_at: newLink.created_at,
+              }];
+            }
+          } catch (createErr: any) {
+            console.warn('[ReferralPage] Could not auto-create referral link:', createErr);
+            // Non-critical – user can retry or contact support
+          } finally {
+            setIsCreatingLink(false);
+          }
+        }
+      }
+
+      setLinks(data || []);
+    } catch (err: any) {
+      setErrorLinks(err.message || 'Failed to load referral link');
     } finally {
       setLoadingLinks(false);
     }
-  };
+  }, [user?.id]);
 
-  const fetchUserReferralData = async () => {
-    try {
-      setLoadingUserReferrals(true);
-      setErrorUserReferrals(null);
-      if (!user?.id) return;
-      const data = await referralService.getUserReferralData(user.id);
-      setUserReferralLinks(data.referralLinks || []);
-    } catch (error: any) {
-      console.error('[ReferralPage] Error fetching user referral data:', error);
-      setErrorUserReferrals(error.message || 'Failed to load your referral data');
-    } finally {
-      setLoadingUserReferrals(false);
-    }
-  };
-
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
       setLoadingStats(true);
       setErrorStats(null);
       const data = await referralService.getStats();
       setStats(data);
-    } catch (error: any) {
-      setErrorStats(error.message || 'Failed to load statistics');
+    } catch (err: any) {
+      setErrorStats(err.message || 'Failed to load statistics');
     } finally {
       setLoadingStats(false);
     }
-  };
+  }, []);
 
-  const fetchMilestones = async () => {
+  // ─── Referred Users ───────────────────────────────────
+
+  const [referredUsers, setReferredUsers] = useState<ReferredUserDetail[]>([]);
+  const [loadingReferredUsers, setLoadingReferredUsers] = useState(false);
+  const [referredUsersPagination, setReferredUsersPagination] = useState<ReferredUsersPagination>({
+    current_page: 1,
+    last_page: 1,
+    per_page: 15,
+    total: 0,
+  });
+
+  const fetchReferredUsers = useCallback(async (page: number = 1) => {
     try {
-      setLoadingMilestones(true);
-      setErrorMilestones(null);
-
-      // Fetch actual milestone data from backend
-      const milestonesData = await referralService.getMilestones();
-      
-      console.log('[ReferralPage] Fetched milestones from backend:', milestonesData);
-      console.log(`[ReferralPage] Total referrals: ${milestonesData.length}`);
-
-      // Use backend data directly - no transformation needed
-      setMilestones(milestonesData);
-    } catch (error: any) {
-      console.error('[ReferralPage] Error fetching milestones:', error);
-      setErrorMilestones(error.message || 'Failed to load referrals');
+      setLoadingReferredUsers(true);
+      const result = await referralService.getReferredUsers(15);
+      setReferredUsers(result.referred_users);
+      setReferredUsersPagination(result.pagination);
+    } catch (err: any) {
+      // Silently handle – this is supplementary data
+      console.warn('[ReferralPage] Failed to fetch referred users:', err);
     } finally {
-      setLoadingMilestones(false);
+      setLoadingReferredUsers(false);
     }
-  };
+  }, []);
 
-  const fetchPrograms = async () => {
-    try {
-      setLoadingPrograms(true);
-      setErrorPrograms(null);
-      const data = await referralService.getPrograms();
-      setPrograms(data);
-    } catch (error: any) {
-      setErrorPrograms(error.message || 'Failed to load programs');
-    } finally {
-      setLoadingPrograms(false);
-    }
-  };
+  // Fetch data once user is available
+  const hasInitiated = useRef(false);
 
-  const copyToClipboard = async (text: string, code: string) => {
-    const success = await referralService.copyToClipboard(text);
-    if (success) {
-      setCopiedCode(code);
-      showSuccess('Copied to clipboard!');
+  useEffect(() => {
+    if (!user?.id) return;
+    if (hasInitiated.current) return;
+    hasInitiated.current = true;
+
+    fetchLinks();
+    fetchStats();
+    fetchReferredUsers();
+  }, [user?.id, fetchLinks, fetchStats, fetchReferredUsers]);
+
+  // ─── Actions ────────────────────────────────────────────
+
+  const handleCopy = async (text: string, key: string) => {
+    const ok = await referralService.copyToClipboard(text);
+    if (ok) {
+      setCopiedCode(key);
+      Toast.success('Copied to clipboard!');
       setTimeout(() => setCopiedCode(null), 2000);
     } else {
-      showError('Failed to copy. Please try again.');
+      Toast.error('Failed to copy. Please try again.');
     }
   };
 
-  const shareLink = async (link: string, code: string) => {
-    try {
-      await referralService.shareReferralLink(link, code);
-      showSuccess('Shared successfully!');
-    } catch (error) {
-      showError('Failed to share. Copied to clipboard instead.');
-      await referralService.copyToClipboard(link);
+  const handleNativeShare = async (link: string, code: string) => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Join Acceding Titans',
+          text: `Join me on Acceding Titans and earn rewards! Use my referral code: ${code}`,
+          url: link,
+        });
+        Toast.success('Shared successfully!');
+        return;
+      } catch (err: any) {
+        if (err.name !== 'AbortError') {
+          await handleCopy(link, `share-${code}`);
+        }
+        return;
+      }
     }
+    await handleCopy(link, `share-${code}`);
   };
 
-  const handleWithdrawal = async () => {
-    const amount = parseFloat(withdrawalAmount);
-
+  const handleWithdraw = async () => {
+    const amount = parseFloat(withdrawAmount);
     if (!amount || amount < 100) {
-      showError('Minimum withdrawal is ₦100');
+      Toast.error('Minimum withdrawal is ₦100');
       return;
     }
-
     if (stats && amount > stats.available_balance) {
-      showError('Insufficient balance');
+      Toast.error('Amount exceeds your available balance');
       return;
     }
-
     try {
       setIsWithdrawing(true);
       await referralService.requestWithdrawal(amount);
-      showSuccess('Withdrawal request submitted!');
-      setWithdrawalAmount('');
-      // Refresh stats
+      Toast.success('Withdrawal request submitted successfully!');
+      setWithdrawAmount('');
+      setShowWithdraw(false);
       await fetchStats();
-    } catch (error: any) {
-      showError(error.message || 'Withdrawal failed');
+    } catch (err: any) {
+      Toast.error(err.message || 'Withdrawal failed');
     } finally {
       setIsWithdrawing(false);
     }
   };
 
+  // ─── Derived ────────────────────────────────────────────
+
+  const primaryLink = links[0] ?? null;
+  const referralUrl = primaryLink ? getReferralLink(primaryLink.code) : '';
+  const totalReferrals = stats?.total_referrals ?? 0;
+  const activeReferrals = stats?.active_referrals ?? 0;
+  const totalEarnings = stats?.total_earnings ?? 0;
+  const availableBalance = stats?.available_balance ?? 0;
+
+  // ─── Render ─────────────────────────────────────────────
+
   return (
-    <div className="space-y-8">
-      {/* Hero Section - Referral Links */}
-      <section className="relative overflow-hidden rounded-[32px] border border-black/5 bg-[#100303] px-6 py-8 shadow-[0_20px_70px_rgba(16,3,3,0.16)] sm:px-8 sm:py-10">
-        <div className="absolute right-0 top-0 h-64 w-64 rounded-full bg-[#c9a84c]/25 blur-3xl" />
-        <div className="absolute bottom-0 left-1/3 h-44 w-44 rounded-full bg-orange-500/10 blur-3xl" />
+    <div className="space-y-6">
 
-        <div className="relative z-10 space-y-8">
-          <div>
-            <h1 className="mt-4 max-w-2xl text-3xl font-black tracking-tight text-white sm:text-4xl">
-              Earn rewards by inviting friends to Acceding Titans.
-            </h1>
+      {/* ─── Hero: Referral Link ───────────────────────── */}
+      <section className="relative overflow-hidden rounded-3xl border border-[#C9A84C]/15 bg-gradient-to-br from-[#C9A84C]/5 via-white to-[#C9A84C]/5 px-6 py-8 sm:px-8 sm:py-10">
+        <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-[#C9A84C]/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-8 left-1/3 h-40 w-40 rounded-full bg-amber-200/30 blur-3xl" />
 
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-white/60 sm:text-base">
-              Share your unique referral link and earn ₦200 for every friend who completes all signup milestones.
-            </p>
+        <div className="relative z-10">
+          <div className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-[#C9A84C]/20 bg-[#C9A84C]/8 px-3 py-1 text-xs font-semibold text-[#C9A84C]">
+            <Sparkles size={12} />
+            Refer & Earn Program
           </div>
 
-          {/* Loading State */}
-          {loadingLinks && (
-            <div className="flex justify-center py-8">
-              <Spinner />
+          <h1 className="text-2xl font-black tracking-tight text-gray-900 sm:text-3xl">
+            Invite friends, earn rewards together
+          </h1>
+          <p className="mt-2 max-w-xl text-sm leading-relaxed text-gray-600">
+            Share your unique referral link and earn ₦500 for every friend who signs up!
+          </p>
+
+          {/* Referral Link Box */}
+          {loadingLinks ? (
+            <div className="mt-6 flex items-center justify-center py-6">
+              <Loader2 className="h-6 w-6 animate-spin text-[#C9A84C]/40" />
             </div>
-          )}
-
-          {/* Error State */}
-          {errorLinks && (
-            <div className="rounded-xl border border-red-500/20 bg-red-500/10 p-4">
-              <p className="text-sm text-red-400 flex items-center gap-2">
-                <AlertCircle size={16} />
-                {errorLinks}
-              </p>
+          ) : errorLinks ? (
+            <div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4">
+              <p className="text-sm text-red-600">{errorLinks}</p>
             </div>
-          )}
-
-          {/* Referral Links */}
-          {!loadingLinks && referralLinks.length > 0 && (
-            <div className="space-y-4">
-              {referralLinks.map((link) => (
-                <div key={link.code} className="rounded-[24px] border border-white/10 bg-white/[0.06] p-4 backdrop-blur">
-                  <p className="text-xs font-black uppercase tracking-[0.14em] text-white/40 mb-3">
-                    {link.program}
-                  </p>
-
-                  <div className="space-y-3">
-                    {/* Link Display */}
-                    <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
-                      <div className="min-w-0 flex-1 break-all rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-sm font-semibold text-white/90">
-                        {normalizeReferralLink(link.link, link.code)}
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        <Button
-                          type="button"
-                          onClick={() => copyToClipboard(normalizeReferralLink(link.link, link.code), link.code)}
-                          className="h-10 rounded-xl bg-[#c9a84c] px-4 font-black text-white shadow-lg shadow-[#c9a84c]/20 hover:bg-[#b91521]"
-                        >
-                          <Copy size={14} />
-                          {copiedCode === link.code ? 'Copied!' : 'Copy'}
-                        </Button>
-                        <Button
-                          type="button"
-                          onClick={() => shareLink(normalizeReferralLink(link.link, link.code), link.code)}
-                          className="h-10 rounded-xl bg-white/10 px-4 font-black text-white border border-white/20 hover:bg-white/20"
-                        >
-                          <Share2 size={14} />
-                          Share
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* Code Display */}
-                    <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
-                      <p className="text-xs font-black uppercase tracking-[0.14em] text-white/40">Code:</p>
-                      <div className="flex-1 rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-2xl font-black tracking-wide text-[#ff6b76]">
-                        {link.code}
-                      </div>
-                      <Button
-                        type="button"
-                        onClick={() => copyToClipboard(link.code, `code-${link.code}`)}
-                        className="h-10 rounded-xl bg-white/10 px-4 font-black text-white border border-white/20 hover:bg-white/20"
-                      >
-                        <Copy size={14} />
-                        {copiedCode === `code-${link.code}` ? 'Copied!' : 'Copy'}
-                      </Button>
-                    </div>
-
-                    {/* Created Date */}
-                    <p className="text-xs text-white/40">
-                      Created: {formatDate(link.created_at)}
-                    </p>
+          ) : primaryLink ? (
+            <div className="mt-6 space-y-4">
+              {/* Link Display */}
+              <div className="rounded-2xl border border-[#C9A84C]/15 bg-white p-4 shadow-sm">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  YOUR REFERRAL LINK
+                </p>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                  <div className="min-w-0 flex-1 truncate rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium text-gray-700">
+                    {referralUrl}
+                  </div>
+                  <div className="flex shrink-0 gap-2">
+                    <button
+                      onClick={() => handleCopy(referralUrl, 'link')}
+                      className="inline-flex h-10 items-center gap-1.5 rounded-xl bg-[#C9A84C] px-4 text-sm font-bold text-white shadow-lg shadow-[#C9A84C]/25 transition-all hover:bg-[#B8962E]"
+                    >
+                      <Copy size={14} />
+                      {copiedCode === 'link' ? 'Copied!' : 'Copy'}
+                    </button>
+                    <button
+                      onClick={() => handleNativeShare(referralUrl, primaryLink.code)}
+                      className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-4 text-sm font-bold text-gray-700 transition-all hover:bg-gray-50"
+                    >
+                      <Share2 size={14} />
+                      Share
+                    </button>
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
 
-          {!loadingLinks && referralLinks.length === 0 && !errorLinks && (
-            <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-4">
-              <p className="text-sm text-amber-200 flex items-center gap-2">
-                <AlertCircle size={16} />
-                No referral links found. Create one to get started.
+              {/* Code + Share Buttons */}
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="rounded-xl border border-[#C9A84C]/15 bg-white px-4 py-2.5 shadow-sm">
+                  <p className="text-xs text-gray-500">Your Code</p>
+                  <p className="text-lg font-black tracking-wider text-[#C9A84C]">
+                    {primaryLink.code}
+                  </p>
+                </div>
+                <span className="text-xs text-gray-400">Share via</span>
+                <a
+                  href={shareUrls.whatsapp(referralUrl, primaryLink.code)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 transition hover:bg-emerald-500/20"
+                  title="Share on WhatsApp"
+                >
+                  <MessageCircle size={16} />
+                </a>
+                <a
+                  href={shareUrls.twitter(referralUrl, primaryLink.code)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-sky-500/10 text-sky-600 transition hover:bg-sky-500/20"
+                  title="Share on Twitter/X"
+                >
+                  <Twitter size={16} />
+                </a>
+                <a
+                  href={shareUrls.facebook(referralUrl)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600 transition hover:bg-blue-500/20"
+                  title="Share on Facebook"
+                >
+                  <Facebook size={16} />
+                </a>
+              </div>
+            </div>
+          ) : (
+            <div className="mt-6 rounded-xl border border-dashed border-gray-200 bg-white p-5 text-center shadow-sm">
+              <Gift className="mx-auto h-8 w-8 text-gray-300" />
+              <p className="mt-2 text-sm text-gray-500">
+                No referral link yet. Create one to get started.
               </p>
             </div>
           )}
         </div>
       </section>
 
-      {/* Your Referrals by Link Section */}
-      <section className="rounded-[32px] border border-black/5 bg-white p-6 shadow-[0_10px_35px_rgba(16,3,3,0.05)] sm:p-8">
-        <h2 className="text-2xl font-black tracking-tight text-[#111]">Your Referral Links</h2>
-        <p className="mt-1 text-sm font-medium text-black/50">View referrals by each of your links</p>
+      {/* ─── Stats Grid ──────────────────────────────────── */}
+      {loadingStats ? (
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          {[...Array(4)].map((_, i) => (
+            <div
+              key={i}
+              className="animate-pulse rounded-2xl border border-gray-100 bg-white p-5"
+            >
+              <div className="mb-3 h-3 w-20 rounded bg-gray-100" />
+              <div className="h-8 w-16 rounded bg-gray-100" />
+            </div>
+          ))}
+        </div>
+      ) : errorStats ? (
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-4">
+          <p className="text-sm text-red-600">{errorStats}</p>
+        </div>
+      ) : stats ? (
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <StatCard
+            label="Total Referrals"
+            value={totalReferrals}
+            icon={Users}
+            accent="gold"
+            subtitle="People who joined"
+          />
+          <StatCard
+            label="Active Referrals"
+            value={activeReferrals}
+            icon={CheckCircle2}
+            accent="green"
+            subtitle="Currently active"
+          />
+          <StatCard
+            label="Total Earnings"
+            value={formatCurrency(totalEarnings)}
+            icon={TrendingUp}
+            accent="blue"
+            subtitle="₦500 per referral"
+          />
+          <StatCard
+            label="Available Balance"
+            value={formatCurrency(availableBalance)}
+            icon={Wallet}
+            accent="purple"
+            subtitle="Ready for withdrawal"
+          />
+        </div>
+      ) : null}
 
-        {loadingUserReferrals ? (
-          <div className="flex justify-center py-8">
-            <Spinner />
-          </div>
-        ) : errorUserReferrals ? (
-          <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/10 p-4">
-            <p className="text-sm text-red-600 flex items-center gap-2">
-              <AlertCircle size={16} />
-              {errorUserReferrals}
-            </p>
-          </div>
-        ) : userReferralLinks.length > 0 ? (
-          <div className="mt-6 space-y-4">
-            {userReferralLinks.map((link) => {
-              const referralCount = link.referrals?.length || 0;
-              return (
-                <div key={link.code} className="rounded-[24px] border border-black/5 bg-[#f8f8f8] p-5">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="font-black text-[#111] text-lg">{link.program}</h3>
-                        <span className="inline-block rounded-full bg-[#c9a84c]/10 px-3 py-1 text-xs font-black text-[#c9a84c]">
-                          {referralCount} {referralCount === 1 ? 'referral' : 'referrals'}
-                        </span>
-                      </div>
-                      <p className="text-sm font-bold text-black/60 font-mono">{link.code}</p>
-                      <p className="text-xs text-black/40 mt-2">Created: {formatDate(link.created_at)}</p>
-                    </div>
-                    <div className="flex-shrink-0">
-                      <div className="rounded-2xl bg-[#c9a84c]/10 p-4">
-                        <Users className="h-6 w-6 text-[#c9a84c]" />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Referrals List */}
-                  {link.referrals && link.referrals.length > 0 && (
-                    <div className="mt-4 border-t border-black/5 pt-4">
-                      <p className="text-xs font-black uppercase tracking-[0.14em] text-black/40 mb-3">
-                        Referred Users
-                      </p>
-                      <div className="space-y-2">
-                        {link.referrals.map((referral) => (
-                          <div key={referral.id} className="flex items-center justify-between rounded-lg bg-white p-3 border border-black/5">
-                            <div className="min-w-0 flex-1">
-                              <p className="font-bold text-black/80 truncate">{referral.name}</p>
-                              <p className="text-xs text-black/50 truncate">{referral.email}</p>
-                            </div>
-                            <p className="text-xs text-black/40 ml-3">{formatDate(referral.created_at)}</p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="mt-4 rounded-xl border border-amber-500/20 bg-amber-500/10 p-4">
-            <p className="text-sm text-amber-600">No referral data available yet. Share your referral links to get started.</p>
-          </div>
-        )}
-      </section>
-      <section className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {loadingStats ? (
-          <div className="col-span-full flex justify-center py-8">
-            <Spinner />
-          </div>
-        ) : errorStats ? (
-          <div className="col-span-full rounded-xl border border-red-500/20 bg-red-500/10 p-4">
-            <p className="text-sm text-red-400 flex items-center gap-2">
-              <AlertCircle size={16} />
-              {errorStats}
-            </p>
-          </div>
-        ) : stats ? (
-          <>
-            <Card className="rounded-[28px] border border-black/5 bg-white p-6 shadow-[0_10px_35px_rgba(16,3,3,0.05)]">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-xs font-black uppercase tracking-wide text-black/40">Total Referrals</p>
-                  <p className="mt-3 text-3xl font-black text-[#111]">{stats.total_referrals}</p>
-                </div>
-                <div className="rounded-2xl bg-[#c9a84c]/10 p-3">
-                  <Users className="h-5 w-5 text-[#c9a84c]" />
-                </div>
+      {/* ─── Withdraw CTA ────────────────────────────────── */}
+      {stats && availableBalance > 0 && !showWithdraw && (
+        <button
+          onClick={() => setShowWithdraw(true)}
+          className="group w-full rounded-2xl border border-[#C9A84C]/20 bg-gradient-to-r from-[#C9A84C]/5 to-[#D4B85C]/5 p-4 text-left transition-all hover:from-[#C9A84C]/10 hover:to-[#D4B85C]/10"
+        >
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#C9A84C]/15 text-[#C9A84C]">
+                <Wallet size={18} />
               </div>
-            </Card>
-
-            <Card className="rounded-[28px] border border-black/5 bg-white p-6 shadow-[0_10px_35px_rgba(16,3,3,0.05)]">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-xs font-black uppercase tracking-wide text-black/40">Active Referrals</p>
-                  <p className="mt-3 text-3xl font-black text-[#111]">{stats.active_referrals}</p>
-                </div>
-                <div className="rounded-2xl bg-green-500/10 p-3">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                </div>
-              </div>
-            </Card>
-
-            <Card className="rounded-[28px] border border-black/5 bg-white p-6 shadow-[0_10px_35px_rgba(16,3,3,0.05)]">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-xs font-black uppercase tracking-wide text-black/40">Total Earnings</p>
-                  <p className="mt-3 text-3xl font-black text-[#c9a84c]">{formatCurrency(stats.total_earnings)}</p>
-                </div>
-                <div className="rounded-2xl bg-[#c9a84c]/10 p-3">
-                  <TrendingUp className="h-5 w-5 text-[#c9a84c]" />
-                </div>
-              </div>
-            </Card>
-
-            <Card className="rounded-[28px] border border-black/5 bg-white p-6 shadow-[0_10px_35px_rgba(16,3,3,0.05)]">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-xs font-black uppercase tracking-wide text-black/40">Available Balance</p>
-                  <p className="mt-3 text-3xl font-black text-green-600">{formatCurrency(stats.available_balance)}</p>
-                </div>
-                <div className="rounded-2xl bg-green-500/10 p-3">
-                  <Wallet className="h-5 w-5 text-green-500" />
-                </div>
-              </div>
-            </Card>
-          </>
-        ) : null}
-      </section>
-
-      {/* Referral Programs Section */}
-      <section>
-        <Card className="rounded-[28px] border border-black/5 bg-white p-6 shadow-[0_10px_35px_rgba(16,3,3,0.05)]">
-          <h2 className="text-2xl font-black tracking-tight text-[#111]">Available Programs</h2>
-          <p className="mt-1 text-sm font-medium text-black/50">Earn rewards from multiple referral programs</p>
-
-          {loadingPrograms ? (
-            <div className="flex justify-center py-8">
-              <Spinner />
-            </div>
-          ) : errorPrograms ? (
-            <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/10 p-4">
-              <p className="text-sm text-red-600 flex items-center gap-2">
-                <AlertCircle size={16} />
-                {errorPrograms}
-              </p>
-            </div>
-          ) : programs.length > 0 ? (
-            <div className="mt-6 grid gap-4 md:grid-cols-2">
-              {programs.map((program) => (
-                <div key={program.id} className="rounded-[24px] border border-black/5 bg-[#f8f8f8] p-5">
-                  <h3 className="font-black text-[#111]">{program.name}</h3>
-                  <p className="mt-2 text-sm text-black/60">
-                    Duration: {program.lifetime_minutes} minutes ({Math.round(program.lifetime_minutes / 1440)} days)
-                  </p>
-                  <div className="mt-4 flex items-center justify-between">
-                    <p className="text-sm font-bold text-black/40">Earn ₦200 per referral</p>
-                    <ArrowRight className="h-4 w-4 text-[#c9a84c]" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="mt-4 rounded-xl border border-amber-500/20 bg-amber-500/10 p-4">
-              <p className="text-sm text-amber-600">No programs available at the moment.</p>
-            </div>
-          )}
-        </Card>
-      </section>
-
-      {/* Milestones Section */}
-      <section>
-        <Card className="rounded-[28px] border border-black/5 bg-white p-6 shadow-[0_10px_35px_rgba(16,3,3,0.05)]">
-          <h2 className="text-2xl font-black tracking-tight text-[#111]">Your Referrals</h2>
-          <p className="mt-1 text-sm font-medium text-black/50">Track milestones and earnings from referred users</p>
-
-          {loadingMilestones ? (
-            <div className="flex justify-center py-8">
-              <Spinner />
-            </div>
-          ) : errorMilestones ? (
-            <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/10 p-4">
-              <p className="text-sm text-red-600 flex items-center gap-2">
-                <AlertCircle size={16} />
-                {errorMilestones}
-              </p>
-            </div>
-          ) : milestones.length > 0 ? (
-            <div className="mt-6 space-y-4">
-              <div className="mb-4 rounded-xl border border-green-500/20 bg-green-500/5 p-3">
-                <p className="text-xs text-green-600">
-                  ✓ Found {milestones.length} referral(s)
+              <div>
+                <p className="text-sm font-bold text-gray-900">
+                  Withdraw your earnings
+                </p>
+                <p className="text-xs text-gray-500">
+                  You have {formatCurrency(availableBalance)} available
                 </p>
               </div>
-              {milestones.map((milestone) => (
-                <div key={milestone.milestone_id} className="rounded-[24px] border border-black/5 bg-[#f8f8f8] p-5">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-black text-[#111]">{milestone.referred_user.name}</h3>
-                      <p className="text-sm text-black/60">{milestone.referred_user.email}</p>
-                      <p className="text-xs text-black/40 mt-1">{milestone.program} • Code: {milestone.referral_code}</p>
-                    </div>
-                    <div className={`rounded-full px-3 py-1 text-xs font-black uppercase tracking-wide ${getStatusBadgeStyle(milestone.status)}`}>
-                      {milestone.status}
-                    </div>
-                  </div>
-
-                  {/* Progress Bar */}
-                  <div className="mt-4">
-                    <div className="mb-2 flex items-center justify-between text-xs">
-                      <span className="font-bold text-black/60">Progress</span>
-                      <span className="font-black text-[#111]">{milestone.progress_percentage}%</span>
-                    </div>
-                    <div className="h-2 w-full overflow-hidden rounded-full bg-black/10">
-                      <div
-                        className="h-full rounded-full bg-[#c9a84c]"
-                        style={{ width: `${milestone.progress_percentage}%` }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Milestones Checklist */}
-                  <div className="mt-4 space-y-2">
-                    {Object.entries({
-                      'Email Verified': milestone.milestones.email_verified,
-                      'Phone Verified': milestone.milestones.phone_verified,
-                      'Wallet Funded ₦100': milestone.milestones.wallet_funded_100,
-                      'First Transaction': milestone.milestones.first_transaction,
-                    }).map(([label, m]) => (
-                      <div key={label} className="flex items-center gap-2 text-sm">
-                        <div className={`h-5 w-5 rounded-full border-2 flex items-center justify-center ${
-                          m.completed
-                            ? 'border-green-500 bg-green-500/10'
-                            : 'border-black/20 bg-transparent'
-                        }`}>
-                          {m.completed && <CheckCircle2 size={14} className="text-green-500" />}
-                        </div>
-                        <span className={m.completed ? 'text-black/80 font-bold' : 'text-black/50'}>
-                          {label}
-                        </span>
-                        {m.completed_at && (
-                          <span className="ml-auto text-xs text-black/40">
-                            {formatDate(m.completed_at)}
-                          </span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Payout Info */}
-                  {milestone.is_fully_qualified && (
-                    <div className={`mt-4 rounded-xl border p-3 ${
-                      milestone.status === 'paid'
-                        ? 'border-green-500/20 bg-green-500/10'
-                        : milestone.status === 'eligible'
-                        ? 'border-amber-500/20 bg-amber-500/10'
-                        : 'border-gray-500/20 bg-gray-500/10'
-                    }`}>
-                      <p className={`text-sm font-black ${
-                        milestone.status === 'paid'
-                          ? 'text-green-600'
-                          : milestone.status === 'eligible'
-                          ? 'text-amber-600'
-                          : 'text-gray-600'
-                      }`}>
-                        {milestone.status === 'paid' ? (
-                          <>✓ Earned ₦{milestone.payout_earned.toFixed(2)} - {milestone.payout_paid_at ? `Paid on ${formatDate(milestone.payout_paid_at)}` : 'Processing'}</>
-                        ) : milestone.status === 'eligible' ? (
-                          <>⏳ Ready for Payout - ₦{milestone.payout_earned.toFixed(2)}</>
-                        ) : (
-                          <>🎯 Complete all milestones to earn ₦200</>
-                        )}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Incomplete Referral Info */}
-                  {!milestone.is_fully_qualified && (
-                    <div className="mt-4 rounded-xl border border-blue-500/20 bg-blue-500/10 p-3">
-                      <p className="text-sm font-black text-blue-600 mb-2">⏳ In Progress ({milestone.progress_percentage}%)</p>
-                      <p className="text-xs text-blue-600">Waiting for remaining milestones to be completed. You'll earn ₦200 once all 4 are done.</p>
-                    </div>
-                  )}
-                </div>
-              ))}
             </div>
-          ) : (
-            <div className="mt-4 rounded-xl border border-amber-500/20 bg-amber-500/10 p-4">
-              <p className="text-sm text-amber-600">No referrals yet. Share your link to get started!</p>
-            </div>
-          )}
-        </Card>
-      </section>
-
-      {/* Withdrawal Section */}
-      {stats && stats.available_balance > 0 && (
-        <section>
-          <Card className="rounded-[28px] border border-black/5 bg-white p-6 shadow-[0_10px_35px_rgba(16,3,3,0.05)]">
-            <h2 className="text-2xl font-black tracking-tight text-[#111]">Withdraw Earnings</h2>
-            <p className="mt-1 text-sm font-medium text-black/50">
-              Available Balance: <span className="font-black text-[#c9a84c]">{formatCurrency(stats.available_balance)}</span>
-            </p>
-
-            <div className="mt-6 space-y-4">
-              <div>
-                <label className="text-sm font-black uppercase tracking-wide text-black/60">Amount (₦)</label>
-                <input
-                  type="number"
-                  value={withdrawalAmount}
-                  onChange={(e) => setWithdrawalAmount(e.target.value)}
-                  placeholder="Enter amount (minimum ₦100)"
-                  className="mt-2 w-full rounded-2xl border border-black/10 bg-[#f8f8f8] px-4 py-3 text-[#111] placeholder-black/40 focus:border-[#c9a84c] focus:outline-none focus:ring-2 focus:ring-[#c9a84c]/20"
-                  min="100"
-                  max={stats.available_balance}
-                />
-                <p className="mt-2 text-xs text-black/50">Minimum: ₦100 | Maximum: {formatCurrency(stats.available_balance)}</p>
-              </div>
-
-              <Button
-                onClick={handleWithdrawal}
-                disabled={isWithdrawing || !withdrawalAmount}
-                className="h-11 w-full rounded-xl bg-[#c9a84c] font-black text-white hover:bg-[#b91521] disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isWithdrawing ? (
-                  <span className="flex items-center gap-2">
-                    <Loader className="h-4 w-4 animate-spin" />
-                    Processing...
-                  </span>
-                ) : (
-                  'Request Withdrawal'
-                )}
-              </Button>
-            </div>
-          </Card>
-        </section>
+            <ChevronRight
+              size={18}
+              className="shrink-0 text-gray-400 transition-all group-hover:translate-x-0.5"
+            />
+          </div>
+        </button>
       )}
 
-      {/* How It Works Section */}
-      <section>
-        <Card className="rounded-[28px] border border-black/5 bg-white p-6 shadow-[0_10px_35px_rgba(16,3,3,0.05)]">
-          <h2 className="text-2xl font-black tracking-tight text-[#111]">How It Works</h2>
+      {/* ─── Withdrawal Form ──────────────────────────────── */}
+      {showWithdraw && (
+        <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-black text-gray-900">Withdraw Earnings</h3>
+              <p className="text-sm text-gray-500">
+                Available: <span className="font-bold text-[#C9A84C]">{formatCurrency(availableBalance)}</span>
+              </p>
+            </div>
+            <button
+              onClick={() => setShowWithdraw(false)}
+              className="text-sm font-semibold text-gray-400 hover:text-gray-600"
+            >
+              Cancel
+            </button>
+          </div>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-4">
-            {[
-              {
-                step: '1',
-                title: 'Share Your Link',
-                description: 'Copy and share your unique referral link',
-              },
-              {
-                step: '2',
-                title: 'User Registers',
-                description: 'They sign up using your referral link',
-              },
-              {
-                step: '3',
-                title: 'Complete Milestones',
-                description: 'They verify email, phone, fund wallet, and transact',
-              },
-              {
-                step: '4',
-                title: 'Earn ₦200',
-                description: 'You get ₦200 once all milestones are completed',
-              },
-            ].map((item) => (
-              <div key={item.step} className="rounded-[24px] border border-black/5 bg-[#f8f8f8] p-5 text-center">
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#c9a84c] text-lg font-black text-white shadow-lg shadow-[#c9a84c]/20">
-                  {item.step}
+          <div className="space-y-4">
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Amount (₦)
+              </label>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-gray-400">
+                  ₦
+                </span>
+                <input
+                  type="number"
+                  value={withdrawAmount}
+                  onChange={(e) => setWithdrawAmount(e.target.value)}
+                  placeholder="0.00"
+                  min="100"
+                  max={availableBalance}
+                  className="h-12 w-full rounded-xl border border-gray-200 bg-gray-50 pl-8 pr-4 text-lg font-bold text-gray-900 outline-none transition focus:border-[#C9A84C] focus:ring-2 focus:ring-[#C9A84C]/10"
+                />
+              </div>
+              <div className="mt-2 flex items-center justify-between text-xs">
+                <span className="text-gray-400">Min: ₦100</span>
+                <button
+                  onClick={() => setWithdrawAmount(String(availableBalance))}
+                  className="font-semibold text-[#C9A84C] hover:text-[#B8962E]"
+                >
+                  Max: {formatCurrency(availableBalance)}
+                </button>
+              </div>
+            </div>
+
+            <button
+              onClick={handleWithdraw}
+              disabled={isWithdrawing || !withdrawAmount || parseFloat(withdrawAmount) < 100}
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#C9A84C] font-bold text-white shadow-lg shadow-[#C9A84C]/20 transition-all hover:bg-[#B8962E] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isWithdrawing ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                'Request Withdrawal'
+              )}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ─── How It Works ──────────────────────────────────── */}
+      <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm sm:p-6">
+        <h2 className="text-lg font-black tracking-tight text-gray-900">
+          How It Works
+        </h2>
+        <p className="mt-1 text-sm text-gray-500">
+          Three simple steps to earn rewards
+        </p>
+
+        <div className="mt-6 grid gap-4 sm:grid-cols-3">
+          {[
+            {
+              step: '01',
+              icon: Share2,
+              title: 'Share Your Link',
+              desc: 'Share your unique referral link with friends and family',
+            },
+            {
+              step: '02',
+              icon: UserPlus,
+              title: 'Friend Signs Up',
+              desc: 'They register using your referral link or code',
+            },
+            {
+              step: '03',
+              icon: Award,
+              title: 'Earn ₦500',
+              desc: 'You earn ₦500 for every friend who signs up through your link',
+            },
+          ].map(({ step, icon: Icon, title, desc }) => (
+            <div
+              key={step}
+              className="group rounded-2xl border border-gray-100 bg-gray-50/50 p-5 text-center transition hover:border-[#C9A84C]/20 hover:bg-[#C9A84C]/5"
+            >
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-[#C9A84C]/10 text-[#C9A84C] transition group-hover:bg-[#C9A84C]/20">
+                <Icon size={22} />
+              </div>
+              <div className="mt-1 text-xs font-black text-gray-300">{step}</div>
+              <h3 className="mt-1 text-sm font-bold text-gray-900">{title}</h3>
+              <p className="mt-1 text-xs leading-relaxed text-gray-500">{desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── Tips ──────────────────────────────────────────── */}
+      <section className="rounded-2xl border border-gray-100 bg-gradient-to-r from-[#C9A84C]/5 to-transparent p-5 sm:p-6">
+        <div className="flex items-start gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#C9A84C]/15 text-[#C9A84C]">
+            <Zap size={18} />
+          </div>
+          <div>
+            <h3 className="text-sm font-bold text-gray-900">Pro Tip</h3>
+            <p className="mt-1 text-sm leading-relaxed text-gray-600">
+              Share your referral link on social media, WhatsApp groups, and with friends
+              who would benefit from Acceding Titans. The more you share, the more you earn!
+              You get <span className="font-bold text-[#C9A84C]">₦500</span> for every
+              friend who signs up.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── Referral History ────────────────────────────── */}
+      <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm sm:p-6">
+        <div className="mb-1 flex items-center justify-between">
+          <h2 className="text-lg font-black tracking-tight text-gray-900">
+            Referral History
+          </h2>
+          {referredUsersPagination.total > 0 && (
+            <span className="text-xs font-semibold text-gray-400">
+              {referredUsersPagination.total} total
+            </span>
+          )}
+        </div>
+        <p className="mb-5 text-sm text-gray-500">
+          People who signed up using your referral link
+        </p>
+
+        {loadingReferredUsers ? (
+          <div className="space-y-3">
+            {[...Array(3)].map((_, i) => (
+              <div
+                key={i}
+                className="flex animate-pulse items-center gap-3 rounded-xl border border-gray-100 p-3"
+              >
+                <div className="h-10 w-10 rounded-full bg-gray-100" />
+                <div className="flex-1 space-y-1.5">
+                  <div className="h-3 w-32 rounded bg-gray-100" />
+                  <div className="h-2.5 w-48 rounded bg-gray-100" />
                 </div>
-                <h3 className="mt-4 font-black text-[#111]">{item.title}</h3>
-                <p className="mt-2 text-sm leading-6 text-black/60">{item.description}</p>
               </div>
             ))}
           </div>
-        </Card>
+        ) : referredUsers.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-gray-200 bg-gray-50/50 p-8 text-center">
+            <Users className="mx-auto h-8 w-8 text-gray-300" />
+            <p className="mt-3 text-sm font-medium text-gray-500">
+              No referrals yet
+            </p>
+            <p className="mt-1 text-xs text-gray-400">
+              Share your referral link to start earning rewards
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {referredUsers.map((ref) => (
+              <div
+                key={ref.id}
+                className="flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50/30 p-3 transition hover:bg-gray-50"
+              >
+                {/* Avatar */}
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#C9A84C]/10 text-xs font-black text-[#C9A84C]">
+                  {ref.first_name.charAt(0).toUpperCase()}
+                  {ref.last_name?.charAt(0).toUpperCase()}
+                </div>
+
+                {/* Details */}
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-bold text-gray-900 truncate">
+                    {ref.first_name} {ref.last_name}
+                  </p>
+                  <p className="text-xs text-gray-500 truncate">{ref.email}</p>
+                </div>
+
+                {/* Date */}
+                <div className="shrink-0 text-right">
+                  <div className="flex items-center gap-1 text-xs text-gray-400">
+                    <CalendarDays size={12} />
+                    <span>
+                      {new Date(ref.referred_at).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* Pagination */}
+            {referredUsersPagination.last_page > 1 && (
+              <div className="flex items-center justify-between border-t border-gray-100 pt-4">
+                <button
+                  onClick={() => fetchReferredUsers(referredUsersPagination.current_page - 1)}
+                  disabled={referredUsersPagination.current_page <= 1}
+                  className="inline-flex items-center gap-1 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <ChevronLeft size={14} />
+                  Previous
+                </button>
+
+                <span className="text-xs font-medium text-gray-400">
+                  Page {referredUsersPagination.current_page} of{' '}
+                  {referredUsersPagination.last_page}
+                </span>
+
+                <button
+                  onClick={() => fetchReferredUsers(referredUsersPagination.current_page + 1)}
+                  disabled={referredUsersPagination.current_page >= referredUsersPagination.last_page}
+                  className="inline-flex items-center gap-1 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  Next
+                  <ChevronRight size={14} />
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </section>
+
     </div>
   );
 }

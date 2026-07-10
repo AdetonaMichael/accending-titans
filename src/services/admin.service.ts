@@ -17,6 +17,27 @@ import {
   UserStatistics,
   CombinedUserStatistics,
 } from '@/types/vtu.types';
+import type {
+  Role,
+  Permission,
+  StoreRoleRequest,
+  UpdateRoleRequest,
+  StorePermissionRequest,
+  UpdatePermissionRequest,
+  AssignRoleRequest,
+  AssignPermissionRequest,
+  RevokePermissionRequest,
+  AdminUserDetail,
+  AdminDashboardStats,
+  LoginHistoryEntry,
+  AdminUpdateUserRequest,
+  AssignRoleResponse,
+  AssignPermissionResponse,
+  ToggleActiveResponse,
+  RestoreUserResponse,
+  LoginHistoryResponse,
+  AdminStatsResponse,
+} from '@/types/role.types';
 
 class AdminService {
   async getDashboard(): Promise<ApiResponse<{ data: any }>> {
@@ -177,44 +198,94 @@ class AdminService {
   }
 
   // ROLES & PERMISSIONS
-  async getRoles(): Promise<any> {
+  // Based on /api/v1/role/* endpoints
+
+  /**
+   * List all roles with their permissions
+   * GET /api/v1/role/roles
+   */
+  async getRoles(): Promise<ApiResponse<{ roles: Role[] }>> {
     return apiClient.get('/role/roles');
   }
 
-  async getPermissions(): Promise<any> {
-    return apiClient.get('/role/permissions');
+  /**
+   * Create a new role
+   * POST /api/v1/role/roles
+   */
+  async createRole(data: StoreRoleRequest): Promise<ApiResponse<{ role: Role }>> {
+    return apiClient.post('/role/roles', data);
   }
 
-  async createRole(name: string): Promise<any> {
-    return apiClient.post('/role/roles', { name });
+  /**
+   * Update a role
+   * PUT /api/v1/role/roles/{id}
+   */
+  async updateRole(roleId: number, data: UpdateRoleRequest): Promise<ApiResponse<{ role: Role }>> {
+    return apiClient.put(`/role/roles/${roleId}`, data);
   }
 
-  async createPermission(name: string): Promise<any> {
-    return apiClient.post('/role/permissions', { name });
-  }
-
-  async assignRoleToUser(userId: number, roleId: number): Promise<any> {
-    return apiClient.post('/role/assign/role', { user_id: userId, role_id: roleId });
-  }
-
-  async assignPermissionToRole(roleId: number, permissionId: number): Promise<any> {
-    return apiClient.post('/role/role/permission', { role_id: roleId, permission_id: permissionId });
-  }
-
-  async revokePermissionFromRole(roleId: number, permissionId: number): Promise<any> {
-    return apiClient.post('/role/role/permission/revoke', { role_id: roleId, permission_id: permissionId });
-  }
-
-  async updateRole(roleId: number, name: string): Promise<any> {
-    return apiClient.put(`/role/roles/${roleId}`, { name });
-  }
-
-  async deleteRole(roleId: number): Promise<any> {
+  /**
+   * Delete a role
+   * DELETE /api/v1/role/roles/{id}
+   */
+  async deleteRole(roleId: number): Promise<ApiResponse<null>> {
     return apiClient.delete(`/role/roles/${roleId}`);
   }
 
-  async deletePermission(permissionId: number): Promise<any> {
+  /**
+   * List all permissions
+   * GET /api/v1/role/permissions
+   */
+  async getPermissions(): Promise<ApiResponse<{ permissions: Permission[] }>> {
+    return apiClient.get('/role/permissions');
+  }
+
+  /**
+   * Create a new permission
+   * POST /api/v1/role/permissions
+   */
+  async createPermission(data: StorePermissionRequest): Promise<ApiResponse<{ permission: Permission }>> {
+    return apiClient.post('/role/permissions', data);
+  }
+
+  /**
+   * Update a permission
+   * PUT /api/v1/role/permissions/{id}
+   */
+  async updatePermission(permissionId: number, data: UpdatePermissionRequest): Promise<ApiResponse<{ permission: Permission }>> {
+    return apiClient.put(`/role/permissions/${permissionId}`, data);
+  }
+
+  /**
+   * Delete a permission
+   * DELETE /api/v1/role/permissions/{id}
+   */
+  async deletePermission(permissionId: number): Promise<ApiResponse<null>> {
     return apiClient.delete(`/role/permissions/${permissionId}`);
+  }
+
+  /**
+   * Assign a role to a user
+   * POST /api/v1/role/assign/role
+   */
+  async assignRoleToUser(data: AssignRoleRequest): Promise<ApiResponse<AssignRoleResponse>> {
+    return apiClient.post('/role/assign/role', data);
+  }
+
+  /**
+   * Assign a permission to a role
+   * POST /api/v1/role/role/permission
+   */
+  async assignPermissionToRole(data: AssignPermissionRequest): Promise<ApiResponse<AssignPermissionResponse>> {
+    return apiClient.post('/role/role/permission', data);
+  }
+
+  /**
+   * Revoke a permission from a role
+   * POST /api/v1/role/role/permission/revoke
+   */
+  async revokePermissionFromRole(data: RevokePermissionRequest): Promise<ApiResponse<AssignPermissionResponse>> {
+    return apiClient.post('/role/role/permission/revoke', data);
   }
 
   // OFFER CODES
@@ -410,7 +481,7 @@ class AdminService {
     return apiClient.get('/stats/all');
   }
 
-  async getAdminStats(): Promise<any> {
+  async getStatsAdmin(): Promise<any> {
     return apiClient.get('/stats/admin');
   }
 
@@ -449,6 +520,72 @@ class AdminService {
 
   async getAdminDashboardComprehensive(period: 'week' | 'month' | 'year' = 'month'): Promise<ApiResponse<AdminStatisticsData>> {
     return apiClient.get(`/admin/dashboard/comprehensive?period=${period}`);
+  }
+
+  // ── NEW ADMIN USER MANAGEMENT ENDPOINTS (from API docs) ──────────────
+
+  /**
+   * Get admin dashboard stats (user statistics for dashboard overview)
+   * GET /api/v1/admin/stats
+   */
+  async getAdminStats(): Promise<ApiResponse<AdminStatsResponse>> {
+    return apiClient.get('/admin/stats');
+  }
+
+  /**
+   * Get single user with full details
+   * GET /api/v1/admin/users/{id}
+   */
+  async getAdminUserDetail(userId: number): Promise<ApiResponse<{ user: AdminUserDetail }>> {
+    return apiClient.get(`/admin/users/${userId}`);
+  }
+
+  /**
+   * Update user (admin) - can update details and assign roles
+   * PUT /api/v1/admin/users/{id}
+   */
+  async updateAdminUser(userId: number, data: AdminUpdateUserRequest): Promise<ApiResponse<{ user: AdminUserDetail }>> {
+    return apiClient.put(`/admin/users/${userId}`, data);
+  }
+
+  /**
+   * Soft delete a user
+   * DELETE /api/v1/admin/users/{id}
+   */
+  async softDeleteUser(userId: number): Promise<ApiResponse<null>> {
+    return apiClient.delete(`/admin/users/${userId}`);
+  }
+
+  /**
+   * Permanently delete a user
+   * DELETE /api/v1/admin/users/{id}/force
+   */
+  async forceDeleteUser(userId: number): Promise<ApiResponse<null>> {
+    return apiClient.delete(`/admin/users/${userId}/force`);
+  }
+
+  /**
+   * Restore a soft-deleted user
+   * POST /api/v1/admin/users/{id}/restore
+   */
+  async restoreUser(userId: number): Promise<ApiResponse<RestoreUserResponse>> {
+    return apiClient.post(`/admin/users/${userId}/restore`);
+  }
+
+  /**
+   * Toggle user active status (activate/deactivate)
+   * POST /api/v1/admin/users/{id}/toggle-active
+   */
+  async toggleUserActive(userId: number): Promise<ApiResponse<ToggleActiveResponse>> {
+    return apiClient.post(`/admin/users/${userId}/toggle-active`);
+  }
+
+  /**
+   * Get user login history
+   * GET /api/v1/admin/users/{id}/login-history
+   */
+  async getUserLoginHistory(userId: number, page = 1, per_page = 20): Promise<ApiResponse<LoginHistoryResponse>> {
+    return apiClient.get(`/admin/users/${userId}/login-history?page=${page}&per_page=${per_page}`);
   }
 }
 

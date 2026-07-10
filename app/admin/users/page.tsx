@@ -18,6 +18,7 @@ import {
   Trash2,
   X,
   CheckCircle,
+  UserCog,
 } from 'lucide-react';
 import { FilterPanel, type FilterField } from '@/components/shared/FilterPanel';
 import { useFilters } from '@/hooks/useFilters';
@@ -27,6 +28,7 @@ import { Badge } from '@/components/shared/Badge';
 import { Input } from '@/components/shared/Input';
 import { Card } from '@/components/shared/Card';
 import { Modal } from '@/components/shared/Modal';
+import { AdminModal } from '@/components/admin/AdminModal';
 import { TableSkeleton } from '@/components/shared/SkeletonLoader';
 import { Spinner } from '@/components/shared/Spinner';
 import { useAuthStore } from '@/store/auth.store';
@@ -34,6 +36,17 @@ import { useAlert } from '@/hooks/useAlert';
 import { adminService } from '@/services/admin.service';
 import { formatDate } from '@/utils/format.utils';
 import type { AdminUser } from '@/types/api.types';
+import {
+  User,
+  Mail as MailIcon,
+  Bell as BellIcon,
+  Shield as ShieldIcon,
+  Activity as ActivityIcon,
+  Trash2 as TrashIcon,
+  CheckCircle as CheckCircleIcon,
+  X as XIcon,
+  Edit3 as EditIcon,
+} from 'lucide-react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -51,6 +64,30 @@ function getStatusVariant(
     inactive: 'warning',
   };
   return map[status ?? ''] ?? 'info';
+}
+
+/** Get role badge variant based on role name */
+function getRoleBadgeVariant(
+  role: string
+): 'success' | 'danger' | 'warning' | 'info' | 'default' {
+  const map: Record<string, 'success' | 'danger' | 'warning' | 'info' | 'default'> = {
+    admin: 'danger',
+    customer: 'success',
+    user: 'info',
+    agent: 'warning',
+  };
+  return map[role?.toLowerCase()] ?? 'default';
+}
+
+/** Get role badge custom color class */
+function getRoleBadgeColor(role: string): string {
+  const map: Record<string, string> = {
+    admin: 'bg-red-100 text-red-800 border-red-200',
+    customer: 'bg-green-100 text-green-800 border-green-200',
+    user: 'bg-blue-100 text-blue-800 border-blue-200',
+    agent: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+  };
+  return map[role?.toLowerCase()] || 'bg-gray-100 text-gray-800 border-gray-200';
 }
 
 // Filter configuration for FilterPanel component
@@ -195,6 +232,7 @@ export default function AdminUsersPage() {
     address?: string;
     bvn?: string;
     nin?: string;
+    roles?: string[];
   }>({
     first_name: '',
     last_name: '',
@@ -204,6 +242,7 @@ export default function AdminUsersPage() {
     address: '',
     bvn: '',
     nin: '',
+    roles: [],
   });
 
   const [notificationData, setNotificationData] = useState({
@@ -278,22 +317,35 @@ export default function AdminUsersPage() {
       const response = await adminService.getUsers(page, 10, filterParams);
 
       if (response?.data) {
-        const userData = Array.isArray(response.data)
-          ? response.data
-          : response.data.data ?? [];
-        setUsers(userData);
-        if (response.pagination) {
-          setTotalPages(response.pagination.last_page ?? 1);
-        }
+        // Response shape: { data: { users: [...], pagination: {...} } }
+        const apiData = response.data;
         
-        // Use stats from API response
-        if (response.stats) {
-          setTotalUsersCount(response.stats.total_users ?? 0);
-          setWalletBalance(response.stats.total_wallet_balance ?? 0);
+        if (apiData && typeof apiData === 'object') {
+          // Extract users array
+          const userData = Array.isArray(apiData)
+            ? apiData
+            : (apiData as any).users ?? [];
+          setUsers(userData);
+
+          // Extract pagination from nested data
+          const pagination = apiData.pagination;
+          if (pagination) {
+            setTotalPages(pagination.last_page ?? 1);
+            setTotalUsersCount(pagination.total ?? userData.length);
+          } else {
+            setTotalUsersCount(userData.length);
+          }
+
+          // Use stats if available
+          if (apiData.stats) {
+            setTotalUsersCount(apiData.stats.total_users ?? pagination?.total ?? userData.length);
+            setWalletBalance(apiData.stats.total_wallet_balance ?? 0);
+          } else {
+            setWalletBalance(0);
+          }
         } else {
-          // Fallback if stats not provided
-          setTotalUsersCount(response.pagination?.total ?? userData.length);
-          setWalletBalance(0);
+          setUsers([]);
+          setTotalUsersCount(0);
         }
       }
     } catch (error) {
@@ -309,7 +361,7 @@ export default function AdminUsersPage() {
       setLoadingRoles(true);
       const response = await adminService.getRoles();
 
-      let rolesData = [];
+      let rolesData: { id: number; name: string }[] = [];
       if (Array.isArray(response)) {
         rolesData = response;
       } else if (Array.isArray(response.data)) {
@@ -401,14 +453,18 @@ export default function AdminUsersPage() {
 
     try {
       setLoadingAction(true);
-      await adminService.changeUserRole(selectedUser.id, selectedRole);
-      showAlert('Role changed successfully', 'success');
+      // Use the new assignRoleToUser endpoint
+      await adminService.assignRoleToUser({
+        user_id: Number(selectedUser.id),
+        role: selectedRole,
+      });
+      showAlert('Role assigned successfully', 'success');
       setShowRoleModal(false);
       setSelectedRole('');
       fetchUsers(currentPage);
     } catch (error) {
       console.error('Error assigning role:', error);
-      showAlert('Failed to change user role', 'error');
+      showAlert('Failed to assign role', 'error');
     } finally {
       setLoadingAction(false);
     }
@@ -529,6 +585,7 @@ export default function AdminUsersPage() {
       address: typeof (user as any).address === 'string' ? (user as any).address : JSON.stringify((user as any).address || {}),
       bvn: user.bvn || '',
       nin: user.nin || '',
+      roles: user.roles || [],
     });
     setShowEditModal(true);
   };
@@ -538,7 +595,7 @@ export default function AdminUsersPage() {
 
     try {
       setLoadingAction(true);
-      const updatePayload = {
+      const updatePayload: any = {
         first_name: editFormData.first_name,
         last_name: editFormData.last_name,
         email: editFormData.email,
@@ -548,6 +605,12 @@ export default function AdminUsersPage() {
         ...(editFormData.bvn && { bvn: editFormData.bvn }),
         ...(editFormData.nin && { nin: editFormData.nin }),
       };
+
+      // Include roles if available
+      if (editFormData.roles && editFormData.roles.length > 0) {
+        updatePayload.roles = editFormData.roles;
+      }
+
       await adminService.updateUser(String(selectedUser.id), updatePayload);
       showAlert('User updated successfully', 'success');
       setShowEditModal(false);
@@ -818,6 +881,7 @@ export default function AdminUsersPage() {
                       'User',
                       'Email',
                       'Phone',
+                      'Roles',
                       'Status',
                       'Verified',
                       'Joined',
@@ -882,6 +946,24 @@ export default function AdminUsersPage() {
                       {/* Phone */}
                       <td className="px-6 py-4 text-sm text-[#6b7280]">
                         {u.phone_number ?? '—'}
+                      </td>
+
+                      {/* Roles */}
+                      <td className="px-6 py-4">
+                        <div className="flex flex-wrap gap-1.5">
+                          {u.roles && u.roles.length > 0 ? (
+                            u.roles.map((role: string) => (
+                              <span
+                                key={role}
+                                className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-bold ${getRoleBadgeColor(role)}`}
+                              >
+                                {role.charAt(0).toUpperCase() + role.slice(1)}
+                              </span>
+                            ))
+                          ) : (
+                            <span className="text-xs text-[#9ca3af]">—</span>
+                          )}
+                        </div>
                       </td>
 
                       {/* Status */}
@@ -972,7 +1054,27 @@ export default function AdminUsersPage() {
                     </Badge>
                   </div>
 
-                  <div className="mt-4 grid grid-cols-2 gap-4">
+                  <div className="mt-3">
+                    <p className="text-xs font-medium uppercase tracking-wide text-[#9ca3af] mb-1.5">
+                      Roles
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {u.roles && u.roles.length > 0 ? (
+                        u.roles.map((role: string) => (
+                          <span
+                            key={role}
+                            className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-bold ${getRoleBadgeColor(role)}`}
+                          >
+                            {role.charAt(0).toUpperCase() + role.slice(1)}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-xs text-[#9ca3af]">—</span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="mt-3 grid grid-cols-2 gap-4">
                     <div>
                       <p className="text-xs font-medium uppercase tracking-wide text-[#9ca3af]">
                         Phone
@@ -1073,11 +1175,13 @@ export default function AdminUsersPage() {
 
       {/* ── User Details Modal ───────────────────────────────────────────── */}
       {showDetails && userDetails && (
-        <Modal
+        <AdminModal
           isOpen={showDetails}
           onClose={() => setShowDetails(false)}
           title="User Details"
-          size="xl"
+          subtitle={`#${userDetails.id} · ${userDetails.first_name} ${userDetails.last_name}`}
+          icon={User}
+          size="full"
         >
           <div className="space-y-6 max-h-[80vh] overflow-y-auto pr-2">
             {/* Profile Photo */}
@@ -1414,15 +1518,17 @@ export default function AdminUsersPage() {
               </Button>
             </div>
           </div>
-        </Modal>
+        </AdminModal>
       )}
 
       {/* ── Send Notification Modal ──────────────────────────────────────── */}
       {showNotificationModal && selectedUser && (
-        <Modal
+        <AdminModal
           isOpen={showNotificationModal}
           onClose={() => setShowNotificationModal(false)}
           title="Send Notification"
+          subtitle={`To: ${selectedUser.first_name} ${selectedUser.last_name}`}
+          icon={BellIcon}
           size="md"
         >
           <div className="space-y-5">
@@ -1550,15 +1656,17 @@ export default function AdminUsersPage() {
               </Button>
             </div>
           </div>
-        </Modal>
+        </AdminModal>
       )}
 
       {/* ── Send Email Modal ──────────────────────────────────────────────── */}
       {showEmailModal && selectedUser && (
-        <Modal
+        <AdminModal
           isOpen={showEmailModal}
           onClose={() => setShowEmailModal(false)}
-          title="Send Email to User"
+          title="Send Email"
+          subtitle={`To: ${selectedUser.email}`}
+          icon={MailIcon}
           size="lg"
         >
           <div className="space-y-6 max-h-[75vh] overflow-y-auto">
@@ -1913,15 +2021,17 @@ export default function AdminUsersPage() {
               </Button>
             </div>
           </div>
-        </Modal>
+        </AdminModal>
       )}
 
       {/* ── Edit User Modal ──────────────────────────────────────────────── */}
       {showEditModal && selectedUser && (
-        <Modal
+        <AdminModal
           isOpen={showEditModal}
           onClose={() => setShowEditModal(false)}
           title="Edit User"
+          subtitle={selectedUser ? `${selectedUser.first_name} ${selectedUser.last_name}` : ''}
+          icon={EditIcon}
           size="lg"
         >
           <div className="space-y-5 max-h-[70vh] overflow-y-auto">
@@ -2061,6 +2171,58 @@ export default function AdminUsersPage() {
               />
             </div>
 
+            {/* Roles Assignment */}
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-[#111827]">
+                Assign Roles
+              </label>
+              <div className="space-y-2">
+                {loadingRoles ? (
+                  <div className="flex items-center justify-center rounded-lg border border-[#e5e7eb] bg-[#f8fafc] py-4">
+                    <Spinner />
+                    <span className="ml-2 text-sm text-[#6b7280]">Loading roles…</span>
+                  </div>
+                ) : roles.length === 0 ? (
+                  <p className="text-sm text-[#9ca3af]">No roles available</p>
+                ) : (
+                  roles.map((role: { id: number; name: string }) => (
+                    <label
+                      key={role.id}
+                      className="flex cursor-pointer items-center gap-3 rounded-lg border border-[#e5e7eb] p-3 transition hover:bg-[#f8fafc]"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={editFormData.roles?.includes(role.name) ?? false}
+                        onChange={(e) => {
+                          const currentRoles = editFormData.roles || [];
+                          if (e.target.checked) {
+                            setEditFormData({
+                              ...editFormData,
+                              roles: [...currentRoles, role.name],
+                            });
+                          } else {
+                            setEditFormData({
+                              ...editFormData,
+                              roles: currentRoles.filter((r) => r !== role.name),
+                            });
+                          }
+                        }}
+                        className="h-4 w-4 rounded border-[#d1d5db] text-[#c9a84c] focus:ring-[#c9a84c]"
+                      />
+                      <span
+                        className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-bold ${getRoleBadgeColor(role.name)}`}
+                      >
+                        {role.name.charAt(0).toUpperCase() + role.name.slice(1)}
+                      </span>
+                    </label>
+                  ))
+                )}
+              </div>
+              <p className="mt-1 text-xs text-[#6b7280]">
+                Select one or more roles to assign to this user
+              </p>
+            </div>
+
             {/* Actions */}
             <div className="flex gap-3 pt-4">
               <Button
@@ -2089,15 +2251,17 @@ export default function AdminUsersPage() {
               </Button>
             </div>
           </div>
-        </Modal>
+        </AdminModal>
       )}
 
       {/* ── Assign Role Modal ────────────────────────────────────────────── */}
       {showRoleModal && selectedUser && (
-        <Modal
+        <AdminModal
           isOpen={showRoleModal}
           onClose={() => setShowRoleModal(false)}
-          title="Assign Role to User"
+          title="Assign Role"
+          subtitle={`${selectedUser.first_name} ${selectedUser.last_name}`}
+          icon={ShieldIcon}
           size="md"
         >
           <div className="space-y-5">
@@ -2134,7 +2298,7 @@ export default function AdminUsersPage() {
                 >
                   <option value="">Select a role…</option>
                   {roles.map((role) => (
-                    <option key={role.id} value={role.id}>
+                    <option key={role.id} value={role.name}>
                       {role.name.charAt(0).toUpperCase() + role.name.slice(1)}
                     </option>
                   ))}
@@ -2170,15 +2334,17 @@ export default function AdminUsersPage() {
               </Button>
             </div>
           </div>
-        </Modal>
+        </AdminModal>
       )}
 
       {/* ── Transactions Modal ───────────────────────────────────────────── */}
       {showTransactionsModal && selectedUser && (
-        <Modal
+        <AdminModal
           isOpen={showTransactionsModal}
           onClose={() => setShowTransactionsModal(false)}
-          title={`Transactions - ${selectedUser.first_name} ${selectedUser.last_name}`}
+          title="User Transactions"
+          subtitle={`${selectedUser.first_name} ${selectedUser.last_name}`}
+          icon={ActivityIcon}
           size="lg"
         >
           <div className="space-y-4">
@@ -2241,15 +2407,17 @@ export default function AdminUsersPage() {
               Close
             </Button>
           </div>
-        </Modal>
+        </AdminModal>
       )}
 
       {/* ── Bulk Action Modal ────────────────────────────────────────────── */}
       {showBulkActionModal && (
-        <Modal
+        <AdminModal
           isOpen={showBulkActionModal}
           onClose={() => setShowBulkActionModal(false)}
           title="Bulk User Action"
+          subtitle={`${selectedUsers.size} user${selectedUsers.size !== 1 ? 's' : ''} selected`}
+          icon={CheckCircleIcon}
           size="md"
         >
           <div className="space-y-5">
@@ -2344,7 +2512,7 @@ export default function AdminUsersPage() {
               </Button>
             </div>
           </div>
-        </Modal>
+        </AdminModal>
       )}
     </div>
   );

@@ -826,7 +826,7 @@ export default function CataloguePage() {
               <div className="p-6 text-center">
                 <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-red-100 bg-red-50">
                   <AlertCircle size={20} className="text-red-500" />
-                </div>
+                </div> 
                 <h3 className="text-base font-black text-gray-900">Delete this item?</h3>
                 <p className="mt-1.5 text-sm text-gray-400">
                   "{deleteTarget.name}" will be permanently removed from your catalogue. This can't be undone.
