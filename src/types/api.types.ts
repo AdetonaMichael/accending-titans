@@ -4,6 +4,7 @@
  */
 
 import type { MapleradCustomerData } from './tier-upgrade.types';
+import type { UserSubscriptionInfo } from './subscription.types';
 
 // ============= Generic Response Wrapper =============
 export interface ApiResponse<T = any> {
@@ -42,6 +43,7 @@ export interface PaginatedResponse<T> {
 // ============= User & Auth Types =============
 export interface User {
   id: number;
+  membership_id: string | null;
   first_name: string;
   last_name: string;
   phone_number: string;
@@ -50,6 +52,10 @@ export interface User {
   phone_verified_at: string | null;
   isPhoneVerified: boolean;
   isEmailVerified: boolean;
+  is_titan_member: boolean;
+  current_rank: string | null;
+  total_subscription_months: number;
+  wallet_balance: number;
   profile_complete_status: boolean;
   profile_photo_url: string | null;
   created_at: string;
@@ -57,6 +63,7 @@ export interface User {
   permissions: string[];
   balance: number;
   formatted_balance: string;
+  subscription: UserSubscriptionInfo | null;
   mapleradCustomer?: MapleradCustomerData | null;
 }
 

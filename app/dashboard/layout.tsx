@@ -17,6 +17,11 @@ import {
   X,
   Bell,
   ChevronDown,
+  Wallet,
+  ShoppingBag,
+  Star,
+  Upload,
+  TrendingUp,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -26,6 +31,7 @@ import { useUIStore } from '@/store/ui.store';
 import { Topbar } from '@/components/shared/Topbar';
 import { AuthProtected } from '@/components/AuthProtected';
 import { NotificationBell } from '@/components/dashboard/NotificationBell';
+import { RoleSwitcher } from '@/components/shared/RoleSwitcher';
 
 const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const pathname = usePathname();
@@ -80,10 +86,14 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
   const navItems = [
     { href: '/dashboard', label: 'Dashboard', icon: Home },
-    { href: '/dashboard/catalogue', label: 'Business Catalogue', icon: FileText },
-    { href: '/dashboard/messages', label: 'Messages', icon: Send },
+    { href: '/dashboard/catalogue', label: 'My Portfolio', icon: ShoppingBag },
+    { href: '/dashboard/subscriptions', label: 'Subscription', icon: Star },
+    { href: '/dashboard/wallet', label: 'Wallet', icon: Wallet },
     { href: '/dashboard/rewards', label: 'Birthday Rewards', icon: Gift },
+    { href: '/dashboard/content', label: 'Submit Content', icon: Upload },
+    { href: '/dashboard/rankings', label: 'Rankings', icon: TrendingUp },
     { href: '/dashboard/referral', label: 'Referral Program', icon: Users },
+    { href: '/dashboard/messages', label: 'Messages', icon: Send },
     { href: '/dashboard/opportunities', label: 'Opportunities', icon: Award },
   ];
 
@@ -203,6 +213,9 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
             </div>
 
             <div className="flex items-center gap-3">
+              {/* Role Switcher - visible for admins/multi-role users */}
+              <RoleSwitcher />
+
               {/* Notification Bell */}
               <NotificationBell className="mr-2" />
 

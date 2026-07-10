@@ -35,10 +35,15 @@ export const RoleSwitcher: React.FC = () => {
     }
   }, [isMounted]);
 
-  // Only show if user has multiple roles
-  if (!user || !user.roles || user.roles.length <= 1) {
+  // Show if user has multiple roles OR if user is admin (can switch to user view)
+  if (!user || !user.roles || user.roles.length === 0) {
     return null;
   }
+
+  // Get displayable roles: actual roles + admin override to see user view
+  const displayRoles = user.roles.includes('admin') && user.roles.length === 1
+    ? [...user.roles, 'user'] // Admin with single role can see "user" view too
+    : user.roles;
 
   const getRoleColor = (role: string) => {
     switch (role.toLowerCase()) {
@@ -74,8 +79,8 @@ export const RoleSwitcher: React.FC = () => {
   };
 
   const handleRoleSwitch = (role: string) => {
-    // Verify user actually has this role (security check)
-    if (!user.roles.includes(role)) {
+    // Allow admins to switch to "user" view even without the user role
+    if (!user.roles.includes(role) && !(user.roles.includes('admin') && role === 'user')) {
       console.error(`User does not have role: ${role}`);
       return;
     }
@@ -116,7 +121,7 @@ export const RoleSwitcher: React.FC = () => {
           </div>
 
           <div className="space-y-1 p-2">
-            {user.roles.map((role) => {
+            {displayRoles.map((role) => {
               const isActive = activeRole === role;
               return (
                 <button

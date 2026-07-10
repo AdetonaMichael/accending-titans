@@ -30,6 +30,8 @@ import {
   Megaphone,
   Shield,
   KeyRound,
+  Store,
+  Star,
 } from 'lucide-react';
 import Link from 'next/link';
 import { clsx } from 'clsx';
@@ -61,8 +63,22 @@ const navGroups: NavGroup[] = [
       { label: 'Users', href: '/admin/users', icon: Users },
       { label: 'Roles', href: '/admin/roles', icon: Shield },
       { label: 'Permissions', href: '/admin/permissions', icon: KeyRound },
+      { label: 'Portfolios', href: '/admin/portfolios', icon: Store },
       { label: 'Transactions', href: '/admin/transactions', icon: Receipt },
       { label: 'Services', href: '/admin/services', icon: Network },
+    ],
+  },
+  {
+    label: 'Subscriptions',
+    items: [
+      { label: 'Subscriptions', href: '/admin/subscriptions', icon: Star },
+    ],
+  },
+  {
+    label: 'Content & Rewards',
+    items: [
+      { label: 'Content Review', href: '/admin/content', icon: FileText },
+      { label: 'Birthdays', href: '/admin/birthdays', icon: Gift },
     ],
   },
   {

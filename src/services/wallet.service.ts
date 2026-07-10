@@ -19,6 +19,11 @@ class WalletService {
   async getTransactions(page = 1, per_page = 20): Promise<ApiResponse<PaginatedResponse<WalletTransaction>>> {
     return apiClient.get(`/wallet/transactions?page=${page}&per_page=${per_page}`);
   }
+
+  /** POST /wallet/withdraw */
+  async withdraw(data: { amount: number; bank_name?: string; account_number?: string; account_name?: string }): Promise<ApiResponse<{ withdrawal: any }>> {
+    return apiClient.post('/wallet/withdraw', data);
+  }
 }
 
 class PaymentService {
