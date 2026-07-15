@@ -86,7 +86,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
   const navItems = [
     { href: '/dashboard', label: 'Dashboard', icon: Home },
-    { href: '/dashboard/catalogue', label: 'My Portfolio', icon: ShoppingBag },
+    { href: '/dashboard/catalogue', label: 'Business Catalogueo', icon: ShoppingBag },
     { href: '/dashboard/subscriptions', label: 'Subscription', icon: Star },
     { href: '/dashboard/wallet', label: 'Wallet', icon: Wallet },
     { href: '/dashboard/rewards', label: 'Birthday Rewards', icon: Gift },

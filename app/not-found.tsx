@@ -6,84 +6,86 @@ import { ErrorPageProvider } from '@/contexts/ErrorPageContext';
 
 function NotFoundContent() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
-      <div className="max-w-md w-full">
-        {/* Icon */}
-        <div className="flex justify-center mb-8">
-          <div className="relative">
-            <div className="absolute inset-0 bg-yellow-500/20 rounded-full blur-3xl opacity-50 animate-pulse" />
-            <div className="relative flex items-center justify-center h-24 w-24 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 border-2 border-yellow-500/50 shadow-2xl shadow-yellow-500/20">
-              <AlertCircle className="h-12 w-12 text-yellow-500" />
+    <div className="relative min-h-screen bg-white flex items-center justify-center px-4 py-12 overflow-hidden">
+      <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[280px] rounded-full bg-[#C9A84C]/[0.06] blur-3xl" />
+
+      <div className="relative w-full max-w-[420px]">
+        <div className="rounded-2xl bg-white border border-gray-100 shadow-[0_2px_32px_rgba(0,0,0,0.07)] overflow-hidden">
+          <div className="h-[3px] bg-gradient-to-r from-[#C9A84C]/35 via-[#C9A84C] to-[#C9A84C]/35" />
+
+          <div className="px-8 py-8">
+            <div className="flex justify-center mb-6">
+              <div className="w-14 h-14 rounded-xl border border-[#C9A84C]/25 bg-[#FDFAF3] flex items-center justify-center">
+                <AlertCircle className="h-6 w-6 text-[#C9A84C]" />
+              </div>
+            </div>
+
+            <div className="mb-7 text-center">
+              <h1 className="text-[40px] font-bold tracking-tight text-gray-900 leading-none mb-2">
+                404
+              </h1>
+              <h2 className="text-[21px] font-semibold tracking-tight text-gray-900">
+                Page not found
+              </h2>
+              <p className="mt-1.5 text-sm text-gray-500 leading-relaxed">
+                The page you are looking for does not exist or may have been moved.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-gray-200 bg-gray-50 py-2.5 px-3.5 text-center">
+              <p className="text-[13px] font-medium text-gray-600">
+                This resource could not be found
+              </p>
+            </div>
+
+            <div className="my-5 flex items-center gap-3">
+              <div className="h-px flex-1 bg-gray-100" />
+              <span className="text-[11px] font-medium uppercase tracking-widest text-gray-300">
+                try this instead
+              </span>
+              <div className="h-px flex-1 bg-gray-100" />
+            </div>
+
+            <ul className="text-sm text-gray-600 space-y-2 mb-2">
+              <li className="flex items-start gap-2">
+                <span className="text-[#C9A84C] font-bold">-</span>
+                <span>Go back to the home page</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-[#C9A84C] font-bold">-</span>
+                <span>Check the URL for typos</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-[#C9A84C] font-bold">-</span>
+                <span>Contact support for help</span>
+              </li>
+            </ul>
+
+            <div className="flex gap-2.5 mt-6">
+              <Link
+                href="/"
+                className="flex-1 flex items-center justify-center gap-2 rounded-xl py-[11px] text-sm font-semibold text-white bg-[#C9A84C] shadow-sm shadow-[#C9A84C]/25 hover:bg-[#B8962E] hover:shadow-md active:scale-[0.99] transition-all"
+              >
+                <Home size={14} />
+                Go Home
+              </Link>
+
+              <button
+                onClick={() => window.history.back()}
+                className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white py-[11px] text-sm font-medium text-gray-600 transition-colors hover:border-gray-300 hover:bg-gray-50"
+              >
+                <RotateCw size={14} />
+                Go Back
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Content */}
-        <div className="text-center space-y-4">
-          <h1 className="text-5xl font-bold text-white mb-2">
-            404
-          </h1>
-          
-          <h2 className="text-2xl font-semibold text-slate-100">
-            Page Not Found
-          </h2>
-          
-          <p className="text-slate-300 text-base leading-relaxed">
-            The page you're looking for doesn't exist or may have been moved to a different location.
-          </p>
-
-          {/* Status Indicator */}
-          <div className="mt-6 p-4 bg-slate-700/50 border border-slate-600 rounded-lg backdrop-blur">
-            <p className="text-sm font-medium text-slate-300">
-              This resource could not be found
-            </p>
-          </div>
-        </div>
-
-        {/* Helpful Links */}
-        <div className="mt-8 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-          <p className="text-sm font-semibold text-blue-300 mb-3">Here are some helpful links:</p>
-          <ul className="text-sm text-slate-300 space-y-2">
-            <li className="flex items-start gap-2">
-              <span className="text-blue-400 font-bold">•</span>
-              <span>Go back to the home page</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-blue-400 font-bold">•</span>
-              <span>Check the URL for typos</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-blue-400 font-bold">•</span>
-              <span>Contact support for help</span>
-            </li>
-          </ul>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex gap-3 mt-8">
-          <Link
-            href="/"
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-lg font-semibold transition-all shadow-lg shadow-red-500/30 hover:shadow-red-500/50"
-          >
-            <Home className="h-5 w-5" />
-            Go Home
-          </Link>
-          
-          <button
-            onClick={() => window.history.back()}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-colors"
-          >
-            <RotateCw className="h-5 w-5" />
-            Go Back
-          </button>
-        </div>
-
-        {/* Support Link */}
-        <p className="text-center text-xs text-slate-400 mt-8">
+        <p className="mt-5 text-center text-xs text-gray-400">
           Need help?{' '}
-          <a 
-            href="mailto:support@Acceding Titans.com" 
-            className="text-red-400 font-semibold hover:text-red-300 transition-colors"
+          <a
+            href="mailto:support@yourapp.com"
+            className="font-semibold text-[#C9A84C] hover:text-[#B8962E] transition-colors"
           >
             Contact Support
           </a>

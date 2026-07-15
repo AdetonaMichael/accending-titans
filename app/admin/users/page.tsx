@@ -364,9 +364,9 @@ export default function AdminUsersPage() {
       let rolesData: { id: number; name: string }[] = [];
       if (Array.isArray(response)) {
         rolesData = response;
+      } else if (response?.data?.roles && Array.isArray(response.data.roles)) {
+        rolesData = response.data.roles;
       } else if (Array.isArray(response.data)) {
-        rolesData = response.data;
-      } else if (response?.data && Array.isArray(response.data)) {
         rolesData = response.data;
       }
 

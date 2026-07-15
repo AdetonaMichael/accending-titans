@@ -1,10 +1,21 @@
 import { apiClient } from './api-client';
-import type { ApiResponse, PaginatedResponse } from '@/types/api.types';
+import type { ApiResponse } from '@/types/api.types';
 import type {
   SubscriptionPlan,
   ActiveSubscription,
-  SubscribeRequest,
-  SubscriptionHistory,
+  PlansResponse,
+  InitializeSubscriptionResponse,
+  SubscriptionInitializeRequest,
+  VerifyAndCreateResponse,
+  VerifyAndCreateRequest,
+  MySubscriptionResponse,
+  HistoryResponse,
+  EnableDisableResponse,
+  EnableDisableRequest,
+  ManageLinkResponse,
+  RemainingHoursResponse,
+  CancelAutoRenewResponse,
+  PaginationInfo,
   AdminSubscriptionPlan,
   CreatePlanRequest,
   UpdatePlanRequest,
@@ -12,58 +23,204 @@ import type {
 } from '@/types/subscription.types';
 
 class SubscriptionService {
-  // ── User endpoints ────────────────────────────────────────────────
+  /**
+   * Normalize a plan's features field from any shape to string[].
+   * The backend may return features as a JSON-encoded string, a plain string,
+   * an array, null, or even a double-encoded string. This ensures it is
+   * always a proper string[] before components consume it.
+   */
+  private normalizeFeatures(features: unknown): string[] {
+    if (!features) return [];
 
-  /** GET /subscriptions/plans */
-  async getPlans(): Promise<ApiResponse<{ plans: SubscriptionPlan[] }>> {
-    return apiClient.get('/subscriptions/plans');
+    // Already an array — verify elements are strings
+    if (Array.isArray(features)) {
+      return features.filter(
+        (f): f is string => typeof f === 'string'
+      );
+    }
+
+    // String — attempt JSON parse to handle double-encoded values
+    if (typeof features === 'string') {
+      try {
+        const parsed = JSON.parse(features);
+        return this.normalizeFeatures(parsed);
+      } catch {
+        // Not valid JSON — treat as a single-feature string
+        return features.trim() ? [features.trim()] : [];
+      }
+    }
+
+    return [];
   }
 
-  /** POST /subscriptions/subscribe */
-  async subscribe(data: SubscribeRequest): Promise<ApiResponse<{ subscription: ActiveSubscription }>> {
-    return apiClient.post('/subscriptions/subscribe', data);
+  /** Normalise a single SubscriptionPlan so `features` is always string[] */
+  private normalizePlan(plan: any): SubscriptionPlan {
+    return {
+      ...plan,
+      features: this.normalizeFeatures(plan?.features),
+    };
   }
 
-  /** GET /subscriptions/my-subscription */
-  async getMySubscription(): Promise<ApiResponse<{ subscription: ActiveSubscription | null }>> {
-    return apiClient.get('/subscriptions/my-subscription');
+  // ── Public (Unauthenticated) Endpoints ──────────────────────────
+
+  /** GET /v1/subscriptions/plans — List all active subscription plans */
+  async getPlans(): Promise<ApiResponse<PlansResponse>> {
+    const res = await apiClient.get<PlansResponse>('/subscriptions/plans');
+    if (res.success && res.data?.plans) {
+      res.data.plans = res.data.plans.map((plan) => this.normalizePlan(plan));
+    }
+    return res;
   }
 
-  /** GET /subscriptions/history */
-  async getHistory(page = 1, per_page = 20): Promise<ApiResponse<PaginatedResponse<SubscriptionHistory>>> {
-    return apiClient.get(`/subscriptions/history?page=${page}&per_page=${per_page}`);
+  // ── Authenticated User Endpoints ────────────────────────────────
+
+  /** POST /v1/subscriptions/initialize — Initialize a Paystack transaction for a subscription plan */
+  async initializePayment(
+    data: SubscriptionInitializeRequest
+  ): Promise<ApiResponse<InitializeSubscriptionResponse>> {
+    return apiClient.post<InitializeSubscriptionResponse>(
+      '/subscriptions/initialize',
+      data
+    );
   }
 
-  /** POST /subscriptions/cancel-auto-renew */
-  async cancelAutoRenew(): Promise<ApiResponse<{ auto_renew: boolean }>> {
-    return apiClient.post('/subscriptions/cancel-auto-renew');
+  /** POST /v1/subscriptions/verify-and-create — Verify payment and create Paystack subscription */
+  async verifyAndCreate(
+    data: VerifyAndCreateRequest
+  ): Promise<ApiResponse<VerifyAndCreateResponse>> {
+    return apiClient.post<VerifyAndCreateResponse>(
+      '/subscriptions/verify-and-create',
+      data
+    );
   }
 
-  /** GET /subscriptions/remaining-hours */
-  async getRemainingHours(): Promise<ApiResponse<{ daily_hours: { remaining_minutes: number; limit_minutes: number; used_minutes: number } }>> {
-    return apiClient.get('/subscriptions/remaining-hours');
+  /** GET /v1/subscriptions/my-subscription — Get current user's active subscription */
+  async getMySubscription(): Promise<ApiResponse<MySubscriptionResponse>> {
+    return apiClient.get<MySubscriptionResponse>(
+      '/subscriptions/my-subscription'
+    );
   }
 
-  // ── Admin endpoints ───────────────────────────────────────────────
-
-  /** GET /admin/subscriptions */
-  async adminGetAll(page = 1, per_page = 20): Promise<ApiResponse<PaginatedResponse<AdminSubscriptionList>>> {
-    return apiClient.get(`/admin/subscriptions?page=${page}&per_page=${per_page}`);
+  /** GET /v1/subscriptions/history — Get subscription history with pagination */
+  async getHistory(
+    page = 1,
+    per_page = 20
+  ): Promise<ApiResponse<HistoryResponse>> {
+    return apiClient.get<HistoryResponse>(
+      `/subscriptions/history?page=${page}&per_page=${per_page}`
+    );
   }
 
-  /** POST /admin/subscriptions/plans */
-  async adminCreatePlan(data: CreatePlanRequest): Promise<ApiResponse<{ plan: AdminSubscriptionPlan }>> {
+  /** POST /v1/subscriptions/paystack/enable — Enable a previously disabled subscription */
+  async enableSubscription(
+    data: EnableDisableRequest
+  ): Promise<ApiResponse<EnableDisableResponse>> {
+    return apiClient.post<EnableDisableResponse>(
+      '/subscriptions/paystack/enable',
+      data
+    );
+  }
+
+  /** POST /v1/subscriptions/paystack/disable — Disable an active subscription */
+  async disableSubscription(
+    data: EnableDisableRequest
+  ): Promise<ApiResponse<EnableDisableResponse>> {
+    return apiClient.post<EnableDisableResponse>(
+      '/subscriptions/paystack/disable',
+      data
+    );
+  }
+
+  /** GET /v1/subscriptions/paystack/{code}/manage/link — Generate card update link */
+  async getCardUpdateLink(
+    code: string
+  ): Promise<ApiResponse<ManageLinkResponse>> {
+    return apiClient.get<ManageLinkResponse>(
+      `/subscriptions/paystack/${code}/manage/link`
+    );
+  }
+
+  /** POST /v1/subscriptions/paystack/{code}/manage/email — Send card update email */
+  async sendCardUpdateEmail(code: string): Promise<ApiResponse<null>> {
+    return apiClient.post<null>(
+      `/subscriptions/paystack/${code}/manage/email`
+    );
+  }
+
+  /** POST /v1/subscriptions/cancel-auto-renew — Cancel auto-renewal */
+  async cancelAutoRenew(): Promise<ApiResponse<CancelAutoRenewResponse>> {
+    return apiClient.post<CancelAutoRenewResponse>(
+      '/subscriptions/cancel-auto-renew'
+    );
+  }
+
+  /** GET /v1/subscriptions/remaining-hours — Get remaining hours for today */
+  async getRemainingHours(): Promise<ApiResponse<RemainingHoursResponse>> {
+    return apiClient.get<RemainingHoursResponse>(
+      '/subscriptions/remaining-hours'
+    );
+  }
+
+  // ── Admin Endpoints ─────────────────────────────────────────────
+
+  /** GET /v1/admin/subscriptions — List all subscriptions */
+  async adminGetAll(
+    page = 1,
+    per_page = 20
+  ): Promise<
+    ApiResponse<{
+      subscriptions: AdminSubscriptionList[];
+      pagination: PaginationInfo;
+    }>
+  > {
+    return apiClient.get(
+      `/admin/subscriptions?page=${page}&per_page=${per_page}`
+    );
+  }
+
+  /** POST /v1/admin/subscriptions/plans — Create a new subscription plan */
+  async adminCreatePlan(
+    data: CreatePlanRequest
+  ): Promise<ApiResponse<{ plan: AdminSubscriptionPlan }>> {
     return apiClient.post('/admin/subscriptions/plans', data);
   }
 
-  /** PUT /admin/subscriptions/plans/{id} */
-  async adminUpdatePlan(id: number, data: UpdatePlanRequest): Promise<ApiResponse<{ plan: AdminSubscriptionPlan }>> {
+  /** PUT /v1/admin/subscriptions/plans/{id} — Update a subscription plan */
+  async adminUpdatePlan(
+    id: number,
+    data: UpdatePlanRequest
+  ): Promise<ApiResponse<{ plan: AdminSubscriptionPlan }>> {
     return apiClient.put(`/admin/subscriptions/plans/${id}`, data);
   }
 
-  /** DELETE /admin/subscriptions/plans/{id} */
+  /** DELETE /v1/admin/subscriptions/plans/{id} — Deactivate a subscription plan */
   async adminDeletePlan(id: number): Promise<ApiResponse<null>> {
     return apiClient.delete(`/admin/subscriptions/plans/${id}`);
+  }
+
+  // ── Admin: Paystack Sync Endpoints ──────────────────────────────
+
+  /** GET /v1/admin/subscriptions/paystack/plans — List plans from Paystack */
+  async adminGetPaystackPlans(): Promise<
+    ApiResponse<{ plans: SubscriptionPlan[] }>
+  > {
+    return apiClient.get('/admin/subscriptions/paystack/plans');
+  }
+
+  /** GET /v1/admin/subscriptions/paystack/subscriptions — List subscriptions from Paystack */
+  async adminGetPaystackSubscriptions(): Promise<
+    ApiResponse<{ subscriptions: any[] }>
+  > {
+    return apiClient.get('/admin/subscriptions/paystack/subscriptions');
+  }
+
+  /** GET /v1/admin/subscriptions/paystack/subscriptions/{code} — Fetch single subscription from Paystack */
+  async adminGetPaystackSubscription(
+    code: string
+  ): Promise<ApiResponse<{ subscription: any }>> {
+    return apiClient.get(
+      `/admin/subscriptions/paystack/subscriptions/${code}`
+    );
   }
 }
 

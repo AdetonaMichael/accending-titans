@@ -14,9 +14,8 @@ function ErrorContent({
 }) {
   const router = useRouter();
 
-  // Detect connection errors and redirect to offline page
   useEffect(() => {
-    const isConnectionError = 
+    const isConnectionError =
       error?.message?.includes('Connection failed') ||
       error?.message?.includes('connection') ||
       error?.message?.includes('Network') ||
@@ -28,90 +27,97 @@ function ErrorContent({
   }, [error, router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
-      <div className="max-w-md w-full">
-        {/* Icon */}
-        <div className="flex justify-center mb-8">
-          <div className="relative">
-            <div className="absolute inset-0 bg-red-500/20 rounded-full blur-3xl opacity-50 animate-pulse" />
-            <div className="relative flex items-center justify-center h-24 w-24 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 border-2 border-red-500/50 shadow-2xl shadow-red-500/20">
-              <AlertCircle className="h-12 w-12 text-red-500" />
+    <div className="relative min-h-screen bg-white flex items-center justify-center px-4 py-12 overflow-hidden">
+      <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[280px] rounded-full bg-[#C9A84C]/[0.06] blur-3xl" />
+
+      <div className="relative w-full max-w-[420px]">
+        <div className="rounded-2xl bg-white border border-gray-100 shadow-[0_2px_32px_rgba(0,0,0,0.07)] overflow-hidden">
+          <div className="h-[3px] bg-gradient-to-r from-[#C9A84C]/35 via-[#C9A84C] to-[#C9A84C]/35" />
+
+          <div className="px-8 py-8">
+            <div className="flex justify-center mb-6">
+              <div className="w-14 h-14 rounded-xl border border-[#C9A84C]/25 bg-[#FDFAF3] flex items-center justify-center">
+                <AlertCircle className="h-6 w-6 text-[#C9A84C]" />
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* Content */}
-        <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-white">
-            Oops! Something Went Wrong
-          </h1>
-          
-          <p className="text-slate-300 text-base leading-relaxed">
-            We encountered an unexpected error while processing your request. Our team has been notified.
-          </p>
+            <div className="mb-7 text-center">
+              <h1 className="text-[21px] font-semibold tracking-tight text-gray-900">
+                Something went wrong
+              </h1>
+              <p className="mt-1.5 text-sm text-gray-500 leading-relaxed">
+                We encountered an unexpected error while processing your request. Our team has been notified.
+              </p>
+            </div>
 
-          {/* Error Details (Development Only) */}
-          {process.env.NODE_ENV === 'development' && (
-            <div className="mt-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-left">
-              <p className="text-xs font-semibold text-red-300 mb-2">Error Details:</p>
-              <p className="text-xs font-mono text-slate-300 break-all mb-2">{error.message}</p>
-              {error.digest && (
-                <p className="text-xs text-slate-400">
-                  <span className="text-slate-500 font-medium">Digest:</span> {error.digest}
+            {process.env.NODE_ENV === 'development' && (
+              <div className="mb-4 rounded-xl border border-gray-200 bg-gray-50 p-4 text-left">
+                <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-2">
+                  Error details
                 </p>
-              )}
-            </div>
-          )}
+                <p className="text-xs font-mono text-gray-600 break-all mb-2">
+                  {error.message}
+                </p>
+                {error.digest && (
+                  <p className="text-xs text-gray-500">
+                    <span className="font-medium text-gray-600">Digest:</span> {error.digest}
+                  </p>
+                )}
+              </div>
+            )}
 
-          {/* Helpful Info */}
-          <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-            <p className="text-sm font-semibold text-blue-300 mb-3">What you can try:</p>
-            <ul className="text-sm text-slate-300 space-y-2">
+            <div className="my-5 flex items-center gap-3">
+              <div className="h-px flex-1 bg-gray-100" />
+              <span className="text-[11px] font-medium uppercase tracking-widest text-gray-300">
+                what you can try
+              </span>
+              <div className="h-px flex-1 bg-gray-100" />
+            </div>
+
+            <ul className="text-sm text-gray-600 space-y-2 mb-2">
               <li className="flex items-start gap-2">
-                <span className="text-blue-400 font-bold">•</span>
+                <span className="text-[#C9A84C] font-bold">-</span>
                 <span>Refresh the page</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-blue-400 font-bold">•</span>
+                <span className="text-[#C9A84C] font-bold">-</span>
                 <span>Clear your browser cache</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-blue-400 font-bold">•</span>
+                <span className="text-[#C9A84C] font-bold">-</span>
                 <span>Try again in a few moments</span>
               </li>
             </ul>
+
+            <div className="flex gap-2.5 mt-6">
+              <button
+                onClick={() => reset()}
+                className="flex-1 flex items-center justify-center gap-2 rounded-xl py-[11px] text-sm font-semibold text-white bg-[#C9A84C] shadow-sm shadow-[#C9A84C]/25 hover:bg-[#B8962E] hover:shadow-md active:scale-[0.99] transition-all"
+              >
+                <RotateCw size={14} />
+                Try again
+              </button>
+
+              <button
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    window.location.href = '/';
+                  }
+                }}
+                className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white py-[11px] text-sm font-medium text-gray-600 transition-colors hover:border-gray-300 hover:bg-gray-50"
+              >
+                <Home size={14} />
+                Home
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-3 mt-8">
-          <button
-            onClick={() => reset()}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-lg font-semibold transition-all shadow-lg shadow-red-500/30 hover:shadow-red-500/50"
-          >
-            <RotateCw className="h-5 w-5" />
-            Try Again
-          </button>
-          
-          <button
-            onClick={() => {
-              if (typeof window !== 'undefined') {
-                window.location.href = '/';
-              }
-            }}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-colors"
-          >
-            <Home className="h-5 w-5" />
-            Home
-          </button>
-        </div>
-
-        {/* Support Link */}
-        <p className="text-center text-xs text-slate-400 mt-8">
+        <p className="mt-5 text-center text-xs text-gray-400">
           Experiencing persistent issues?{' '}
-          <a 
-            href="mailto:support@Acceding Titans.com" 
-            className="text-red-400 font-semibold hover:text-red-300 transition-colors"
+          <a
+            href="mailto:support@yourapp.com"
+            className="font-semibold text-[#C9A84C] hover:text-[#B8962E] transition-colors"
           >
             Contact Support
           </a>

@@ -23,3 +23,4 @@ export { useAirtimeToCash } from './useAirtimeToCash';
 export { useLedger } from './useLedger';
 export { useVtuRecipients } from './useVtuRecipients';
 export { usePermissionGuard, getRoleBadgeVariant, getRoleBadgeColor } from './usePermissionGuard';
+export { useSubscription } from './useSubscription';

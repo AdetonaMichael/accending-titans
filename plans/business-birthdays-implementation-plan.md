@@ -29,7 +29,7 @@ This plan covers the full implementation of the Business & Birthdays module base
 | **Subscription Plans** (browse & subscribe) | High | Medium |
 | **My Subscription** (active sub, remaining hours) | High | Medium |
 | **Session Tracking** (start/end/remaining hours) | High | Medium |
-| **Portfolio Management** (my portfolio CRUD) | High | High |
+| **Portfolio Management** (Business Catalogueo CRUD) | High | High |
 | **Browse Portfolios** (public catalogue) | Medium | Medium |
 | **Birthday Rewards** (eligibility/reward display) | High | Medium |
 | **Upcoming Birthdays** (public list) | Medium | Low |
@@ -453,7 +453,7 @@ The existing rewards page seems to be for a different reward system. Need to rew
 Update `navItems` to include new links:
 ```
 Dashboard (Home)
-My Portfolio / Catalogue
+Business Catalogueo / Catalogue
 Subscription Plans
 Birthday Rewards
 Wallet

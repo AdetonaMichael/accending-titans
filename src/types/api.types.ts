@@ -4,7 +4,7 @@
  */
 
 import type { MapleradCustomerData } from './tier-upgrade.types';
-import type { UserSubscriptionInfo } from './subscription.types';
+import type { ActiveSubscription } from './subscription.types';
 
 // ============= Generic Response Wrapper =============
 export interface ApiResponse<T = any> {
@@ -63,7 +63,7 @@ export interface User {
   permissions: string[];
   balance: number;
   formatted_balance: string;
-  subscription: UserSubscriptionInfo | null;
+  subscription: ActiveSubscription | null;
   mapleradCustomer?: MapleradCustomerData | null;
 }
 

@@ -7,7 +7,6 @@ import {
   ArrowRight,
   BadgeCheck,
   CheckCircle2,
-  ChevronLeft,
   ChevronRight,
   Gift,
   Globe,
@@ -27,6 +26,8 @@ import {
   Share2,
 } from 'lucide-react';
 import { LandingTopbar } from '@/components/LandingTopbar';
+import { SubscriptionPlansSection } from '@/components/subscription/SubscriptionPlansSection';
+import BusinessShowcase from '@/components/vtu-public/BusinessShowcase';
 
 const features = [
   {
@@ -58,55 +59,6 @@ const features = [
     title: 'Job Opportunities',
     desc: 'Find and post gigs and job opportunities within the community.',
     icon: Briefcase,
-  },
-];
-
-const membershipTiers = [
-  {
-    tier: 'Regular',
-    price: '₦2,000',
-    period: '/month',
-    features: [
-      'Access to community',
-      'Basic profile creation',
-      '1 business catalogue entry',
-      'Member messaging',
-      'Birthday recognition',
-    ],
-    color: 'border-gray-200',
-    buttonColor: 'bg-gray-100 text-gray-900 hover:bg-gray-200',
-  },
-  {
-    tier: 'VIP',
-    price: '₦3,500',
-    period: '/month',
-    features: [
-      'Everything in Regular',
-      'Up to 5 catalogue entries',
-      'Priority support',
-      'Featured listings',
-      'Enhanced profile badge',
-      'Job posting access',
-    ],
-    color: 'border-[#C9A84C]',
-    buttonColor: 'bg-[#C9A84C] text-white hover:bg-[#B8962E]',
-    recommended: true,
-  },
-  {
-    tier: 'VVIP',
-    price: '₦5,000',
-    period: '/month',
-    features: [
-      'Everything in VIP',
-      'Unlimited catalogue entries',
-      'Video advertising (5 min)',
-      'Premium support',
-      'Custom profile design',
-      'Monthly analytics report',
-      'Co-branding opportunities',
-    ],
-    color: 'border-[#C9A84C]',
-    buttonColor: 'bg-[#C9A84C] text-white hover:bg-[#B8962E]',
   },
 ];
 
@@ -431,63 +383,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ═══════════════════ MEMBERSHIP TIERS ═══════════════════ */}
-      <section id="pricing" className="bg-gradient-to-b from-gray-50 to-white py-20 sm:py-28 md:py-40 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-14 sm:mb-18 md:mb-20">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-              Choose Your Membership
-            </h2>
-            <p className="text-sm sm:text-base text-gray-600 max-w-xl mx-auto">
-              Flexible plans designed for every stage of your business journey
-            </p>
-          </div>
-
-          {/* Horizontal scroll on mobile, 3-col grid on md+ */}
-          <div className="flex md:grid md:grid-cols-3 overflow-x-auto gap-4 md:gap-6 py-12 md:pb-8 -mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 snap-x snap-mandatory scroll-smooth items-stretch min-h-[620px] md:min-h-auto">
-            {membershipTiers.map((plan) => (
-              <div
-                key={plan.tier}
-                className={`flex flex-col flex-shrink-0 w-72 sm:w-80 md:w-auto snap-start relative rounded-2xl border-2 ${plan.color} bg-white overflow-visible transition-all hover:shadow-2xl ${
-                  plan.recommended ? 'shadow-lg md:scale-105' : ''
-                }`}
-              >
-                {plan.recommended && (
-                  <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#C9A84C]/35 via-[#C9A84C] to-[#C9A84C]/35" />
-                )}
-
-                <div className="p-6 sm:p-8 flex flex-col h-full">
-                  {plan.recommended && (
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C9A84C]/10 border border-[#C9A84C]/20 mb-3">
-                      <BadgeCheck size={13} className="text-[#C9A84C]" />
-                      <span className="text-xs font-semibold text-[#C9A84C]">Most Popular</span>
-                    </div>
-                  )}
-
-                  <h3 className="text-xl font-bold text-gray-900 mb-1.5">{plan.tier}</h3>
-                  <div className="mb-5">
-                    <span className="text-3xl font-bold text-[#C9A84C]">{plan.price}</span>
-                    <span className="text-sm text-gray-600 ml-1.5">{plan.period}</span>
-                  </div>
-
-                  <button className={`w-full py-2.5 px-4 rounded-xl text-sm font-semibold transition-colors mb-6 ${plan.buttonColor}`}>
-                    Get Started
-                  </button>
-
-                  <div className="space-y-3.5 flex-1">
-                    {plan.features.map((feature) => (
-                      <div key={feature} className="flex items-start gap-2.5">
-                        <CheckCircle2 size={16} className="text-[#C9A84C] flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-gray-700">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ═══════════════════ MEMBERSHIP PLANS (Dynamic) ═══════════════════ */}
+      <SubscriptionPlansSection showViewAll />
 
       {/* ═══════════════════ MOBILE APP SECTION ═══════════════════ */}
       <section
@@ -600,6 +497,9 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* ═══════════════════ BUSINESS SHOWCASE ═══════════════════ */}
+      <BusinessShowcase />
 
       {/* ═══════════════════ TESTIMONIALS ═══════════════════ */}
       <section id="testimonials" className="bg-white py-12 sm:py-16 md:py-24 px-4 sm:px-6 lg:px-8">

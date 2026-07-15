@@ -3,6 +3,8 @@ import Script from "next/script";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 
+const PAYSTACK_SCRIPT_URL = "https://js.paystack.co/v1/inline.js";
+
 // Using system fonts instead of Google Fonts to avoid network dependency during build
 
 export const metadata: Metadata = {
@@ -304,6 +306,12 @@ export default function RootLayout({
           async
           src="https://www.googletagmanager.com/gtag/js?id=AW-YOUR_CONVERSION_ID"
           strategy="afterInteractive"
+        />
+
+        {/* Paystack Inline Payment Script */}
+        <Script
+          src="https://js.paystack.co/v1/inline.js"
+          strategy="beforeInteractive"
         />
       </head>
       <body className="min-h-full flex flex-col bg-gray-50">
